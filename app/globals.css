@@ -22,16 +22,16 @@
 }
 
 :root[data-theme="light"] {
-  --app-bg: #f4f8fb;
+  --app-bg: #eef4f8;
   --panel: #ffffff;
-  --soft: #f0f6fb;
+  --soft: #eaf2f8;
   --input: #ffffff;
   --text: #172033;
-  --muted-text: #6e7e95;
-  --line: #dbe4ee;
+  --muted-text: #52647b;
+  --line: #cfdbe7;
   --topbar: rgba(255, 255, 255, 0.88);
-  --sidebar-bg: linear-gradient(180deg, #073763 0%, #0b4978 100%);
-  --sidebar-line: rgba(255, 255, 255, 0.12);
+  --sidebar-bg: linear-gradient(180deg, #083b66 0%, #0b4d7d 100%);
+  --sidebar-line: rgba(255, 255, 255, 0.16);
 }
 
 @theme inline {
