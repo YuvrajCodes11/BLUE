@@ -9,19 +9,6 @@
   --teal: #11d7b4;
   --violet: #8178ff;
   --gold: #f5c96b;
-  --app-bg: #f4f8fb;
-  --panel: #ffffff;
-  --soft: #f0f6fb;
-  --input: #ffffff;
-  --text: #172033;
-  --muted-text: #6e7e95;
-  --line: #dbe4ee;
-  --topbar: rgba(255, 255, 255, 0.88);
-  --sidebar-bg: linear-gradient(180deg, #073763 0%, #0b4978 100%);
-  --sidebar-line: rgba(255, 255, 255, 0.12);
-}
-
-:root[data-theme="dark"] {
   --app-bg: #050b14;
   --panel: rgba(7, 17, 31, 0.82);
   --soft: rgba(255, 255, 255, 0.04);
@@ -32,6 +19,19 @@
   --topbar: rgba(7, 17, 31, 0.84);
   --sidebar-bg: linear-gradient(180deg, #061729 0%, #09233c 100%);
   --sidebar-line: rgba(255, 255, 255, 0.1);
+}
+
+:root[data-theme="light"] {
+  --app-bg: #f4f8fb;
+  --panel: #ffffff;
+  --soft: #f0f6fb;
+  --input: #ffffff;
+  --text: #172033;
+  --muted-text: #6e7e95;
+  --line: #dbe4ee;
+  --topbar: rgba(255, 255, 255, 0.88);
+  --sidebar-bg: linear-gradient(180deg, #073763 0%, #0b4978 100%);
+  --sidebar-line: rgba(255, 255, 255, 0.12);
 }
 
 @theme inline {
@@ -53,7 +53,7 @@ body {
   min-height: 100vh;
   overflow-x: hidden;
   color: var(--foreground);
-  background: var(--app-bg);
+  background: var(--background);
   font-family: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
 }
 

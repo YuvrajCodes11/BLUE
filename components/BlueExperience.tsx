@@ -111,21 +111,21 @@ export default function BlueExperience() {
   }, [activeRole]);
 
   return (
-    <main className="noise min-h-screen overflow-hidden text-white">
+    <main className="noise min-h-screen overflow-hidden bg-[#020712] text-white">
       <Leva hidden />
-      <nav className="fixed inset-x-0 top-0 z-50 mx-auto flex max-w-7xl items-center justify-between px-5 py-5 text-sm text-cyan-50/80 backdrop-blur-xl md:px-8">
+      <nav className="fixed inset-x-0 top-0 z-50 mx-auto flex max-w-7xl items-center justify-between px-5 py-5 text-sm text-cyan-50/85 backdrop-blur-xl md:px-8">
         <a href="#hero" className="flex items-center gap-3 font-display text-lg font-bold tracking-tight text-white">
           <span className="grid h-10 w-10 place-items-center rounded-xl bg-cyan-300 text-slate-950 shadow-[0_0_40px_rgba(65,243,255,.42)]">B</span>
           BLUE
         </a>
         <div className="hidden items-center gap-7 md:flex">
           {["Mission", "Platform", "GIS", "Roles", "Pricing"].map((item) => (
-            <a key={item} href={`#${item.toLowerCase()}`} className="transition hover:text-cyan-200">
+            <a key={item} href={`#${item.toLowerCase()}`} className="font-semibold transition hover:text-cyan-200">
               {item}
             </a>
           ))}
         </div>
-        <a href="#contact" className="rounded-full border border-cyan-200/20 px-4 py-2 text-cyan-100 transition hover:border-cyan-200/60 hover:bg-cyan-200/10">
+        <a href="#contact" className="rounded-full border border-cyan-200/30 bg-cyan-200/10 px-4 py-2 font-semibold text-cyan-50 transition hover:border-cyan-200/70 hover:bg-cyan-200/20">
           Request access
         </a>
       </nav>
@@ -134,13 +134,13 @@ export default function BlueExperience() {
         <div className="absolute inset-0 ocean-grid opacity-70" />
         <div className="mx-auto grid w-full max-w-7xl items-center gap-10 lg:grid-cols-[0.95fr_1.05fr]">
           <motion.div initial={{ opacity: 0, y: 24 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.9 }} className="relative z-10">
-            <div className="mb-6 inline-flex rounded-full border border-cyan-200/15 bg-white/5 px-4 py-2 text-xs uppercase tracking-[0.32em] text-cyan-100/80">
+            <div className="mb-6 inline-flex rounded-full border border-cyan-200/20 bg-cyan-200/10 px-4 py-2 text-xs uppercase tracking-[0.26em] text-cyan-100/90">
               Blue Economy Livelihoods Unified Ecosystem
             </div>
-            <h1 className="font-display text-6xl font-bold leading-[0.88] tracking-[-0.04em] md:text-8xl xl:text-[9.5rem]">
+            <h1 className="font-display text-5xl font-bold leading-[0.92] tracking-[-0.03em] md:text-7xl xl:text-8xl">
               Ocean <span className="liquid-text">intelligence</span> for living coastlines.
             </h1>
-            <p className="mt-7 max-w-2xl text-lg leading-8 text-cyan-50/72 md:text-xl">
+            <p className="mt-7 max-w-2xl text-lg leading-8 text-cyan-50/78 md:text-xl">
               BLUE unifies fisheries governance, BMU operations, conservation evidence, NGO programs, donor monitoring, GIS layers, and community records into one secure command ecosystem.
             </p>
             <div className="mt-9 flex flex-wrap gap-3">
@@ -152,7 +152,7 @@ export default function BlueExperience() {
               </a>
             </div>
           </motion.div>
-          <div className="h-[520px] rounded-[2rem] border border-cyan-200/15 bg-cyan-100/5 p-2 shadow-[0_30px_140px_rgba(0,0,0,.45)] lg:h-[670px]">
+          <div className="h-[460px] rounded-[2rem] border border-cyan-200/15 bg-cyan-100/5 p-2 shadow-[0_30px_140px_rgba(0,0,0,.45)] lg:h-[600px]">
             <div className="h-full overflow-hidden rounded-[1.65rem]">
               <OceanScene />
             </div>
