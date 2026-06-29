@@ -1,0 +1,3 @@
+import { ChartCard } from "@/components/dashboard/ChartCard";
+import { StatCard } from "@/components/dashboard/StatCard";
+export default function Page() { const stats=[{label:"Funding outcomes",value:"86%",trend:"validated",tone:"emerald" as const},{label:"Beneficiaries",value:"5,860",trend:"reached",tone:"cyan" as const},{label:"Milestones",value:"72",trend:"complete",tone:"violet" as const}]; return <section><h1 className="text-4xl font-bold">Donor Impact</h1><div className="mt-6 grid gap-4 md:grid-cols-3">{stats.map((stat)=><StatCard key={stat.label} stat={stat} />)}</div><div className="mt-6"><ChartCard title="Outcome KPI trend" /></div></section>; }
