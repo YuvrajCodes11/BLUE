@@ -2,7 +2,8 @@
 
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { Bell, LogOut, Search } from "lucide-react";
+import { Bell, LogIn, LogOut, Search } from "lucide-react";
+import { ThemeToggle } from "@/components/dashboard/ThemeToggle";
 import { createClient, hasSupabaseConfig } from "@/lib/supabase";
 
 export function Topbar() {
@@ -16,10 +17,21 @@ export function Topbar() {
     router.refresh();
   }
   return (
-    <header className="sticky top-0 z-20 border-b border-white/10 bg-[#07111f]/80 px-5 py-4 backdrop-blur-xl lg:px-8">
+    <header className="sticky top-0 z-20 border-b border-[var(--line)] bg-[var(--topbar)] px-4 py-4 backdrop-blur-xl lg:px-6">
       <div className="flex items-center justify-between gap-4">
-        <div className="hidden items-center gap-3 rounded-2xl border border-white/10 bg-white/[0.04] px-4 py-2 text-sm text-slate-400 md:flex"><Search className="h-4 w-4" /> Search records, reports, BMUs...</div>
-        <div className="ml-auto flex items-center gap-3"><button className="rounded-xl border border-white/10 p-2 text-slate-300"><Bell className="h-4 w-4" /></button><Link href="/dashboard/settings" className="rounded-xl bg-cyan-300 px-4 py-2 text-sm font-bold text-slate-950">Settings</Link><button onClick={()=>void logout()} className="rounded-xl border border-white/10 p-2 text-slate-300"><LogOut className="h-4 w-4" /></button></div>
+        <div>
+          <p className="text-xs font-black uppercase tracking-[0.24em] text-[var(--muted-text)]">BLUE</p>
+          <h1 className="text-xl font-black text-[var(--text)]">Dashboard</h1>
+        </div>
+        <div className="hidden min-w-80 items-center gap-3 rounded-2xl border border-[var(--line)] bg-[var(--panel)] px-4 py-2 text-sm text-[var(--muted-text)] md:flex">
+          <Search className="h-4 w-4" /> Search records, reports, BMUs...
+        </div>
+        <div className="ml-auto flex items-center gap-2">
+          <ThemeToggle />
+          <button className="grid h-11 w-11 place-items-center rounded-xl border border-[var(--line)] bg-[var(--panel)] text-[var(--text)]"><Bell className="h-4 w-4" /></button>
+          <Link href="/login" className="hidden items-center gap-2 rounded-xl border border-[var(--line)] bg-[var(--panel)] px-4 py-2 text-sm font-bold text-[var(--text)] md:flex"><LogIn className="h-4 w-4" /> Login</Link>
+          <button onClick={()=>void logout()} className="grid h-11 w-11 place-items-center rounded-xl border border-[var(--line)] bg-[var(--panel)] text-[var(--text)]"><LogOut className="h-4 w-4" /></button>
+        </div>
       </div>
     </header>
   );

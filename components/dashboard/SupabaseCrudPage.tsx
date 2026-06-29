@@ -22,6 +22,14 @@ type CrudConfig = {
 };
 
 const configs: Record<string, CrudConfig> = {
+  "register-member": {
+    title: "Register Member",
+    description: "Create a fisher/member profile managed by the BMU or authorized officer.",
+    table: "fishers",
+    statusField: "membership_status",
+    columns: [{ key: "full_name", label: "Name" }, { key: "phone", label: "Phone" }, { key: "membership_status", label: "Status" }, { key: "qr_code", label: "QR Code" }, { key: "created_at", label: "Created" }],
+    fields: [{ name: "full_name", label: "Full name", required: true }, { name: "phone", label: "Phone" }, { name: "bmu_id", label: "BMU UUID", required: true }, { name: "membership_status", label: "Status", required: true }],
+  },
   fishers: {
     title: "Fishers",
     description: "Real Supabase fisher records with BMU affiliation and membership status.",
@@ -82,6 +90,36 @@ const configs: Record<string, CrudConfig> = {
     statusField: "status",
     columns: [{ key: "name", label: "Name" }, { key: "county", label: "County" }, { key: "status", label: "Status" }, { key: "created_at", label: "Created" }],
     fields: [{ name: "name", label: "Beneficiary name", required: true }, { name: "county", label: "County" }, { name: "project_id", label: "Project UUID" }, { name: "status", label: "Status", required: true }],
+  },
+  payments: {
+    title: "Payments & Revenue Ledger",
+    description: "BMU fee, BLUE service fee, receipt, and payment tracking records.",
+    table: "payment_records",
+    statusField: "status",
+    columns: [{ key: "payer_name", label: "Payer" }, { key: "service_type", label: "Service" }, { key: "bmu_fee", label: "BMU Fee" }, { key: "blue_fee", label: "BLUE Fee" }, { key: "method", label: "Method" }, { key: "status", label: "Status" }],
+    fields: [{ name: "payer_name", label: "Payer name", required: true }, { name: "service_type", label: "Service type", required: true }, { name: "bmu_fee", label: "BMU fee", type: "number", required: true }, { name: "blue_fee", label: "BLUE fee", type: "number", required: true }, { name: "method", label: "Method", required: true }, { name: "reference", label: "Reference" }, { name: "status", label: "Status", required: true }, { name: "bmu_id", label: "BMU UUID" }, { name: "fisher_id", label: "Fisher UUID" }],
+  },
+  renewals: {
+    title: "Renewals",
+    description: "Annual membership, vessel, licence, and BMU renewal tracking.",
+    table: "renewal_records",
+    statusField: "status",
+    columns: [{ key: "holder_name", label: "Holder" }, { key: "renewal_type", label: "Type" }, { key: "expiry_date", label: "Expiry" }, { key: "status", label: "Status" }, { key: "created_at", label: "Created" }],
+    fields: [{ name: "holder_name", label: "Holder name", required: true }, { name: "renewal_type", label: "Renewal type", required: true }, { name: "expiry_date", label: "Expiry date", required: true }, { name: "status", label: "Status", required: true }, { name: "bmu_id", label: "BMU UUID" }, { name: "fisher_id", label: "Fisher UUID" }, { name: "vessel_id", label: "Vessel UUID" }],
+  },
+  documents: {
+    title: "Documents",
+    description: "Document registry for fisher licences, vessel files, minutes, compliance forms, and reports.",
+    table: "documents",
+    columns: [{ key: "document_type", label: "Type" }, { key: "owner_type", label: "Owner Type" }, { key: "storage_path", label: "Storage Path" }, { key: "created_at", label: "Created" }],
+    fields: [{ name: "document_type", label: "Document type", required: true }, { name: "owner_type", label: "Owner type", required: true }, { name: "owner_id", label: "Owner UUID", required: true }, { name: "storage_path", label: "Storage path", required: true }],
+  },
+  rangers: {
+    title: "Ranger Patrol & Compliance",
+    description: "Ranger patrol, inspection, and compliance submissions without GIS dependency.",
+    table: "compliance_records",
+    columns: [{ key: "record_type", label: "Type" }, { key: "finding", label: "Finding" }, { key: "action_taken", label: "Action" }, { key: "created_at", label: "Created" }],
+    fields: [{ name: "record_type", label: "Record type", required: true }, { name: "finding", label: "Finding", type: "textarea", required: true }, { name: "action_taken", label: "Action taken" }, { name: "bmu_id", label: "BMU UUID" }, { name: "officer_id", label: "Officer profile UUID" }],
   },
   notifications: {
     title: "Notifications",

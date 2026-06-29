@@ -27,7 +27,12 @@ export type Permission =
   | "projects.manage"
   | "beneficiaries.manage"
   | "donor-impact.view"
-  | "settings.manage";
+  | "settings.manage"
+  | "payments.manage"
+  | "renewals.manage"
+  | "documents.manage"
+  | "rangers.manage"
+  | "qr.verify";
 
 export type NavItem = { label: string; href: string; permission?: Permission };
 export type Stat = { label: string; value: string; trend: string; tone: "cyan" | "emerald" | "amber" | "violet" };
