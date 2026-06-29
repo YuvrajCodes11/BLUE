@@ -12,17 +12,11 @@ type AccessRow = { id: string; name: string; email: string; organization: string
 
 const roles: DbRole[] = ["BMU Manager", "County Officer", "KFS Officer", "Ranger", "NGO Program Manager", "Donor", "Fisher", "Government Admin"];
 
-function defaultPassword(email: string) {
-  const prefix = email.split("@")[0]?.replace(/[^a-zA-Z0-9]/g, "").slice(0, 8) || "blueuser";
-  return `${prefix}#Blue2026`;
-}
-
 export function AccessRequestsPanel() {
   const [rows, setRows] = useState<AccessRow[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [roleById, setRoleById] = useState<Record<string, DbRole>>({});
-  const [passwordById, setPasswordById] = useState<Record<string, string>>({});
   const [countyById, setCountyById] = useState<Record<string, string>>({});
   const [busyId, setBusyId] = useState<string | null>(null);
   const [notice, setNotice] = useState("");
@@ -37,7 +31,6 @@ export function AccessRequestsPanel() {
     const nextRows = (data ?? []) as AccessRow[];
     setRows(nextRows);
     setRoleById((current) => Object.fromEntries(nextRows.map((row) => [row.id, current[row.id] ?? "BMU Manager"])));
-    setPasswordById((current) => Object.fromEntries(nextRows.map((row) => [row.id, current[row.id] ?? defaultPassword(row.email)])));
     setCountyById((current) => Object.fromEntries(nextRows.map((row) => [row.id, current[row.id] ?? "Kilifi"])));
     setLoading(false);
   }
@@ -61,7 +54,6 @@ export function AccessRequestsPanel() {
       body: JSON.stringify({
         action,
         role: roleById[id] ?? "BMU Manager",
-        temporaryPassword: passwordById[id] ?? "BlueUser#2026",
         county: countyById[id] ?? "Kilifi",
       }),
     });
@@ -72,7 +64,7 @@ export function AccessRequestsPanel() {
       return;
     }
     if (action === "approve") {
-      setNotice(`User approved. Send login URL, email, and temporary password to ${result.email}.`);
+      setNotice(`User approved. Password setup email sent to ${result.email}.`);
     }
     await load();
     setBusyId(null);
@@ -83,7 +75,7 @@ export function AccessRequestsPanel() {
   return (
     <div className="mt-8 rounded-2xl border border-white/10 bg-slate-950/45 p-5">
       <h2 className="text-xl font-bold">Access requests</h2>
-      <p className="mt-2 text-sm text-slate-400">Approve requests to automatically create login access and assign a role.</p>
+      <p className="mt-2 text-sm text-slate-400">Approve requests to create login access and email the user a password setup link.</p>
       {notice && <div className="mt-4 rounded-xl border border-emerald-300/30 bg-emerald-300/10 p-3 text-sm text-emerald-100">{notice}</div>}
       <div className="mt-5">
         {loading ? <LoadingState /> : error ? <EmptyState title="Cannot load access requests" body={error} /> : rows.length ? (
@@ -95,13 +87,12 @@ export function AccessRequestsPanel() {
                   <StatusBadge status={row.status} />
                 </div>
                 {row.message && <p className="mt-3 text-sm text-slate-300">{row.message}</p>}
-                <div className="mt-4 grid gap-3 md:grid-cols-3">
+                <div className="mt-4 grid gap-3 md:grid-cols-2">
                   <label className="text-xs font-semibold uppercase tracking-[0.2em] text-slate-500">Role<select value={roleById[row.id] ?? "BMU Manager"} onChange={(event)=>setRoleById((current)=>({...current,[row.id]: event.target.value as DbRole}))} className="mt-2 w-full rounded-lg border border-white/10 bg-slate-950 px-3 py-2 text-sm text-white">{roles.map((role)=><option key={role}>{role}</option>)}</select></label>
                   <label className="text-xs font-semibold uppercase tracking-[0.2em] text-slate-500">County<input value={countyById[row.id] ?? "Kilifi"} onChange={(event)=>setCountyById((current)=>({...current,[row.id]: event.target.value}))} className="mt-2 w-full rounded-lg border border-white/10 bg-slate-950 px-3 py-2 text-sm text-white" /></label>
-                  <label className="text-xs font-semibold uppercase tracking-[0.2em] text-slate-500">Temp password<input value={passwordById[row.id] ?? ""} onChange={(event)=>setPasswordById((current)=>({...current,[row.id]: event.target.value}))} className="mt-2 w-full rounded-lg border border-white/10 bg-slate-950 px-3 py-2 text-sm text-white" /></label>
                 </div>
                 <div className="mt-4 flex gap-2">
-                  <button disabled={busyId === row.id} onClick={()=>void updateStatus(row.id,"approve")} className="rounded-lg bg-emerald-300 px-3 py-2 text-sm font-bold text-slate-950 disabled:opacity-50">Approve + Create Login</button>
+                  <button disabled={busyId === row.id} onClick={()=>void updateStatus(row.id,"approve")} className="rounded-lg bg-emerald-300 px-3 py-2 text-sm font-bold text-slate-950 disabled:opacity-50">Approve + Send Invite</button>
                   <button disabled={busyId === row.id} onClick={()=>void updateStatus(row.id,"reject")} className="rounded-lg bg-rose-300 px-3 py-2 text-sm font-bold text-slate-950 disabled:opacity-50">Reject</button>
                 </div>
               </div>
