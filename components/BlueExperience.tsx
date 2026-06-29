@@ -125,9 +125,14 @@ export default function BlueExperience() {
             </a>
           ))}
         </div>
-        <a href="#contact" className="rounded-full border border-cyan-200/30 bg-cyan-200/10 px-4 py-2 font-semibold text-cyan-50 transition hover:border-cyan-200/70 hover:bg-cyan-200/20">
-          Request access
-        </a>
+        <div className="flex items-center gap-3">
+          <a href="/login" className="rounded-full border border-white/20 px-4 py-2 font-semibold text-white transition hover:border-cyan-200/70 hover:bg-white/10">
+            Login
+          </a>
+          <a href="/request-access" className="rounded-full border border-cyan-200/30 bg-cyan-200/10 px-4 py-2 font-semibold text-cyan-50 transition hover:border-cyan-200/70 hover:bg-cyan-200/20">
+            Request access
+          </a>
+        </div>
       </nav>
 
       <section id="hero" className="relative grid min-h-screen items-center px-5 pt-28 md:px-8">
