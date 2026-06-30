@@ -1,3 +1,15 @@
 import { ChartCard } from "@/components/dashboard/ChartCard";
-import { StatCard } from "@/components/dashboard/StatCard";
-export default function Page() { const stats=[{label:"Funding outcomes",value:"86%",trend:"validated",tone:"emerald" as const},{label:"Beneficiaries",value:"5,860",trend:"reached",tone:"cyan" as const},{label:"Milestones",value:"72",trend:"complete",tone:"violet" as const}]; return <section><h1 className="text-4xl font-bold">Donor Impact</h1><div className="mt-6 grid gap-4 md:grid-cols-3">{stats.map((stat)=><StatCard key={stat.label} stat={stat} />)}</div><div className="mt-6"><ChartCard title="Outcome KPI trend" /></div></section>; }
+import { EmptyState } from "@/components/dashboard/EmptyState";
+
+export default function Page() {
+  return (
+    <section>
+      <h1 className="text-4xl font-bold text-[var(--text)]">Donor Impact</h1>
+      <p className="mt-3 max-w-3xl text-[var(--muted-text)]">Read-only donor outcomes will populate from real project, beneficiary, and report data.</p>
+      <div className="mt-6 grid gap-4 xl:grid-cols-2">
+        <ChartCard title="Outcome KPI trend" />
+        <EmptyState title="No donor impact records yet" body="Funding outcomes, beneficiaries, and milestones will appear after approved project data is entered." />
+      </div>
+    </section>
+  );
+}

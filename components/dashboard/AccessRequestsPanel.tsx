@@ -73,23 +73,23 @@ export function AccessRequestsPanel() {
   useEffect(() => { void load(); }, []);
 
   return (
-    <div className="mt-8 rounded-2xl border border-white/10 bg-slate-950/45 p-5">
-      <h2 className="text-xl font-bold">Access requests</h2>
-      <p className="mt-2 text-sm text-slate-400">Approve requests to create login access and email the user a password setup link.</p>
-      {notice && <div className="mt-4 rounded-xl border border-emerald-300/30 bg-emerald-300/10 p-3 text-sm text-emerald-100">{notice}</div>}
+    <div className="mt-8 rounded-2xl border border-[var(--line)] bg-[var(--panel)] p-5">
+      <h2 className="text-xl font-bold text-[var(--text)]">Access requests</h2>
+      <p className="mt-2 text-sm text-[var(--muted-text)]">Approve requests to create login access and email the user a password setup link.</p>
+      {notice && <div className="mt-4 rounded-xl border border-emerald-300 bg-emerald-50 p-3 text-sm text-emerald-800">{notice}</div>}
       <div className="mt-5">
         {loading ? <LoadingState /> : error ? <EmptyState title="Cannot load access requests" body={error} /> : rows.length ? (
           <div className="grid gap-3">
             {rows.map((row) => (
-              <div key={row.id} className="rounded-2xl border border-white/10 bg-white/[0.04] p-4">
+              <div key={row.id} className="rounded-2xl border border-[var(--line)] bg-[var(--soft)] p-4">
                 <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
-                  <div><strong>{row.name}</strong><p className="text-sm text-slate-400">{row.organization} · {row.email}</p></div>
+                  <div><strong className="text-[var(--text)]">{row.name}</strong><p className="text-sm text-[var(--muted-text)]">{row.organization} · {row.email}</p></div>
                   <StatusBadge status={row.status} />
                 </div>
-                {row.message && <p className="mt-3 text-sm text-slate-300">{row.message}</p>}
+                {row.message && <p className="mt-3 text-sm text-[var(--text)]">{row.message}</p>}
                 <div className="mt-4 grid gap-3 md:grid-cols-2">
-                  <label className="text-xs font-semibold uppercase tracking-[0.2em] text-slate-500">Role<select value={roleById[row.id] ?? "BMU Manager"} onChange={(event)=>setRoleById((current)=>({...current,[row.id]: event.target.value as DbRole}))} className="mt-2 w-full rounded-lg border border-white/10 bg-slate-950 px-3 py-2 text-sm text-white">{roles.map((role)=><option key={role}>{role}</option>)}</select></label>
-                  <label className="text-xs font-semibold uppercase tracking-[0.2em] text-slate-500">County<input value={countyById[row.id] ?? "Kilifi"} onChange={(event)=>setCountyById((current)=>({...current,[row.id]: event.target.value}))} className="mt-2 w-full rounded-lg border border-white/10 bg-slate-950 px-3 py-2 text-sm text-white" /></label>
+                  <label className="text-xs font-semibold uppercase tracking-[0.2em] text-[var(--muted-text)]">Role<select value={roleById[row.id] ?? "BMU Manager"} onChange={(event)=>setRoleById((current)=>({...current,[row.id]: event.target.value as DbRole}))} className="mt-2 w-full rounded-lg border border-[var(--line)] bg-[var(--input)] px-3 py-2 text-sm text-[var(--text)]">{roles.map((role)=><option key={role}>{role}</option>)}</select></label>
+                  <label className="text-xs font-semibold uppercase tracking-[0.2em] text-[var(--muted-text)]">County<input value={countyById[row.id] ?? "Kilifi"} onChange={(event)=>setCountyById((current)=>({...current,[row.id]: event.target.value}))} className="mt-2 w-full rounded-lg border border-[var(--line)] bg-[var(--input)] px-3 py-2 text-sm text-[var(--text)]" /></label>
                 </div>
                 <div className="mt-4 flex gap-2">
                   <button disabled={busyId === row.id} onClick={()=>void updateStatus(row.id,"approve")} className="rounded-lg bg-emerald-300 px-3 py-2 text-sm font-bold text-slate-950 disabled:opacity-50">Approve + Send Invite</button>

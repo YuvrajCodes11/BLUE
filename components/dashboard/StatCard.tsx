@@ -1,10 +1,10 @@
 import type { Stat } from "@/types/domain";
 
 const tones: Record<Stat["tone"], string> = {
-  cyan: "text-sky-600 dark:text-cyan-200",
-  emerald: "text-emerald-600 dark:text-emerald-200",
-  amber: "text-orange-600 dark:text-amber-200",
-  violet: "text-violet-600 dark:text-violet-200",
+  cyan: "text-cyan-500",
+  emerald: "text-emerald-500",
+  amber: "text-amber-500",
+  violet: "text-violet-500",
 };
 
 export function StatCard({ stat }: { stat: Stat }) {

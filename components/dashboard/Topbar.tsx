@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { Bell, LogIn, LogOut, Search } from "lucide-react";
+import { Bell, LogOut, Search, Settings } from "lucide-react";
 import { ThemeToggle } from "@/components/dashboard/ThemeToggle";
 import { createClient, hasSupabaseConfig } from "@/lib/supabase";
 
@@ -29,8 +29,8 @@ export function Topbar() {
         <div className="ml-auto flex items-center gap-2">
           <ThemeToggle />
           <button className="grid h-11 w-11 place-items-center rounded-xl border border-[var(--line)] bg-[var(--panel)] text-[var(--text)]"><Bell className="h-4 w-4" /></button>
-          <Link href="/login" className="hidden items-center gap-2 rounded-xl border border-[var(--line)] bg-[var(--panel)] px-4 py-2 text-sm font-bold text-[var(--text)] md:flex"><LogIn className="h-4 w-4" /> Login</Link>
-          <button onClick={()=>void logout()} className="grid h-11 w-11 place-items-center rounded-xl border border-[var(--line)] bg-[var(--panel)] text-[var(--text)]"><LogOut className="h-4 w-4" /></button>
+          <Link href="/dashboard/settings" className="hidden items-center gap-2 rounded-xl border border-[var(--line)] bg-[var(--panel)] px-4 py-2 text-sm font-bold text-[var(--text)] md:flex"><Settings className="h-4 w-4" /> Settings</Link>
+          <button onClick={()=>void logout()} className="inline-flex h-11 items-center gap-2 rounded-xl border border-[var(--line)] bg-[var(--panel)] px-4 text-sm font-bold text-[var(--text)]"><LogOut className="h-4 w-4" /> Logout</button>
         </div>
       </div>
     </header>

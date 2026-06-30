@@ -1,2 +1,18 @@
 import { ChartCard } from "@/components/dashboard/ChartCard";
-export default function Page() { return <section><h1 className="text-4xl font-bold">Reports</h1><p className="mt-3 text-slate-400">Role-filtered PDF/CSV reports for production, species, landing sites, BMUs, conservation, and donor impact.</p><div className="mt-6 grid gap-4 xl:grid-cols-2"><ChartCard title="Catch trend report" /><ChartCard title="Species composition" /></div><button className="mt-6 rounded-xl bg-cyan-300 px-4 py-2 font-bold text-slate-950">Generate report</button></section>; }
+
+export default function Page() {
+  return (
+    <section>
+      <h1 className="text-4xl font-bold text-[var(--text)]">Reports</h1>
+      <p className="mt-3 max-w-3xl text-[var(--muted-text)]">Role-filtered PDF/CSV reports will be generated from real Supabase records after report templates and operational data are available.</p>
+      <div className="mt-6 grid gap-4 xl:grid-cols-2">
+        <ChartCard title="Catch trend report" />
+        <ChartCard title="Species composition" />
+      </div>
+      <div className="mt-6 rounded-2xl border border-[var(--line)] bg-[var(--panel)] p-5">
+        <h2 className="font-bold text-[var(--text)]">Exports</h2>
+        <p className="mt-2 text-sm text-[var(--muted-text)]">Export buttons will activate when report queries return real records. No placeholder report files are generated.</p>
+      </div>
+    </section>
+  );
+}

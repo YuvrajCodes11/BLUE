@@ -1,1 +1,21 @@
-export default function Page() { return <section><h1 className="text-4xl font-bold">Settings</h1><div className="mt-6 rounded-2xl border border-white/10 bg-white/[0.04] p-5"><h2 className="font-bold">Profile and platform settings</h2><p className="mt-2 text-slate-400">Manage profile, password, notification preferences, role defaults, and system configuration.</p></div></section>; }
+import Link from "next/link";
+
+export default function Page() {
+  return (
+    <section>
+      <h1 className="text-4xl font-bold text-[var(--text)]">Settings</h1>
+      <div className="mt-6 grid gap-4 md:grid-cols-2">
+        <div className="rounded-2xl border border-[var(--line)] bg-[var(--panel)] p-5">
+          <h2 className="font-bold text-[var(--text)]">Account security</h2>
+          <p className="mt-2 text-sm text-[var(--muted-text)]">Use password reset for account recovery or password changes.</p>
+          <Link href="/forgot-password" className="mt-4 inline-flex rounded-xl bg-cyan-300 px-4 py-2 text-sm font-bold text-slate-950">Reset password</Link>
+        </div>
+        <div className="rounded-2xl border border-[var(--line)] bg-[var(--panel)] p-5">
+          <h2 className="font-bold text-[var(--text)]">Access management</h2>
+          <p className="mt-2 text-sm text-[var(--muted-text)]">New users should request access first. Admins approve roles from the admin dashboard.</p>
+          <Link href="/request-access" className="mt-4 inline-flex rounded-xl border border-[var(--line)] bg-[var(--soft)] px-4 py-2 text-sm font-bold text-[var(--text)]">Open request form</Link>
+        </div>
+      </div>
+    </section>
+  );
+}

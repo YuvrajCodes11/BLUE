@@ -5,6 +5,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
+import { ThemeToggle } from "@/components/dashboard/ThemeToggle";
 import { createClient, hasSupabaseConfig } from "@/lib/supabase";
 import { redirectForRole, type DbRole } from "@/lib/role-redirect";
 
@@ -110,32 +111,33 @@ export function AuthCard({ mode }: { mode: "login" | "register" | "forgot" | "ac
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="mx-auto w-full max-w-lg rounded-3xl border border-[var(--line)] bg-[var(--panel)] p-6 text-[var(--text)] shadow-2xl">
+      <div className="flex justify-end"><ThemeToggle /></div>
       <div className="text-center">
         <span className="mx-auto grid h-14 w-14 place-items-center rounded-2xl bg-cyan-300 font-black text-slate-950">B</span>
         <h1 className="mt-4 text-3xl font-black">{title}</h1>
         <p className="mt-2 text-sm text-[var(--muted-text)]">Blue Economy Livelihoods Unified Ecosystem</p>
       </div>
       <div className="mt-6 grid gap-3">
-        {(mode === "register" || mode === "access") && <input {...register("name")} placeholder="Full name" className="rounded-xl border border-[var(--line)] bg-[var(--input)] px-4 py-3 outline-none" />}
-        {mode === "access" && <input {...register("organization")} placeholder="Organization / BMU / county" className="rounded-xl border border-[var(--line)] bg-[var(--input)] px-4 py-3 outline-none" />}
-        <input {...register("email")} placeholder="Email" className="rounded-xl border border-[var(--line)] bg-[var(--input)] px-4 py-3 outline-none" />
+        {(mode === "register" || mode === "access") && <input {...register("name")} placeholder="Full name" className="rounded-xl border border-[var(--line)] bg-[var(--input)] px-4 py-3 text-[var(--text)] outline-none placeholder:text-[var(--muted-text)]" />}
+        {mode === "access" && <input {...register("organization")} placeholder="Organization / BMU / county" className="rounded-xl border border-[var(--line)] bg-[var(--input)] px-4 py-3 text-[var(--text)] outline-none placeholder:text-[var(--muted-text)]" />}
+        <input {...register("email")} placeholder="Email" className="rounded-xl border border-[var(--line)] bg-[var(--input)] px-4 py-3 text-[var(--text)] outline-none placeholder:text-[var(--muted-text)]" />
         {mode === "access" && (
           <div className="grid gap-3 md:grid-cols-2">
-            <select {...register("requestedRole")} className="rounded-xl border border-[var(--line)] bg-[var(--input)] px-4 py-3 outline-none">
+            <select {...register("requestedRole")} className="rounded-xl border border-[var(--line)] bg-[var(--input)] px-4 py-3 text-[var(--text)] outline-none placeholder:text-[var(--muted-text)]">
               {requestRoles.map((role) => <option key={role}>{role}</option>)}
             </select>
-            <select {...register("requestType")} className="rounded-xl border border-[var(--line)] bg-[var(--input)] px-4 py-3 outline-none">
+            <select {...register("requestType")} className="rounded-xl border border-[var(--line)] bg-[var(--input)] px-4 py-3 text-[var(--text)] outline-none placeholder:text-[var(--muted-text)]">
               {requestTypes.map((type) => <option key={type}>{type}</option>)}
             </select>
           </div>
         )}
-        {mode === "access" && <textarea {...register("message")} placeholder="Briefly describe what access is needed for" className="min-h-28 rounded-xl border border-[var(--line)] bg-[var(--input)] px-4 py-3 outline-none" />}
-        {mode !== "forgot" && mode !== "access" && <input {...register("password")} type="password" placeholder="Password" className="rounded-xl border border-[var(--line)] bg-[var(--input)] px-4 py-3 outline-none" />}
+        {mode === "access" && <textarea {...register("message")} placeholder="Briefly describe what access is needed for" className="min-h-28 rounded-xl border border-[var(--line)] bg-[var(--input)] px-4 py-3 text-[var(--text)] outline-none placeholder:text-[var(--muted-text)]" />}
+        {mode !== "forgot" && mode !== "access" && <input {...register("password")} type="password" placeholder="Password" className="rounded-xl border border-[var(--line)] bg-[var(--input)] px-4 py-3 text-[var(--text)] outline-none placeholder:text-[var(--muted-text)]" />}
         <button disabled={formState.isSubmitting} className="rounded-xl bg-cyan-300 px-4 py-3 font-black text-slate-950 disabled:opacity-60">{formState.isSubmitting ? "Working..." : "Continue"}</button>
         {mode === "login" && <p className="text-center text-sm text-[var(--muted-text)]">No approved account yet? <Link className="font-bold text-cyan-500" href="/request-access">Request access</Link></p>}
         {mode === "access" && <p className="text-center text-sm text-[var(--muted-text)]">Already approved? <Link className="font-bold text-cyan-500" href="/login">Login instead</Link></p>}
-        {message && <p className="rounded-xl border border-cyan-300/20 bg-cyan-300/10 p-3 text-sm text-cyan-700 dark:text-cyan-100">{message}</p>}
-        {error && <p className="rounded-xl border border-rose-300/30 bg-rose-300/10 p-3 text-sm text-rose-600 dark:text-rose-100">{error}</p>}
+        {message && <p className="rounded-xl border border-cyan-300/20 bg-cyan-300/10 p-3 text-sm text-cyan-800">{message}</p>}
+        {error && <p className="rounded-xl border border-rose-300/30 bg-rose-300/10 p-3 text-sm text-rose-800">{error}</p>}
       </div>
     </form>
   );

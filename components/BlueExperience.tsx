@@ -21,18 +21,18 @@ import {
   UsersRound,
   Waves,
 } from "lucide-react";
-import type { DashboardSignal, GisPoint, Metric, PlatformModule, Role } from "@/types/blue";
+import type { PlatformModule, Role } from "@/types/blue";
 
 const OceanScene = dynamic(() => import("@/components/OceanScene"), {
   ssr: false,
   loading: () => <div className="h-full w-full animate-pulse rounded-[2rem] bg-cyan-300/10" />,
 });
 
-const metrics: Metric[] = [
-  { label: "registered coastal actors", value: "1.28M", delta: "+18%" },
-  { label: "catch records analyzed", value: "42.6M", delta: "+31%" },
-  { label: "protected marine zones", value: "312", delta: "+9" },
-  { label: "donor impact traced", value: "$84M", delta: "+22%" },
+const capabilities = [
+  { title: "Fisher records", body: "Profiles, memberships, QR verification, documents, and BMU-managed registration workflows." },
+  { title: "Operational data", body: "Vessels, gear, catch records, species monitoring, landing sites, and compliance records." },
+  { title: "Revenue workflows", body: "BMU fees, BLUE service fees, renewals, payment confirmation, and receipt records." },
+  { title: "Governance reporting", body: "Role-scoped dashboards, reports, audit visibility, and donor-ready monitoring views." },
 ];
 
 const modules: PlatformModule[] = [
@@ -53,19 +53,11 @@ const roles: Role[] = [
   "Fisher",
 ];
 
-const gisPoints: GisPoint[] = [
-  { label: "Landing Site A", x: 18, y: 54, kind: "landing" },
-  { label: "Reef Patrol", x: 42, y: 35, kind: "route" },
-  { label: "MPA North", x: 66, y: 26, kind: "conservation" },
-  { label: "Fishing Zone 7", x: 78, y: 62, kind: "zone" },
-  { label: "Landing Site B", x: 33, y: 74, kind: "landing" },
-];
-
-const signals: DashboardSignal[] = [
-  { label: "Catch reports", value: 86 },
-  { label: "Species health", value: 72 },
-  { label: "Compliance", value: 91 },
-  { label: "Funding impact", value: 64 },
+const workflowSignals = [
+  "Catch records",
+  "Species monitoring",
+  "Compliance follow-up",
+  "Donor evidence",
 ];
 
 export default function BlueExperience() {
@@ -166,11 +158,10 @@ export default function BlueExperience() {
       </section>
 
       <section id="mission" className="reveal-section mx-auto grid max-w-7xl gap-6 px-5 py-24 md:grid-cols-4 md:px-8">
-        {metrics.map((metric) => (
-          <div key={metric.label} className="glass holo-border rounded-3xl p-6">
-            <div className="text-4xl font-bold text-white">{metric.value}</div>
-            <div className="mt-3 text-sm uppercase tracking-[0.2em] text-cyan-100/50">{metric.label}</div>
-            <div className="mt-5 text-sm font-semibold text-emerald-200">{metric.delta} signal lift</div>
+        {capabilities.map((item) => (
+          <div key={item.title} className="glass holo-border rounded-3xl p-6">
+            <div className="text-2xl font-bold text-white">{item.title}</div>
+            <p className="mt-4 text-sm leading-7 text-cyan-50/66">{item.body}</p>
           </div>
         ))}
       </section>
@@ -194,30 +185,32 @@ export default function BlueExperience() {
       <section className="reveal-section mx-auto max-w-7xl px-5 py-24 md:px-8" id="dashboard">
         <div className="grid gap-6 lg:grid-cols-[0.8fr_1.2fr]">
           <div className="glass rounded-[2rem] p-7">
-            <p className="text-sm uppercase tracking-[0.35em] text-cyan-200/70">Futuristic dashboards</p>
-            <h2 className="mt-4 font-display text-5xl font-bold tracking-[-0.04em]">Live coastal command.</h2>
-            <p className="mt-5 leading-8 text-cyan-50/64">Animated KPI cards, heatmaps, catch trends, compliance signals, funding impact, NGO activities, marine zones, and live activity feeds.</p>
+            <p className="text-sm uppercase tracking-[0.35em] text-cyan-200/70">Operational dashboards</p>
+            <h2 className="mt-4 font-display text-5xl font-bold tracking-[-0.04em]">Connected coastal command.</h2>
+            <p className="mt-5 leading-8 text-cyan-50/64">KPI cards, report areas, catch trends, compliance work queues, funding impact views, NGO activities, and marine intelligence surfaces connect to real Supabase records.</p>
             <div className="mt-8 grid gap-3">
               {[Fish, ShieldCheck, CircleDollarSign, Leaf].map((Icon, index) => (
                 <div key={String(index)} className="flex items-center gap-3 rounded-2xl border border-white/10 bg-white/[0.04] p-4">
                   <Icon className="h-5 w-5 text-cyan-200" />
-                  <span className="text-sm text-cyan-50/72">{["Species analytics refreshed", "Compliance risk reduced", "Donor milestone verified", "Conservation activity logged"][index]}</span>
+                  <span className="text-sm text-cyan-50/72">{["Species analytics", "Compliance follow-up", "Donor milestones", "Conservation activity"][index]}</span>
                 </div>
               ))}
             </div>
           </div>
           <div className="glass rounded-[2rem] p-5">
             <div className="grid gap-4 md:grid-cols-2">
-              {signals.map((signal, index) => (
-                <div key={signal.label} className="rounded-3xl border border-white/10 bg-slate-950/40 p-5">
-                  <div className="flex items-center justify-between text-sm text-cyan-50/56">
-                    <span>{signal.label}</span>
-                    <span>{signal.value}%</span>
+              {workflowSignals.map((signal, index) => (
+                <div key={signal} className="rounded-3xl border border-white/10 bg-slate-950/40 p-5">
+                  <div className="flex items-center justify-between text-sm text-cyan-50/64">
+                    <span>{signal}</span>
+                    <span>Supabase</span>
                   </div>
-                  <div className="mt-5 h-2 rounded-full bg-white/10">
-                    <motion.div initial={{ width: 0 }} whileInView={{ width: `${signal.value}%` }} viewport={{ once: true }} transition={{ duration: 1.1, delay: index * 0.08 }} className="h-full rounded-full bg-gradient-to-r from-cyan-300 to-teal-300" />
+                  <div className="mt-5 h-2 overflow-hidden rounded-full bg-white/10">
+                    <motion.div initial={{ x: "-100%" }} whileInView={{ x: "100%" }} viewport={{ once: true }} transition={{ duration: 1.2, delay: index * 0.08 }} className="h-full w-1/2 rounded-full bg-gradient-to-r from-cyan-300 to-teal-300" />
                   </div>
-                  <div className="mt-5 h-36 rounded-2xl bg-[radial-gradient(circle_at_50%_20%,rgba(65,243,255,.35),transparent_35%),linear-gradient(135deg,rgba(255,255,255,.08),rgba(255,255,255,.02))]" />
+                  <div className="mt-5 grid h-36 place-items-center rounded-2xl border border-dashed border-white/10 bg-white/[0.035] text-center text-xs uppercase tracking-[0.2em] text-cyan-50/42">
+                    No fake values
+                  </div>
                 </div>
               ))}
             </div>
@@ -237,13 +230,12 @@ export default function BlueExperience() {
             <svg viewBox="0 0 100 100" className="relative h-full min-h-[470px] w-full">
               <path d="M12 70 C30 40, 52 48, 70 22 S90 30, 86 66" fill="none" stroke="rgba(65,243,255,.42)" strokeWidth="0.6" strokeDasharray="2 2" />
               <path d="M22 28 C38 15, 55 25, 69 18" fill="none" stroke="rgba(17,215,180,.35)" strokeWidth="7" strokeLinecap="round" />
-              {gisPoints.map((point) => (
-                <g key={point.label}>
-                  <circle cx={point.x} cy={point.y} r="4.5" fill="rgba(65,243,255,.16)">
+              {[22, 42, 62, 78].map((x, index) => (
+                <g key={x}>
+                  <circle cx={x} cy={index % 2 ? 34 : 64} r="4.5" fill="rgba(65,243,255,.16)">
                     <animate attributeName="r" values="3;7;3" dur="2.4s" repeatCount="indefinite" />
                   </circle>
-                  <circle cx={point.x} cy={point.y} r="1.6" fill={point.kind === "conservation" ? "#11d7b4" : "#41f3ff"} />
-                  <text x={point.x + 3} y={point.y - 2} fill="rgba(239,252,255,.78)" fontSize="3">{point.label}</text>
+                  <circle cx={x} cy={index % 2 ? 34 : 64} r="1.6" fill={index % 2 ? "#11d7b4" : "#41f3ff"} />
                 </g>
               ))}
             </svg>
@@ -312,11 +304,10 @@ export default function BlueExperience() {
           <Map className="mx-auto h-10 w-10 text-cyan-200" />
           <h2 className="mt-6 font-display text-5xl font-bold tracking-[-0.04em] md:text-7xl">Deploy a living ocean platform.</h2>
           <p className="mx-auto mt-6 max-w-2xl leading-8 text-cyan-50/64">BLUE is built for the future of fisheries, conservation, funding transparency, and community decision-making.</p>
-          <form className="glass mt-10 grid gap-3 rounded-[2rem] p-4 text-left md:grid-cols-[1fr_1fr_auto]">
-            <input aria-label="Name" placeholder="Name" className="rounded-2xl border border-white/10 bg-white/5 px-4 py-4 text-white outline-none placeholder:text-cyan-50/38 focus:border-cyan-200/50" />
-            <input aria-label="Email" placeholder="Email" className="rounded-2xl border border-white/10 bg-white/5 px-4 py-4 text-white outline-none placeholder:text-cyan-50/38 focus:border-cyan-200/50" />
-            <button type="button" className="rounded-2xl bg-cyan-200 px-6 py-4 font-bold text-slate-950">Request demo</button>
-          </form>
+          <div className="mt-10 flex flex-wrap justify-center gap-3">
+            <a href="/request-access" className="rounded-full bg-cyan-200 px-6 py-3 font-bold text-slate-950 shadow-[0_0_45px_rgba(65,243,255,.24)] transition hover:scale-[1.02]">Request access</a>
+            <a href="/login" className="rounded-full border border-white/15 px-6 py-3 font-bold text-white transition hover:border-cyan-200/60 hover:bg-white/10">Login</a>
+          </div>
         </div>
       </section>
 
