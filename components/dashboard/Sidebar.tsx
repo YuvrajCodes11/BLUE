@@ -48,7 +48,7 @@ export function Sidebar({ role }: { role: RoleSlug }) {
   }, {});
 
   return (
-    <aside className="fixed inset-y-0 left-0 z-30 hidden w-72 border-r border-[var(--sidebar-line)] bg-[var(--sidebar-bg)] text-[var(--sidebar-text)] shadow-2xl lg:flex lg:flex-col">
+    <aside className="dashboard-sidebar fixed inset-y-0 left-0 z-30 hidden w-72 border-r border-[var(--sidebar-line)] text-[var(--sidebar-text)] shadow-2xl lg:flex lg:flex-col">
       <div className="flex items-center gap-3 border-b border-[var(--sidebar-line)] p-5">
         <span className="grid h-11 w-11 place-items-center rounded-2xl bg-cyan-300 font-black text-slate-950">B</span>
         <div>
