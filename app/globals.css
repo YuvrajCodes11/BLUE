@@ -28,6 +28,9 @@
 }
 
 :root[data-theme="light"] {
+  --background: #f6fbff;
+  --foreground: #172033;
+  --muted: #52647b;
   --app-bg: #eef4f8;
   --panel: #ffffff;
   --soft: #eaf2f8;
@@ -38,6 +41,12 @@
   --topbar: rgba(255, 255, 255, 0.88);
   --sidebar-bg: linear-gradient(180deg, #083b66 0%, #0b4d7d 100%);
   --sidebar-line: rgba(255, 255, 255, 0.16);
+  --sidebar-text: #ffffff;
+  --sidebar-muted: rgba(236, 254, 255, 0.88);
+  --sidebar-subtle: rgba(236, 254, 255, 0.76);
+  --sidebar-hover: rgba(255, 255, 255, 0.14);
+  --sidebar-active-bg: #ffffff;
+  --sidebar-active-text: #0a4674;
 }
 
 @theme inline {
