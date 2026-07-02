@@ -39,14 +39,14 @@ export default function DiagnosticsPage() {
   }, []);
 
   return (
-    <main className="min-h-screen bg-[var(--app-bg)] px-5 py-12 text-[var(--text)]">
+    <main className="ocean-app-shell min-h-screen px-5 py-12 text-[var(--text)]">
       <section className="mx-auto max-w-3xl">
         <p className="text-sm uppercase tracking-[0.24em] text-cyan-500">Development only</p>
         <h1 className="mt-2 text-4xl font-bold">BLUE Supabase Diagnostics</h1>
         <p className="mt-3 text-[var(--muted-text)]">Checks configuration without exposing secret keys.</p>
         <div className="mt-8 grid gap-3">
-          {loading ? <div className="rounded-2xl border border-[var(--line)] bg-[var(--panel)] p-5">Running checks...</div> : checks.map((check) => (
-            <div key={check.label} className="rounded-2xl border border-[var(--line)] bg-[var(--panel)] p-5">
+          {loading ? <div className="ocean-panel rounded-2xl p-5">Running checks...</div> : checks.map((check) => (
+            <div key={check.label} className="ocean-panel rounded-2xl p-5">
               <div className="flex items-center justify-between gap-4">
                 <strong>{check.label}</strong>
                 <span className={check.status === "pass" ? "text-emerald-600" : check.status === "warn" ? "text-amber-600" : "text-rose-600"}>{check.status.toUpperCase()}</span>

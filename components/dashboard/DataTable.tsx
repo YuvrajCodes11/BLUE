@@ -15,7 +15,7 @@ function isStatus(value: unknown): value is RecordStatus {
 
 export function DataTable({ columns, rows }: DataTableProps) {
   return (
-    <div className="overflow-hidden rounded-2xl border border-[var(--line)] bg-[var(--panel)]">
+    <div className="ocean-panel overflow-hidden rounded-2xl">
       <table className="w-full min-w-[760px] border-collapse text-left text-sm">
         <thead className="bg-[var(--soft)] text-xs uppercase tracking-[0.2em] text-[var(--muted-text)]">
           <tr>{columns.map((column) => <th key={column.key} className="px-4 py-4 font-semibold">{column.label}</th>)}</tr>

@@ -27,11 +27,11 @@ export function DashboardLayout({ role, children }: { role: RoleSlug; children: 
   const activeRole = roleFromPath(pathname, role);
 
   return (
-    <div className="min-h-screen bg-[var(--app-bg)] text-[var(--text)]">
+    <div className="ocean-app-shell min-h-screen text-[var(--text)]">
       <Sidebar role={activeRole} />
       <div className="lg:pl-72">
         <Topbar />
-        <main className="px-4 py-5 lg:px-6">{children}</main>
+        <main className="relative px-4 py-5 lg:px-6">{children}</main>
       </div>
     </div>
   );

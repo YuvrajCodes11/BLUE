@@ -26,7 +26,7 @@ export function ThemeToggle() {
     <button
       type="button"
       onClick={toggle}
-      className="grid h-11 w-11 place-items-center rounded-xl border border-[var(--line)] bg-[var(--panel)] text-[var(--text)] shadow-sm transition hover:-translate-y-0.5"
+      className="ocean-panel grid h-11 w-11 place-items-center rounded-xl text-[var(--text)] transition hover:-translate-y-0.5"
       aria-label="Toggle theme"
       title="Toggle theme"
     >

@@ -47,7 +47,7 @@ export function VerifyMemberPage() {
 
   return (
     <section>
-      <div className="rounded-3xl border border-[var(--line)] bg-[var(--panel)] p-6 shadow-sm">
+      <div className="ocean-panel rounded-3xl p-6">
         <p className="text-sm font-black uppercase tracking-[0.24em] text-cyan-500">Member verification</p>
         <h1 className="mt-2 text-3xl font-black text-[var(--text)] md:text-5xl">Verify Member QR</h1>
         <p className="mt-3 max-w-3xl text-[var(--muted-text)]">Search a fisher QR code, name, or phone number. Results come from the live fishers table.</p>
@@ -61,7 +61,7 @@ export function VerifyMemberPage() {
         {loading ? <LoadingState /> : error ? <EmptyState title="Verification unavailable" body={error} /> : rows.length ? (
           <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
             {rows.map((row) => (
-              <article key={row.id} className="rounded-3xl border border-[var(--line)] bg-[var(--panel)] p-5 shadow-sm">
+              <article key={row.id} className="ocean-panel rounded-3xl p-5">
                 <div className="flex items-start justify-between gap-3">
                   <div>
                     <p className="text-xs font-black uppercase tracking-[0.22em] text-[var(--muted-text)]">Digital fisher card</p>

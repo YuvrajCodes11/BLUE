@@ -47,13 +47,13 @@ export function AdminManagementPanel() {
 
   return (
     <div className="mt-8 grid gap-6 xl:grid-cols-[1fr_0.45fr]">
-      <section className="rounded-2xl border border-[var(--line)] bg-[var(--panel)] p-5">
+      <section className="ocean-panel rounded-2xl p-5">
         <h2 className="text-xl font-bold text-[var(--text)]">User management</h2>
         <div className="mt-5 overflow-auto"><table className="w-full min-w-[760px] text-left text-sm"><thead className="text-xs uppercase tracking-[0.2em] text-[var(--muted-text)]"><tr><th className="p-3">Name</th><th className="p-3">Role</th><th className="p-3">County</th><th className="p-3">Status</th><th className="p-3">Actions</th></tr></thead><tbody>{profiles.map((profile)=><tr key={profile.id} className="border-t border-[var(--line)]"><td className="p-3 text-[var(--text)]">{profile.full_name}</td><td className="p-3"><select value={profile.role} onChange={(event)=>void updateProfile(profile.id,{ role: event.target.value as DbRole })} className="rounded-lg border border-[var(--line)] bg-[var(--input)] px-2 py-1 text-[var(--text)]">{roles.map((role)=><option key={role}>{role}</option>)}</select></td><td className="p-3 text-[var(--muted-text)]">{profile.county ?? "-"}</td><td className="p-3 text-[var(--muted-text)]">{profile.is_active === false ? "Inactive" : "Active"}</td><td className="p-3"><button onClick={()=>void updateProfile(profile.id,{ is_active: profile.is_active === false })} className="font-semibold text-cyan-600">{profile.is_active === false ? "Activate" : "Deactivate"}</button></td></tr>)}</tbody></table></div>
       </section>
-      <section className="rounded-2xl border border-[var(--line)] bg-[var(--panel)] p-5">
+      <section className="ocean-panel rounded-2xl p-5">
         <h2 className="text-xl font-bold text-[var(--text)]">Audit logs</h2>
-        <div className="mt-5 grid gap-3">{logs.length ? logs.map((log)=><div key={log.id} className="rounded-xl border border-[var(--line)] bg-[var(--soft)] p-3"><p className="text-sm text-[var(--text)]">{log.action}</p><p className="text-xs text-[var(--muted-text)]">{log.entity_type} · {log.entity_id ?? "-"}</p></div>) : <EmptyState title="No audit logs" body="Admin changes will be recorded here." />}</div>
+        <div className="mt-5 grid gap-3">{logs.length ? logs.map((log)=><div key={log.id} className="rounded-xl border border-[var(--line)] bg-[var(--soft)]/80 p-3"><p className="text-sm text-[var(--text)]">{log.action}</p><p className="text-xs text-[var(--muted-text)]">{log.entity_type} · {log.entity_id ?? "-"}</p></div>) : <EmptyState title="No audit logs" body="Admin changes will be recorded here." />}</div>
       </section>
     </div>
   );

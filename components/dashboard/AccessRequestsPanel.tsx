@@ -73,7 +73,7 @@ export function AccessRequestsPanel() {
   useEffect(() => { void load(); }, []);
 
   return (
-    <div className="mt-8 rounded-2xl border border-[var(--line)] bg-[var(--panel)] p-5">
+    <div className="ocean-panel mt-8 rounded-2xl p-5">
       <h2 className="text-xl font-bold text-[var(--text)]">Access requests</h2>
       <p className="mt-2 text-sm text-[var(--muted-text)]">Approve requests to create login access and email the user a password setup link.</p>
       {notice && <div className="mt-4 rounded-xl border border-emerald-300 bg-emerald-50 p-3 text-sm text-emerald-800">{notice}</div>}
@@ -81,7 +81,7 @@ export function AccessRequestsPanel() {
         {loading ? <LoadingState /> : error ? <EmptyState title="Cannot load access requests" body={error} /> : rows.length ? (
           <div className="grid gap-3">
             {rows.map((row) => (
-              <div key={row.id} className="rounded-2xl border border-[var(--line)] bg-[var(--soft)] p-4">
+              <div key={row.id} className="rounded-2xl border border-[var(--line)] bg-[var(--soft)]/80 p-4 shadow-sm">
                 <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
                   <div><strong className="text-[var(--text)]">{row.name}</strong><p className="text-sm text-[var(--muted-text)]">{row.organization} · {row.email}</p></div>
                   <StatusBadge status={row.status} />

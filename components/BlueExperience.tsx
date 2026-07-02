@@ -128,7 +128,12 @@ export default function BlueExperience() {
       </nav>
 
       <section id="hero" className="relative grid min-h-screen items-center px-5 pt-28 md:px-8">
+        <div className="absolute inset-0 opacity-28">
+          <img src="https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=2200&q=80" alt="Ocean coastline" className="h-full w-full object-cover" />
+        </div>
+        <div className="absolute inset-0 bg-gradient-to-b from-[#020712]/72 via-[#020712]/78 to-[#020712]" />
         <div className="absolute inset-0 ocean-grid opacity-70" />
+        <div className="wave-band" />
         <div className="mx-auto grid w-full max-w-7xl items-center gap-10 lg:grid-cols-[0.95fr_1.05fr]">
           <motion.div initial={{ opacity: 0, y: 24 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.9 }} className="relative z-10">
             <div className="mb-6 inline-flex rounded-full border border-cyan-200/20 bg-cyan-200/10 px-4 py-2 text-xs uppercase tracking-[0.26em] text-cyan-100/90">
@@ -164,6 +169,34 @@ export default function BlueExperience() {
             <p className="mt-4 text-sm leading-7 text-cyan-50/66">{item.body}</p>
           </div>
         ))}
+      </section>
+
+      <section className="reveal-section mx-auto max-w-7xl px-5 py-10 md:px-8">
+        <div className="grid gap-5 lg:grid-cols-[1.1fr_0.9fr]">
+          <div className="ocean-photo min-h-[420px] rounded-[2rem] border border-cyan-200/15 shadow-[0_35px_120px_rgba(0,0,0,.36)]">
+            <img src="https://images.unsplash.com/photo-1518837695005-2083093ee35b?auto=format&fit=crop&w=1600&q=80" alt="Underwater blue ocean" />
+            <div className="absolute bottom-0 left-0 z-10 p-7">
+              <p className="text-sm uppercase tracking-[0.32em] text-cyan-100/80">Ocean operating layer</p>
+              <h2 className="mt-3 max-w-2xl font-display text-4xl font-bold tracking-[-0.03em] text-white md:text-6xl">Records, patrols, revenue, and evidence shaped around real coastal work.</h2>
+            </div>
+          </div>
+          <div className="grid gap-5">
+            <div className="ocean-photo min-h-[200px] rounded-[2rem] border border-cyan-200/15">
+              <img src="https://images.unsplash.com/photo-1498622205843-3b0ac17f8ba3?auto=format&fit=crop&w=1200&q=80" alt="Sea surface" />
+              <div className="absolute bottom-0 z-10 p-5">
+                <h3 className="font-display text-2xl font-bold text-white">BMU-first workflows</h3>
+                <p className="mt-2 text-sm text-cyan-50/72">Built around member records, documents, payments, and compliance.</p>
+              </div>
+            </div>
+            <div className="ocean-photo min-h-[200px] rounded-[2rem] border border-cyan-200/15">
+              <img src="https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?auto=format&fit=crop&w=1200&q=80" alt="Coastal landscape" />
+              <div className="absolute bottom-0 z-10 p-5">
+                <h3 className="font-display text-2xl font-bold text-white">Clean governance view</h3>
+                <p className="mt-2 text-sm text-cyan-50/72">County, KFS, BMU, ranger, NGO, and donor access stays role-aware.</p>
+              </div>
+            </div>
+          </div>
+        </div>
       </section>
 
       <section id="platform" className="reveal-section mx-auto max-w-7xl px-5 py-24 md:px-8">

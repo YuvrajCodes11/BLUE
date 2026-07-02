@@ -2,7 +2,7 @@ export function LoadingState() {
   return (
     <div className="grid gap-3">
       {[0, 1, 2].map((item) => (
-        <div key={item} className="h-16 animate-pulse rounded-2xl bg-[var(--soft)]" />
+        <div key={item} className="ocean-panel h-16 animate-pulse rounded-2xl" />
       ))}
     </div>
   );

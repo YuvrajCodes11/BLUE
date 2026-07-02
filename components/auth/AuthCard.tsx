@@ -110,10 +110,10 @@ export function AuthCard({ mode }: { mode: "login" | "register" | "forgot" | "ac
   const title = mode === "login" ? "Login" : mode === "register" ? "Create account" : mode === "forgot" ? "Reset password" : "Request access";
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)} className="mx-auto w-full max-w-lg rounded-3xl border border-[var(--line)] bg-[var(--panel)] p-6 text-[var(--text)] shadow-2xl">
+    <form onSubmit={handleSubmit(onSubmit)} className="ocean-panel mx-auto w-full max-w-lg rounded-3xl p-6 text-[var(--text)] shadow-2xl">
       <div className="flex justify-end"><ThemeToggle /></div>
       <div className="text-center">
-        <span className="mx-auto grid h-14 w-14 place-items-center rounded-2xl bg-cyan-300 font-black text-slate-950">B</span>
+        <span className="mx-auto grid h-14 w-14 place-items-center rounded-2xl bg-cyan-300 font-black text-slate-950 shadow-[0_0_42px_rgba(65,243,255,.34)]">B</span>
         <h1 className="mt-4 text-3xl font-black">{title}</h1>
         <p className="mt-2 text-sm text-[var(--muted-text)]">Blue Economy Livelihoods Unified Ecosystem</p>
       </div>

@@ -64,6 +64,46 @@ function DataIslands() {
   );
 }
 
+function CurrentField() {
+  const group = useRef<Group>(null);
+  useFrame((state) => {
+    if (group.current) {
+      group.current.rotation.z = Math.sin(state.clock.elapsedTime * 0.18) * 0.08;
+      group.current.position.y = Math.sin(state.clock.elapsedTime * 0.35) * 0.08;
+    }
+  });
+
+  return (
+    <group ref={group}>
+      {[-2.8, -1.45, 0, 1.45, 2.8].map((y, index) => (
+        <mesh key={y} position={[0, y, -2.1]} rotation={[0, 0, index % 2 ? 0.08 : -0.08]}>
+          <torusGeometry args={[3.45 + index * 0.08, 0.004, 8, 220]} />
+          <meshBasicMaterial color={index % 2 ? "#41f3ff" : "#11d7b4"} transparent opacity={0.16} />
+        </mesh>
+      ))}
+    </group>
+  );
+}
+
+function ReefFloor() {
+  const reef = useRef<Group>(null);
+  useFrame((state) => {
+    if (reef.current) reef.current.rotation.y = Math.sin(state.clock.elapsedTime * 0.12) * 0.08;
+  });
+  return (
+    <group ref={reef} position={[0, -2.6, -1.1]}>
+      {[-3.2, -2.3, -1.2, 0.3, 1.6, 2.7].map((x, index) => (
+        <Float key={x} speed={0.8 + index * 0.05} rotationIntensity={0.12} floatIntensity={0.12}>
+          <mesh position={[x, Math.sin(index) * 0.12, index % 2 ? -0.25 : 0.1]} rotation={[0.2, index * 0.35, 0]}>
+            <coneGeometry args={[0.18 + (index % 3) * 0.07, 0.95 + (index % 2) * 0.35, 7]} />
+            <meshStandardMaterial color={index % 2 ? "#11d7b4" : "#0de7ff"} emissive="#042f3f" metalness={0.18} roughness={0.55} transparent opacity={0.72} />
+          </mesh>
+        </Float>
+      ))}
+    </group>
+  );
+}
+
 export default function OceanScene() {
   return (
     <Canvas camera={{ position: [0, 0, 7], fov: 44 }} dpr={[1, 1.6]}>
@@ -73,8 +113,10 @@ export default function OceanScene() {
       <pointLight position={[-4, -2, 3]} intensity={8} color="#8178ff" />
       <Stars radius={80} depth={35} count={900} factor={4} fade speed={0.4} />
       <Sparkles count={90} scale={7} size={2.4} speed={0.45} color="#7dfcff" />
+      <CurrentField />
       <IntelligenceCore />
       <DataIslands />
+      <ReefFloor />
       <OrbitControls enableZoom={false} enablePan={false} autoRotate autoRotateSpeed={0.22} />
     </Canvas>
   );

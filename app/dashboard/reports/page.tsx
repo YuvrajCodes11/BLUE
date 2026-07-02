@@ -9,7 +9,7 @@ export default function Page() {
         <ChartCard title="Catch trend report" />
         <ChartCard title="Species composition" />
       </div>
-      <div className="mt-6 rounded-2xl border border-[var(--line)] bg-[var(--panel)] p-5">
+      <div className="ocean-panel mt-6 rounded-2xl p-5">
         <h2 className="font-bold text-[var(--text)]">Exports</h2>
         <p className="mt-2 text-sm text-[var(--muted-text)]">Export buttons will activate when report queries return real records. No placeholder report files are generated.</p>
       </div>

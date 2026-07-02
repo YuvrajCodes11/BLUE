@@ -48,19 +48,19 @@ export function Sidebar({ role }: { role: RoleSlug }) {
   }, {});
 
   return (
-    <aside className="dashboard-sidebar fixed inset-y-0 left-0 z-30 hidden w-72 border-r border-[var(--sidebar-line)] text-[var(--sidebar-text)] shadow-2xl lg:flex lg:flex-col">
-      <div className="flex items-center gap-3 border-b border-[var(--sidebar-line)] p-5">
-        <span className="grid h-11 w-11 place-items-center rounded-2xl bg-cyan-300 font-black text-slate-950">B</span>
+    <aside className="dashboard-sidebar fixed inset-y-0 left-0 z-30 hidden w-72 overflow-hidden border-r border-[var(--sidebar-line)] text-[var(--sidebar-text)] shadow-2xl lg:flex lg:flex-col">
+      <div className="relative flex items-center gap-3 border-b border-[var(--sidebar-line)] p-5">
+        <span className="grid h-11 w-11 place-items-center rounded-2xl bg-cyan-300 font-black text-slate-950 shadow-[0_0_38px_rgba(65,243,255,.34)]">B</span>
         <div>
           <Link href="/dashboard" className="text-lg font-black">BLUE</Link>
           <p className="text-sm text-[var(--sidebar-muted)]">Livelihoods unified ecosystem</p>
         </div>
       </div>
-      <div className="m-4 rounded-2xl border border-[var(--sidebar-line)] bg-[var(--sidebar-hover)] p-4">
+      <div className="relative m-4 rounded-2xl border border-[var(--sidebar-line)] bg-[var(--sidebar-hover)] p-4 shadow-[inset_0_1px_0_rgba(255,255,255,.12)]">
         <p className="text-xs font-black uppercase tracking-[0.22em] text-[var(--sidebar-subtle)]">Active workspace</p>
         <p className="mt-2 font-bold text-[var(--sidebar-text)]">{roleLabels[role]}</p>
       </div>
-      <nav className="min-h-0 flex-1 overflow-y-auto px-4 pb-4">
+      <nav className="relative min-h-0 flex-1 overflow-y-auto px-4 pb-4">
         {Object.entries(groups).map(([group, items]) => (
           <div key={group} className="mb-6">
             <p className="mb-2 px-1 text-xs font-black uppercase tracking-[0.22em] text-[var(--sidebar-subtle)]">{group}</p>

@@ -58,8 +58,10 @@ export function SetPasswordCard() {
   }
 
   return (
-    <div className="min-h-screen bg-[var(--app-bg)] px-6 py-24 text-[var(--text)]">
-      <form onSubmit={submit} className="mx-auto max-w-md rounded-2xl border border-[var(--line)] bg-[var(--panel)] p-8 shadow-2xl shadow-cyan-950/20">
+    <div className="ocean-app-shell min-h-screen px-6 py-24 text-[var(--text)]">
+      <form onSubmit={submit} className="ocean-panel relative mx-auto max-w-md overflow-hidden rounded-2xl p-8">
+        <div className="wave-band opacity-30" />
+        <div className="relative">
         <div className="flex justify-end"><ThemeToggle /></div>
         <p className="text-xs font-semibold uppercase tracking-[0.35em] text-cyan-500">BLUE Access</p>
         <h1 className="mt-4 text-3xl font-bold">Set password</h1>
@@ -84,6 +86,7 @@ export function SetPasswordCard() {
           {loading ? "Saving..." : "Save password"}
         </button>
         {error && <div className="mt-4 rounded-xl border border-rose-300/30 bg-rose-300/10 p-3 text-sm text-rose-800">{error}</div>}
+        </div>
       </form>
     </div>
   );
