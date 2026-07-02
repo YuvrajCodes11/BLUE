@@ -15,14 +15,14 @@ function isStatus(value: unknown): value is RecordStatus {
 
 export function DataTable({ columns, rows }: DataTableProps) {
   return (
-    <div className="ocean-panel overflow-hidden rounded-2xl">
+    <div className="ocean-panel overflow-x-auto rounded-2xl">
       <table className="w-full min-w-[760px] border-collapse text-left text-sm">
-        <thead className="bg-[var(--soft)] text-xs uppercase tracking-[0.2em] text-[var(--muted-text)]">
+        <thead className="sticky top-0 bg-[var(--soft)] text-xs uppercase tracking-[0.2em] text-[var(--muted-text)]">
           <tr><th className="px-4 py-4 font-semibold">S/N</th>{columns.map((column) => <th key={column.key} className="px-4 py-4 font-semibold">{column.label}</th>)}</tr>
         </thead>
         <tbody>
           {rows.map((row, index) => (
-            <tr key={index} className="border-t border-[var(--line)] text-[var(--text)] hover:bg-[var(--soft)]">
+            <tr key={index} className="border-t border-[var(--line)] text-[var(--text)] transition hover:bg-[var(--soft)]">
               <td className="px-4 py-4 font-semibold text-[var(--muted-text)]">{String(index + 1).padStart(2, "0")}</td>
               {columns.map((column) => {
                 const value = row[column.key];

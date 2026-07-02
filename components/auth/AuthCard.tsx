@@ -123,27 +123,27 @@ export function AuthCard({ mode }: { mode: "login" | "register" | "forgot" | "ac
         <p className="mt-2 text-sm text-[var(--muted-text)]">Blue Economy Livelihoods Unified Ecosystem</p>
       </div>
       <div className="mt-6 grid gap-3">
-        {(mode === "register" || mode === "access") && <input {...register("name")} placeholder="Full name" className="rounded-xl border border-[var(--line)] bg-[var(--input)] px-4 py-3 text-[var(--text)] outline-none placeholder:text-[var(--muted-text)]" />}
-        {mode === "access" && <input {...register("organization")} placeholder="Organization / BMU / county" className="rounded-xl border border-[var(--line)] bg-[var(--input)] px-4 py-3 text-[var(--text)] outline-none placeholder:text-[var(--muted-text)]" />}
+        {(mode === "register" || mode === "access") && <label className="grid gap-1.5 text-xs font-bold uppercase tracking-[0.18em] text-[var(--muted-text)]">Full name<input {...register("name")} placeholder="Full name" className="rounded-xl border border-[var(--line)] bg-[var(--input)] px-4 py-3 text-sm normal-case tracking-normal text-[var(--text)] outline-none placeholder:text-[var(--muted-text)]" /></label>}
+        {mode === "access" && <label className="grid gap-1.5 text-xs font-bold uppercase tracking-[0.18em] text-[var(--muted-text)]">Organization<input {...register("organization")} placeholder="Organization / BMU / county" className="rounded-xl border border-[var(--line)] bg-[var(--input)] px-4 py-3 text-sm normal-case tracking-normal text-[var(--text)] outline-none placeholder:text-[var(--muted-text)]" /></label>}
         {mode === "access" && (
-          <select {...register("location")} className="rounded-xl border border-[var(--line)] bg-[var(--input)] px-4 py-3 text-[var(--text)] outline-none placeholder:text-[var(--muted-text)]">
-            {locations.map((location) => <option key={location} value={location}>{location}</option>)}
-          </select>
+          <label className="grid gap-1.5 text-xs font-bold uppercase tracking-[0.18em] text-[var(--muted-text)]">Location<select {...register("location")} className="rounded-xl border border-[var(--line)] bg-[var(--input)] px-4 py-3 text-sm normal-case tracking-normal text-[var(--text)] outline-none placeholder:text-[var(--muted-text)]">
+              {locations.map((location) => <option key={location} value={location}>{location}</option>)}
+            </select></label>
         )}
-        <input {...register("email")} placeholder="Email" className="rounded-xl border border-[var(--line)] bg-[var(--input)] px-4 py-3 text-[var(--text)] outline-none placeholder:text-[var(--muted-text)]" />
+        <label className="grid gap-1.5 text-xs font-bold uppercase tracking-[0.18em] text-[var(--muted-text)]">Email<input {...register("email")} placeholder="Email" className="rounded-xl border border-[var(--line)] bg-[var(--input)] px-4 py-3 text-sm normal-case tracking-normal text-[var(--text)] outline-none placeholder:text-[var(--muted-text)]" /></label>
         {mode === "access" && (
           <div className="grid gap-3 md:grid-cols-2">
-            <select {...register("requestedRole")} className="rounded-xl border border-[var(--line)] bg-[var(--input)] px-4 py-3 text-[var(--text)] outline-none placeholder:text-[var(--muted-text)]">
-              {requestRoles.map((role) => <option key={role} value={role}>{requestRoleLabel[role] ?? role}</option>)}
-            </select>
-            <select {...register("requestType")} className="rounded-xl border border-[var(--line)] bg-[var(--input)] px-4 py-3 text-[var(--text)] outline-none placeholder:text-[var(--muted-text)]">
-              {requestTypes.map((type) => <option key={type}>{type}</option>)}
-            </select>
+            <label className="grid gap-1.5 text-xs font-bold uppercase tracking-[0.18em] text-[var(--muted-text)]">Requested role<select {...register("requestedRole")} className="rounded-xl border border-[var(--line)] bg-[var(--input)] px-4 py-3 text-sm normal-case tracking-normal text-[var(--text)] outline-none placeholder:text-[var(--muted-text)]">
+                {requestRoles.map((role) => <option key={role} value={role}>{requestRoleLabel[role] ?? role}</option>)}
+              </select></label>
+            <label className="grid gap-1.5 text-xs font-bold uppercase tracking-[0.18em] text-[var(--muted-text)]">Access type<select {...register("requestType")} className="rounded-xl border border-[var(--line)] bg-[var(--input)] px-4 py-3 text-sm normal-case tracking-normal text-[var(--text)] outline-none placeholder:text-[var(--muted-text)]">
+                {requestTypes.map((type) => <option key={type}>{type}</option>)}
+              </select></label>
           </div>
         )}
-        {mode === "access" && <textarea {...register("message")} placeholder="Briefly describe what access is needed for" className="min-h-28 rounded-xl border border-[var(--line)] bg-[var(--input)] px-4 py-3 text-[var(--text)] outline-none placeholder:text-[var(--muted-text)]" />}
-        {mode !== "forgot" && mode !== "access" && <input {...register("password")} type="password" placeholder="Password" className="rounded-xl border border-[var(--line)] bg-[var(--input)] px-4 py-3 text-[var(--text)] outline-none placeholder:text-[var(--muted-text)]" />}
-        <button disabled={formState.isSubmitting} className="rounded-xl bg-cyan-300 px-4 py-3 font-black text-slate-950 disabled:opacity-60">{formState.isSubmitting ? "Working..." : "Continue"}</button>
+        {mode === "access" && <label className="grid gap-1.5 text-xs font-bold uppercase tracking-[0.18em] text-[var(--muted-text)]">Message<textarea {...register("message")} placeholder="Briefly describe what access is needed for" className="min-h-28 rounded-xl border border-[var(--line)] bg-[var(--input)] px-4 py-3 text-sm normal-case tracking-normal text-[var(--text)] outline-none placeholder:text-[var(--muted-text)]" /></label>}
+        {mode !== "forgot" && mode !== "access" && <label className="grid gap-1.5 text-xs font-bold uppercase tracking-[0.18em] text-[var(--muted-text)]">Password<input {...register("password")} type="password" placeholder="Password" className="rounded-xl border border-[var(--line)] bg-[var(--input)] px-4 py-3 text-sm normal-case tracking-normal text-[var(--text)] outline-none placeholder:text-[var(--muted-text)]" /></label>}
+        <button disabled={formState.isSubmitting} className="ocean-action rounded-xl px-4 py-3 font-black text-slate-950 disabled:opacity-60">{formState.isSubmitting ? "Working..." : "Continue"}</button>
         {mode === "login" && <p className="text-center text-sm text-[var(--muted-text)]">No approved account yet? <Link className="font-bold text-cyan-500" href="/request-access">Request access</Link></p>}
         {mode === "access" && <p className="text-center text-sm text-[var(--muted-text)]">Already approved? <Link className="font-bold text-cyan-500" href="/login">Login instead</Link></p>}
         {message && <p className="rounded-xl border border-cyan-300/20 bg-cyan-300/10 p-3 text-sm text-cyan-800">{message}</p>}
