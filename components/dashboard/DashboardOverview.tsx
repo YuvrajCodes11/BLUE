@@ -13,7 +13,6 @@ import type { RoleSlug, Stat } from "@/types/domain";
 const countTargets = [
   ["fishers", "Total fishers", "cyan"],
   ["vessels", "Total vessels", "emerald"],
-  ["gear_records", "Total gear", "violet"],
   ["catch_records", "Catch records", "amber"],
   ["landing_sites", "Landing sites", "cyan"],
   ["access_requests", "Pending requests", "amber"],

@@ -1,4 +1,4 @@
-import type { AccessRequest, BeneficiaryRecord, CatchRecord, ComplianceRecord, FisherRecord, GearRecord, LandingSiteRecord, ProjectRecord, RoleSlug, SpeciesRecord, Stat, VesselRecord } from "@/types/domain";
+import type { AccessRequest, BeneficiaryRecord, CatchRecord, ComplianceRecord, FisherRecord, LandingSiteRecord, ProjectRecord, RoleSlug, SpeciesRecord, Stat, VesselRecord } from "@/types/domain";
 
 export const dashboardStats: Record<RoleSlug, Stat[]> = {
   admin: [
@@ -60,10 +60,6 @@ export const vessels: VesselRecord[] = [
   { id: "VES-001", vessel: "Kilifi Star 07", owner: "Amina Mwakio", registration: "KE-VES-8821", status: "Active" },
   { id: "VES-002", vessel: "Blue Reef", owner: "Joseph Otieno", registration: "KE-VES-1174", status: "Pending" },
 ];
-export const gear: GearRecord[] = [
-  { id: "GER-001", gear: "Gill net", owner: "Amina Mwakio", quantity: 4, status: "Active" },
-  { id: "GER-002", gear: "Handline", owner: "Mary Wanjiku", quantity: 12, status: "Validated" },
-];
 export const catches: CatchRecord[] = [
   { id: "CAT-001", species: "Tuna", landingSite: "Kilifi Landing", weightKg: 420, recorder: "BMU Clerk", status: "Validated" },
   { id: "CAT-002", species: "Rabbitfish", landingSite: "Diani Jetty", weightKg: 118, recorder: "Fisher", status: "Pending" },
@@ -78,7 +74,7 @@ export const landingSites: LandingSiteRecord[] = [
 ];
 export const compliance: ComplianceRecord[] = [
   { id: "CMP-001", type: "Landing site inspection", officer: "Ranger Otieno", finding: "Two vessels missing markings", status: "Pending" },
-  { id: "CMP-002", type: "Patrol report", officer: "KFS Officer Mwangi", finding: "Protected zone respected", status: "Closed" },
+  { id: "CMP-002", type: "Patrol report", officer: "KeFS Officer Mwangi", finding: "Protected zone respected", status: "Closed" },
 ];
 export const projects: ProjectRecord[] = [
   { id: "PRJ-001", project: "Reef Recovery Program", donor: "Ocean Futures Fund", progress: "74%", status: "Active" },

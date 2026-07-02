@@ -45,14 +45,6 @@ const configs: Record<string, CrudConfig> = {
     columns: [{ key: "vessel_name", label: "Vessel" }, { key: "registration_number", label: "Registration" }, { key: "ownership_type", label: "Ownership" }, { key: "created_at", label: "Created" }],
     fields: [{ name: "vessel_name", label: "Vessel name", required: true }, { name: "registration_number", label: "Registration number" }, { name: "ownership_type", label: "Ownership type" }, { name: "fisher_id", label: "Fisher UUID", required: true }],
   },
-  gear: {
-    title: "Fishing Gear",
-    description: "Fishing gear inventory connected to fisher records.",
-    table: "gear_records",
-    statusField: "status",
-    columns: [{ key: "gear_type", label: "Gear" }, { key: "quantity", label: "Quantity" }, { key: "status", label: "Status" }, { key: "created_at", label: "Created" }],
-    fields: [{ name: "gear_type", label: "Gear type", required: true }, { name: "quantity", label: "Quantity", type: "number", required: true }, { name: "fisher_id", label: "Fisher UUID", required: true }, { name: "status", label: "Status", required: true }],
-  },
   catches: {
     title: "Catch Records",
     description: "Catch assessment records for landing statistics and validation workflows.",
@@ -156,6 +148,7 @@ export function SupabaseCrudPage({ moduleKey }: { moduleKey: keyof typeof config
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [notice, setNotice] = useState("");
+  const [currentRole, setCurrentRole] = useState<string | null>(null);
   const form = useForm<Record<string, string | number>>();
   const validation = useMemo(() => schemaFor(config.fields), [config.fields]);
 
@@ -164,7 +157,14 @@ export function SupabaseCrudPage({ moduleKey }: { moduleKey: keyof typeof config
     if (!hasSupabaseConfig()) { setError("Supabase env variables are missing."); setLoading(false); return; }
     setLoading(true);
     const supabase = createClient();
-    const { data, error: loadError } = await supabase.from(config.table).select("*").order("created_at", { ascending: false });
+    const [{ data, error: loadError }, { data: userData }] = await Promise.all([
+      supabase.from(config.table).select("*").order("created_at", { ascending: false }),
+      supabase.auth.getUser(),
+    ]);
+    if (userData.user) {
+      const { data: profile } = await supabase.from("profiles").select("role").eq("id", userData.user.id).maybeSingle();
+      setCurrentRole(profile?.role ?? null);
+    }
     if (loadError) setError(loadError.message);
     setRows((data ?? []) as Row[]);
     setLoading(false);
@@ -200,17 +200,18 @@ export function SupabaseCrudPage({ moduleKey }: { moduleKey: keyof typeof config
   }
 
   const filtered = rows.filter((row) => JSON.stringify(row).toLowerCase().includes(query.toLowerCase()));
+  const canCreateRecords = currentRole === "County Officer";
 
   return (
     <section>
-      <div className="flex flex-col gap-4 md:flex-row md:items-end md:justify-between"><div><p className="text-sm uppercase tracking-[0.24em] text-cyan-500">Supabase module</p><h1 className="mt-2 text-3xl font-bold text-[var(--text)] md:text-5xl">{config.title}</h1><p className="mt-3 max-w-3xl text-[var(--muted-text)]">{config.description}</p></div><button onClick={() => { setEditing(null); form.reset(); }} className="rounded-xl bg-cyan-300 px-4 py-2 font-bold text-slate-950">New record</button></div>
+      <div className="flex flex-col gap-4 md:flex-row md:items-end md:justify-between"><div><p className="text-sm uppercase tracking-[0.24em] text-cyan-500">Supabase module</p><h1 className="mt-2 text-3xl font-bold text-[var(--text)] md:text-5xl">{config.title}</h1><p className="mt-3 max-w-3xl text-[var(--muted-text)]">{config.description}</p></div>{canCreateRecords && <button onClick={() => { setEditing(null); form.reset(); }} className="rounded-xl bg-cyan-300 px-4 py-2 font-bold text-slate-950">New record</button>}</div>
       <div className="mt-6 grid gap-4 xl:grid-cols-[0.68fr_0.32fr]">
         <div>
           <input value={query} onChange={(event)=>setQuery(event.target.value)} placeholder="Search/filter real Supabase records" className="mb-4 w-full rounded-2xl border border-[var(--line)] bg-[var(--input)] px-4 py-3 text-[var(--text)] outline-none placeholder:text-[var(--muted-text)]" />
-          {loading ? <LoadingState /> : error && !rows.length ? <EmptyState title="Cannot load records" body={error} /> : filtered.length ? <div className="ocean-panel overflow-hidden rounded-2xl"><table className="w-full min-w-[760px] text-left text-sm"><thead className="bg-[var(--soft)] text-xs uppercase tracking-[0.2em] text-[var(--muted-text)]"><tr>{config.columns.map((column)=><th key={column.key} className="px-4 py-4">{column.label}</th>)}<th className="px-4 py-4">Actions</th></tr></thead><tbody>{filtered.map((row)=><tr key={row.id} className="border-t border-[var(--line)] text-[var(--text)] transition hover:bg-[var(--soft)]"><>{config.columns.map((column)=>{ const value=row[column.key]; return <td key={column.key} className="px-4 py-4">{column.key === config.statusField && typeof value === "string" ? <StatusBadge status={value as RecordStatus} /> : String(value ?? "-")}</td>; })}</><td className="space-x-2 px-4 py-4"><button onClick={()=>setSelected(row)} className="font-semibold text-cyan-600">View</button><button onClick={()=>startEdit(row)} className="font-semibold text-emerald-600">Edit</button><button onClick={()=>void remove(row)} className="font-semibold text-rose-600">Delete</button></td></tr>)}</tbody></table></div> : <EmptyState title="No records" body="Create the first record or adjust filters." />}
+          {loading ? <LoadingState /> : error && !rows.length ? <EmptyState title="Cannot load records" body={error} /> : filtered.length ? <div className="ocean-panel overflow-hidden rounded-2xl"><table className="w-full min-w-[760px] text-left text-sm"><thead className="bg-[var(--soft)] text-xs uppercase tracking-[0.2em] text-[var(--muted-text)]"><tr><th className="px-4 py-4">S/N</th>{config.columns.map((column)=><th key={column.key} className="px-4 py-4">{column.label}</th>)}<th className="px-4 py-4">Actions</th></tr></thead><tbody>{filtered.map((row, index)=><tr key={row.id} className="border-t border-[var(--line)] text-[var(--text)] transition hover:bg-[var(--soft)]"><td className="px-4 py-4 font-semibold text-[var(--muted-text)]">{String(index + 1).padStart(2, "0")}</td><>{config.columns.map((column)=>{ const value=row[column.key]; return <td key={column.key} className="px-4 py-4">{column.key === config.statusField && typeof value === "string" ? <StatusBadge status={value as RecordStatus} /> : String(value ?? "-")}</td>; })}</><td className="space-x-2 px-4 py-4"><button onClick={()=>setSelected(row)} className="font-semibold text-cyan-600">View</button>{canCreateRecords && <button onClick={()=>startEdit(row)} className="font-semibold text-emerald-600">Edit</button>}{canCreateRecords && <button onClick={()=>void remove(row)} className="font-semibold text-rose-600">Delete</button>}</td></tr>)}</tbody></table></div> : <EmptyState title="No records" body="Create the first record or adjust filters." />}
         </div>
         <div className="grid gap-4">
-          <form onSubmit={form.handleSubmit((values)=>void submit(values))} className="ocean-panel rounded-2xl p-5"><h3 className="font-bold text-[var(--text)]">{editing ? "Edit record" : "Create record"}</h3><div className="mt-4 grid gap-3">{config.fields.map((field)=> field.type === "textarea" ? <textarea key={field.name} {...form.register(field.name)} placeholder={field.label} className="min-h-24 rounded-xl border border-[var(--line)] bg-[var(--input)] px-3 py-2 text-[var(--text)] outline-none placeholder:text-[var(--muted-text)]" /> : <input key={field.name} {...form.register(field.name)} type={field.type ?? "text"} placeholder={field.label} className="rounded-xl border border-[var(--line)] bg-[var(--input)] px-3 py-2 text-[var(--text)] outline-none placeholder:text-[var(--muted-text)]" />)}<button className="rounded-xl bg-cyan-300 px-3 py-2 font-bold text-slate-950">{editing ? "Update" : "Create"}</button>{notice && <p className="text-sm text-emerald-600">{notice}</p>}{error && <p className="text-sm text-rose-600">{error}</p>}</div></form>
+          {canCreateRecords && <form onSubmit={form.handleSubmit((values)=>void submit(values))} className="ocean-panel rounded-2xl p-5"><h3 className="font-bold text-[var(--text)]">{editing ? "Edit record" : "Create record"}</h3><div className="mt-4 grid gap-3">{config.fields.map((field)=> field.type === "textarea" ? <textarea key={field.name} {...form.register(field.name)} placeholder={field.label} className="min-h-24 rounded-xl border border-[var(--line)] bg-[var(--input)] px-3 py-2 text-[var(--text)] outline-none placeholder:text-[var(--muted-text)]" /> : <input key={field.name} {...form.register(field.name)} type={field.type ?? "text"} placeholder={field.label} className="rounded-xl border border-[var(--line)] bg-[var(--input)] px-3 py-2 text-[var(--text)] outline-none placeholder:text-[var(--muted-text)]" />)}<button className="rounded-xl bg-cyan-300 px-3 py-2 font-bold text-slate-950">{editing ? "Update" : "Create"}</button>{notice && <p className="text-sm text-emerald-600">{notice}</p>}{error && <p className="text-sm text-rose-600">{error}</p>}</div></form>}
           {selected && <div className="ocean-panel rounded-2xl p-5"><h3 className="font-bold text-[var(--text)]">Detail view</h3><pre className="mt-4 max-h-80 overflow-auto whitespace-pre-wrap rounded-xl bg-[var(--soft)] p-3 text-xs text-[var(--muted-text)]">{JSON.stringify(selected, null, 2)}</pre></div>}
         </div>
       </div>

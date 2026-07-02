@@ -30,20 +30,19 @@ const OceanScene = dynamic(() => import("@/components/OceanScene"), {
 
 const capabilities = [
   { title: "Fisher records", body: "Profiles, memberships, QR verification, documents, and BMU-managed registration workflows." },
-  { title: "Operational data", body: "Vessels, gear, catch records, species monitoring, landing sites, and compliance records." },
+  { title: "Operational data", body: "Vessels, catch records, species monitoring, landing sites, and compliance records." },
   { title: "Revenue workflows", body: "BMU fees, BLUE service fees, renewals, payment confirmation, and receipt records." },
   { title: "Governance reporting", body: "Role-scoped dashboards, reports, audit visibility, and donor-ready monitoring views." },
 ];
 
 const modules: PlatformModule[] = [
-  { title: "Fisheries Command", body: "BMU, vessel, gear, catch, landing site, compliance, and species records in one operating layer.", accent: "from-cyan-300 to-blue-500" },
+  { title: "Fisheries Command", body: "BMU, vessel, catch, landing site, compliance, and species records in one operating layer.", accent: "from-cyan-300 to-blue-500" },
   { title: "Marine Conservation", body: "Protected areas, patrol evidence, biodiversity observations, threat events, and response workflows.", accent: "from-emerald-300 to-cyan-500" },
   { title: "NGO & Donor OS", body: "Projects, beneficiaries, outputs, KPIs, field evidence, disbursement progress, and board-ready reporting.", accent: "from-violet-300 to-cyan-400" },
-  { title: "Governance Intelligence", body: "County, national, and KFS users see the right data through RLS-backed permissions and role analytics.", accent: "from-blue-300 to-indigo-500" },
+  { title: "Governance Intelligence", body: "County, national, and KeFS users see the right data through RLS-backed permissions and role analytics.", accent: "from-blue-300 to-indigo-500" },
 ];
 
 const roles: Role[] = [
-  "Government Admin",
   "KFS Officer",
   "County Officer",
   "BMU Manager",
@@ -59,6 +58,10 @@ const workflowSignals = [
   "Compliance follow-up",
   "Donor evidence",
 ];
+
+const publicRoleLabel: Partial<Record<Role, string>> = {
+  "KFS Officer": "KeFS Officer",
+};
 
 export default function BlueExperience() {
   const [activeRole, setActiveRole] = useState<Role>("BMU Manager");
@@ -93,7 +96,7 @@ export default function BlueExperience() {
       "Government Admin": "National policy, audit visibility, RLS governance, cross-county analytics, and executive reporting.",
       "KFS Officer": "Operational fisheries intelligence, inspections, landing sites, species trends, and compliance escalation.",
       "County Officer": "County-wide BMU performance, revenue, licensing support, activity oversight, and exportable reports.",
-      "BMU Manager": "Fisher profiles, vessels, gear, fees, receipts, meetings, minutes, compliance, and local operations.",
+      "BMU Manager": "Fisher profiles, vessels, fees, receipts, meetings, minutes, compliance, and local operations.",
       Ranger: "Patrol logs, incidents, evidence, compliance outcomes, and field activity records.",
       "NGO Program Manager": "Programs, beneficiaries, activities, budgets, outputs, and field evidence aligned to donor KPIs.",
       Donor: "Funding impact, milestone completion, beneficiary reach, evidence packs, and board-level dashboards.",
@@ -192,7 +195,7 @@ export default function BlueExperience() {
               <img src="https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?auto=format&fit=crop&w=1200&q=80" alt="Coastal landscape" />
               <div className="absolute bottom-0 z-10 p-5">
                 <h3 className="font-display text-2xl font-bold text-white">Clean governance view</h3>
-                <p className="mt-2 text-sm text-cyan-50/72">County, KFS, BMU, ranger, NGO, and donor access stays role-aware.</p>
+                <p className="mt-2 text-sm text-cyan-50/72">County, KeFS, BMU, ranger, NGO, and donor access stays role-aware.</p>
               </div>
             </div>
           </div>
@@ -281,13 +284,13 @@ export default function BlueExperience() {
           <div className="grid gap-8 lg:grid-cols-[0.9fr_1.1fr]">
             <div>
               <p className="text-sm uppercase tracking-[0.35em] text-cyan-200/70">Role ecosystem</p>
-              <h2 className="mt-4 font-display text-5xl font-bold tracking-[-0.04em]">Eight roles. One secure ocean brain.</h2>
+              <h2 className="mt-4 font-display text-5xl font-bold tracking-[-0.04em]">Seven operational roles. One secure ocean platform.</h2>
               <p className="mt-6 leading-8 text-cyan-50/64">Each role has a distinct dashboard, permission model, analytics layer, and data visibility boundary powered by Supabase Auth and RLS.</p>
             </div>
             <div className="grid gap-3 sm:grid-cols-2">
               {roles.map((role) => (
                 <button key={role} onClick={() => setActiveRole(role)} className={`rounded-2xl border p-4 text-left transition ${activeRole === role ? "border-cyan-200/70 bg-cyan-200/14 text-white" : "border-white/10 bg-white/[0.035] text-cyan-50/64 hover:border-cyan-200/35"}`}>
-                  {role}
+                  {publicRoleLabel[role] ?? role}
                 </button>
               ))}
             </div>
@@ -299,7 +302,7 @@ export default function BlueExperience() {
       <section className="reveal-section mx-auto max-w-7xl px-5 py-24 md:px-8">
         <div className="grid gap-6 lg:grid-cols-5">
           {[
-            [UsersRound, "Register", "Profiles, vessels, gear, memberships"],
+            [UsersRound, "Register", "Profiles, vessels, memberships"],
             [Anchor, "Land", "Catch, species, site activity"],
             [RadioTower, "Monitor", "Compliance, patrol, ranger evidence"],
             [BarChart3, "Analyze", "Dashboards, trends, heatmaps"],

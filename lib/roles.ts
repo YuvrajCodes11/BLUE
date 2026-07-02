@@ -1,8 +1,8 @@
-import type { NavItem, Permission, RoleSlug, UserRole } from "@/types/domain";
+import type { NavItem, Permission, RoleSlug } from "@/types/domain";
 
-export const roleLabels: Record<RoleSlug, UserRole> = {
+export const roleLabels: Record<RoleSlug, string> = {
   admin: "Government Admin",
-  kfs: "KFS Officer",
+  kfs: "KeFS Officer",
   county: "County Officer",
   bmu: "BMU Manager",
   ranger: "Ranger",
@@ -12,10 +12,10 @@ export const roleLabels: Record<RoleSlug, UserRole> = {
 };
 
 export const rolePermissions: Record<RoleSlug, Permission[]> = {
-  admin: ["users.manage", "requests.manage", "fishers.view", "fishers.manage", "vessels.manage", "gear.manage", "catches.create", "catches.validate", "species.view", "landing-sites.manage", "compliance.manage", "reports.export", "gis.view", "projects.manage", "beneficiaries.manage", "donor-impact.view", "settings.manage", "payments.manage", "renewals.manage", "documents.manage", "rangers.manage", "qr.verify"],
+  admin: ["users.manage", "requests.manage", "fishers.view", "fishers.manage", "vessels.manage", "catches.create", "catches.validate", "species.view", "landing-sites.manage", "compliance.manage", "reports.export", "gis.view", "projects.manage", "beneficiaries.manage", "donor-impact.view", "settings.manage", "payments.manage", "renewals.manage", "documents.manage", "rangers.manage", "qr.verify"],
   kfs: ["fishers.view", "catches.validate", "species.view", "landing-sites.manage", "compliance.manage", "reports.export", "gis.view", "documents.manage", "rangers.manage", "qr.verify"],
-  county: ["fishers.view", "vessels.manage", "gear.manage", "catches.validate", "landing-sites.manage", "compliance.manage", "reports.export", "gis.view", "payments.manage", "renewals.manage", "documents.manage", "rangers.manage", "qr.verify"],
-  bmu: ["fishers.manage", "fishers.view", "vessels.manage", "gear.manage", "catches.create", "landing-sites.manage", "compliance.manage", "reports.export", "payments.manage", "renewals.manage", "documents.manage", "rangers.manage", "qr.verify"],
+  county: ["fishers.view", "vessels.manage", "catches.validate", "landing-sites.manage", "compliance.manage", "reports.export", "gis.view", "payments.manage", "renewals.manage", "documents.manage", "rangers.manage", "qr.verify"],
+  bmu: ["fishers.manage", "fishers.view", "vessels.manage", "catches.create", "landing-sites.manage", "compliance.manage", "reports.export", "payments.manage", "renewals.manage", "documents.manage", "rangers.manage", "qr.verify"],
   ranger: ["fishers.view", "compliance.manage", "gis.view", "reports.export", "qr.verify"],
   ngo: ["projects.manage", "beneficiaries.manage", "donor-impact.view", "reports.export", "gis.view", "documents.manage"],
   donor: ["donor-impact.view", "reports.export", "gis.view"],
@@ -27,7 +27,6 @@ export const baseNav: NavItem[] = [
   { label: "Register Member", href: "/dashboard/register-member", permission: "fishers.manage" },
   { label: "Fishers", href: "/dashboard/fishers", permission: "fishers.view" },
   { label: "Vessels", href: "/dashboard/vessels", permission: "vessels.manage" },
-  { label: "Gear", href: "/dashboard/gear", permission: "gear.manage" },
   { label: "Catches", href: "/dashboard/catches", permission: "catches.create" },
   { label: "Species", href: "/dashboard/species", permission: "species.view" },
   { label: "Landing Sites", href: "/dashboard/landing-sites", permission: "landing-sites.manage" },

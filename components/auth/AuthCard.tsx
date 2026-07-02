@@ -10,7 +10,9 @@ import { createClient, hasSupabaseConfig } from "@/lib/supabase";
 import { redirectForRole, type DbRole } from "@/lib/role-redirect";
 
 const requestRoles: DbRole[] = ["BMU Manager", "County Officer", "KFS Officer", "Ranger", "NGO Program Manager", "Donor", "Fisher"];
+const requestRoleLabel: Partial<Record<DbRole, string>> = { "KFS Officer": "KeFS Officer" };
 const requestTypes = ["BMU operations", "County fisheries monitoring", "Patrol and compliance", "NGO or donor monitoring", "Fisher profile access", "Other"];
+const locations = ["Kilifi", "Kwale", "Mombasa", "Lamu", "Tana River", "Homa Bay", "Kisumu", "Migori", "Siaya", "Busia", "Other"];
 
 const schema = z.object({
   email: z.string().email("Enter a valid email."),
@@ -19,6 +21,7 @@ const schema = z.object({
   organization: z.string().optional(),
   requestedRole: z.string().optional(),
   requestType: z.string().optional(),
+  location: z.string().optional(),
   message: z.string().optional(),
 });
 type AuthValues = z.infer<typeof schema>;
@@ -33,6 +36,7 @@ export function AuthCard({ mode }: { mode: "login" | "register" | "forgot" | "ac
       email: search.get("email") ?? "",
       requestedRole: "BMU Manager",
       requestType: "BMU operations",
+      location: "Kilifi",
     },
   });
 
@@ -89,6 +93,7 @@ export function AuthCard({ mode }: { mode: "login" | "register" | "forgot" | "ac
     const details = [
       values.requestedRole ? `Requested role: ${values.requestedRole}` : null,
       values.requestType ? `Access type: ${values.requestType}` : null,
+      values.location ? `Location: ${values.location}` : null,
       values.message ? `Message: ${values.message}` : null,
     ].filter(Boolean).join("\n");
 
@@ -120,11 +125,16 @@ export function AuthCard({ mode }: { mode: "login" | "register" | "forgot" | "ac
       <div className="mt-6 grid gap-3">
         {(mode === "register" || mode === "access") && <input {...register("name")} placeholder="Full name" className="rounded-xl border border-[var(--line)] bg-[var(--input)] px-4 py-3 text-[var(--text)] outline-none placeholder:text-[var(--muted-text)]" />}
         {mode === "access" && <input {...register("organization")} placeholder="Organization / BMU / county" className="rounded-xl border border-[var(--line)] bg-[var(--input)] px-4 py-3 text-[var(--text)] outline-none placeholder:text-[var(--muted-text)]" />}
+        {mode === "access" && (
+          <select {...register("location")} className="rounded-xl border border-[var(--line)] bg-[var(--input)] px-4 py-3 text-[var(--text)] outline-none placeholder:text-[var(--muted-text)]">
+            {locations.map((location) => <option key={location} value={location}>{location}</option>)}
+          </select>
+        )}
         <input {...register("email")} placeholder="Email" className="rounded-xl border border-[var(--line)] bg-[var(--input)] px-4 py-3 text-[var(--text)] outline-none placeholder:text-[var(--muted-text)]" />
         {mode === "access" && (
           <div className="grid gap-3 md:grid-cols-2">
             <select {...register("requestedRole")} className="rounded-xl border border-[var(--line)] bg-[var(--input)] px-4 py-3 text-[var(--text)] outline-none placeholder:text-[var(--muted-text)]">
-              {requestRoles.map((role) => <option key={role}>{role}</option>)}
+              {requestRoles.map((role) => <option key={role} value={role}>{requestRoleLabel[role] ?? role}</option>)}
             </select>
             <select {...register("requestType")} className="rounded-xl border border-[var(--line)] bg-[var(--input)] px-4 py-3 text-[var(--text)] outline-none placeholder:text-[var(--muted-text)]">
               {requestTypes.map((type) => <option key={type}>{type}</option>)}

@@ -1,4 +1,4 @@
-import { beneficiaries, catches, compliance, fishers, gear, landingSites, projects, species, vessels } from "@/lib/mock-data";
+import { beneficiaries, catches, compliance, fishers, landingSites, projects, species, vessels } from "@/lib/mock-data";
 import type { SimpleColumn, TableRow } from "@/components/dashboard/DataTable";
 import type { ModuleKey } from "@/types/domain";
 
@@ -34,19 +34,6 @@ export const moduleConfigs = {
       { key: "vessel", label: "Vessel" },
       { key: "owner", label: "Owner" },
       { key: "registration", label: "Registration" },
-      { key: "status", label: "Status" },
-    ],
-  },
-  gear: {
-    title: "Fishing Gear",
-    description: "Maintain approved gear types, ownership, quantities, and compliance state.",
-    createLabel: "Add gear",
-    records: gear,
-    columns: [
-      { key: "id", label: "ID" },
-      { key: "gear", label: "Gear" },
-      { key: "owner", label: "Owner" },
-      { key: "quantity", label: "Quantity" },
       { key: "status", label: "Status" },
     ],
   },

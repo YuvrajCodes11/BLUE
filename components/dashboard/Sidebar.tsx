@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Anchor, BadgeCheck, BarChart3, Bell, FileText, Fish, FolderOpen, Gauge, Map, Settings, ShieldCheck, Ship, UserPlus, Users, Waves } from "lucide-react";
+import { BadgeCheck, BarChart3, Bell, FileText, Fish, FolderOpen, Gauge, Map, Settings, ShieldCheck, Ship, UserPlus, Users, Waves } from "lucide-react";
 import type { ComponentType } from "react";
 import { navForRole, roleLabels } from "@/lib/roles";
 import type { RoleSlug } from "@/types/domain";
@@ -12,7 +12,6 @@ const icons: Record<string, ComponentType<{ className?: string }>> = {
   "Register Member": UserPlus,
   Fishers: Users,
   Vessels: Ship,
-  Gear: Anchor,
   Catches: Fish,
   Species: Waves,
   "Landing Sites": Map,
@@ -33,7 +32,7 @@ const icons: Record<string, ComponentType<{ className?: string }>> = {
 
 function groupFor(label: string) {
   if (label === "Overview") return "Command";
-  if (["Register Member", "Fishers", "Vessels", "Gear", "Catches", "Species", "Landing Sites"].includes(label)) return "Fisheries Records";
+  if (["Register Member", "Fishers", "Vessels", "Catches", "Species", "Landing Sites"].includes(label)) return "Fisheries Records";
   if (["Compliance", "Payments", "Renewals", "Documents", "Rangers", "Reports", "Verify Member QR", "GIS", "Projects", "Beneficiaries", "Donor Impact"].includes(label)) return "Operations";
   return "Administration";
 }

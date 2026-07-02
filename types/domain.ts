@@ -16,7 +16,6 @@ export type Permission =
   | "fishers.manage"
   | "fishers.view"
   | "vessels.manage"
-  | "gear.manage"
   | "catches.create"
   | "catches.validate"
   | "species.view"
@@ -50,7 +49,6 @@ export type FisherRecord = {
 };
 
 export type VesselRecord = { id: string; vessel: string; owner: string; registration: string; status: RecordStatus };
-export type GearRecord = { id: string; gear: string; owner: string; quantity: number; status: RecordStatus };
 export type CatchRecord = { id: string; species: string; landingSite: string; weightKg: number; recorder: string; status: RecordStatus };
 export type SpeciesRecord = { id: string; species: string; category: string; observations: number; risk: RecordStatus };
 export type LandingSiteRecord = { id: string; site: string; county: string; activeFishers: number; status: RecordStatus };
@@ -62,7 +60,6 @@ export type AccessRequest = { id: string; name: string; email: string; organizat
 export type ModuleKey =
   | "fishers"
   | "vessels"
-  | "gear"
   | "catches"
   | "species"
   | "landing-sites"

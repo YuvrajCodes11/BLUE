@@ -1,104 +1,175 @@
 "use client";
 
-import { Float, MeshDistortMaterial, OrbitControls, Sparkles, Stars } from "@react-three/drei";
+import { Float, MeshDistortMaterial, OrbitControls, Sparkles } from "@react-three/drei";
 import { Canvas, useFrame } from "@react-three/fiber";
-import { easing } from "maath";
 import { useRef } from "react";
+import { DoubleSide } from "three";
 import type { Group, Mesh } from "three";
 
-function IntelligenceCore() {
-  const group = useRef<Group>(null);
-  const shell = useRef<Mesh>(null);
+function OceanSurface() {
+  const surface = useRef<Mesh>(null);
+  const glow = useRef<Mesh>(null);
 
-  useFrame((state, delta) => {
-    if (group.current) {
-      group.current.rotation.y += delta * 0.18;
-      group.current.rotation.x = Math.sin(state.clock.elapsedTime * 0.32) * 0.08;
+  useFrame((state) => {
+    const time = state.clock.elapsedTime;
+    if (surface.current) {
+      surface.current.position.y = Math.sin(time * 0.8) * 0.05;
+      surface.current.rotation.z = Math.sin(time * 0.32) * 0.015;
     }
-    if (shell.current) {
-      easing.damp3(shell.current.scale, [1.08 + Math.sin(state.clock.elapsedTime) * 0.04, 1.08, 1.08], 0.2, delta);
+    if (glow.current) {
+      glow.current.position.x = Math.sin(time * 0.28) * 0.28;
+      glow.current.position.z = Math.cos(time * 0.22) * 0.16;
     }
   });
 
   return (
-    <group ref={group}>
-      <mesh ref={shell}>
-        <sphereGeometry args={[1.45, 96, 96]} />
-        <MeshDistortMaterial color="#0de7ff" distort={0.28} speed={1.8} roughness={0.12} metalness={0.45} transparent opacity={0.72} />
+    <group position={[0, 0.2, 0]}>
+      <mesh ref={surface} rotation={[-Math.PI / 2.22, 0, 0]} position={[0, -0.25, 0]}>
+        <planeGeometry args={[8.5, 5.4, 160, 96]} />
+        <MeshDistortMaterial
+          color="#12d8e8"
+          distort={0.42}
+          speed={1.85}
+          roughness={0.18}
+          metalness={0.12}
+          transparent
+          opacity={0.62}
+          side={DoubleSide}
+        />
       </mesh>
-      <mesh rotation={[Math.PI / 2.35, 0, 0]}>
-        <torusGeometry args={[2.05, 0.01, 12, 180]} />
-        <meshBasicMaterial color="#7dfcff" transparent opacity={0.5} />
-      </mesh>
-      <mesh rotation={[Math.PI / 1.75, 0.6, 0.2]}>
-        <torusGeometry args={[2.55, 0.008, 12, 180]} />
-        <meshBasicMaterial color="#7c8cff" transparent opacity={0.42} />
-      </mesh>
-      <mesh rotation={[0.75, 0.2, 1.4]}>
-        <torusGeometry args={[3.05, 0.006, 12, 180]} />
-        <meshBasicMaterial color="#16f4bd" transparent opacity={0.34} />
+      <mesh ref={glow} rotation={[-Math.PI / 2.24, 0, 0]} position={[0, -0.18, 0.18]}>
+        <planeGeometry args={[7.6, 4.7, 80, 48]} />
+        <MeshDistortMaterial
+          color="#7dfff2"
+          distort={0.28}
+          speed={1.15}
+          roughness={0.1}
+          metalness={0}
+          transparent
+          opacity={0.16}
+          side={DoubleSide}
+        />
       </mesh>
     </group>
   );
 }
 
-function DataIslands() {
-  const islands = [
-    [-3.6, -0.7, -0.6],
-    [3.4, 0.85, -1.2],
-    [-2.1, 1.85, -1.8],
-    [2.0, -1.6, -0.8],
-  ] as const;
-
-  return (
-    <>
-      {islands.map((position, index) => (
-        <Float key={position.join(":")} speed={1.4 + index * 0.2} rotationIntensity={0.38} floatIntensity={0.7}>
-          <mesh position={position} rotation={[0.55, index * 0.6, 0.2]}>
-            <boxGeometry args={[0.95, 0.08, 0.58]} />
-            <meshStandardMaterial color={index % 2 === 0 ? "#41f3ff" : "#11d7b4"} emissive="#08384a" metalness={0.62} roughness={0.25} />
-          </mesh>
-        </Float>
-      ))}
-    </>
-  );
-}
-
-function CurrentField() {
+function SunShafts() {
   const group = useRef<Group>(null);
+
   useFrame((state) => {
     if (group.current) {
-      group.current.rotation.z = Math.sin(state.clock.elapsedTime * 0.18) * 0.08;
-      group.current.position.y = Math.sin(state.clock.elapsedTime * 0.35) * 0.08;
+      group.current.position.x = Math.sin(state.clock.elapsedTime * 0.24) * 0.25;
+      group.current.rotation.z = Math.sin(state.clock.elapsedTime * 0.18) * 0.035;
     }
   });
 
   return (
-    <group ref={group}>
-      {[-2.8, -1.45, 0, 1.45, 2.8].map((y, index) => (
-        <mesh key={y} position={[0, y, -2.1]} rotation={[0, 0, index % 2 ? 0.08 : -0.08]}>
-          <torusGeometry args={[3.45 + index * 0.08, 0.004, 8, 220]} />
-          <meshBasicMaterial color={index % 2 ? "#41f3ff" : "#11d7b4"} transparent opacity={0.16} />
+    <group ref={group} position={[0, 1.2, -1.4]}>
+      {[-2.7, -1.35, 0, 1.35, 2.7].map((x, index) => (
+        <mesh key={x} position={[x, 0, index * 0.12]} rotation={[0.18, 0, index % 2 ? -0.16 : 0.16]}>
+          <planeGeometry args={[0.48, 5.7]} />
+          <meshBasicMaterial color="#bafcff" transparent opacity={0.08} side={DoubleSide} />
         </mesh>
       ))}
     </group>
   );
 }
 
-function ReefFloor() {
+function ReefGarden() {
   const reef = useRef<Group>(null);
+
   useFrame((state) => {
-    if (reef.current) reef.current.rotation.y = Math.sin(state.clock.elapsedTime * 0.12) * 0.08;
+    if (reef.current) {
+      reef.current.rotation.y = Math.sin(state.clock.elapsedTime * 0.15) * 0.08;
+    }
   });
+
+  const coral = [
+    [-3.2, -2.05, -0.6, 0.55],
+    [-2.45, -2.15, -0.25, 0.75],
+    [-1.55, -2.1, -0.75, 0.62],
+    [-0.7, -2.2, -0.15, 0.9],
+    [0.35, -2.12, -0.65, 0.7],
+    [1.35, -2.18, -0.35, 0.86],
+    [2.25, -2.08, -0.8, 0.64],
+    [3.05, -2.18, -0.2, 0.78],
+  ] as const;
+
   return (
-    <group ref={reef} position={[0, -2.6, -1.1]}>
-      {[-3.2, -2.3, -1.2, 0.3, 1.6, 2.7].map((x, index) => (
-        <Float key={x} speed={0.8 + index * 0.05} rotationIntensity={0.12} floatIntensity={0.12}>
-          <mesh position={[x, Math.sin(index) * 0.12, index % 2 ? -0.25 : 0.1]} rotation={[0.2, index * 0.35, 0]}>
-            <coneGeometry args={[0.18 + (index % 3) * 0.07, 0.95 + (index % 2) * 0.35, 7]} />
-            <meshStandardMaterial color={index % 2 ? "#11d7b4" : "#0de7ff"} emissive="#042f3f" metalness={0.18} roughness={0.55} transparent opacity={0.72} />
+    <group ref={reef}>
+      <mesh position={[0, -2.55, -0.45]} rotation={[-Math.PI / 2, 0, 0]}>
+        <planeGeometry args={[9, 1.15, 40, 12]} />
+        <MeshDistortMaterial color="#06344a" distort={0.22} speed={0.8} roughness={0.68} transparent opacity={0.9} />
+      </mesh>
+      {coral.map(([x, y, z, h], index) => (
+        <Float key={`${x}:${z}`} speed={0.75 + index * 0.04} rotationIntensity={0.08} floatIntensity={0.08}>
+          <mesh position={[x, y + h / 2, z]} rotation={[0, index * 0.45, index % 2 ? 0.12 : -0.12]}>
+            <coneGeometry args={[0.12 + (index % 3) * 0.04, h, 6]} />
+            <meshStandardMaterial
+              color={index % 2 ? "#11d7b4" : "#2ee9ff"}
+              emissive={index % 2 ? "#064438" : "#043a52"}
+              roughness={0.5}
+              metalness={0.08}
+              transparent
+              opacity={0.88}
+            />
           </mesh>
         </Float>
+      ))}
+    </group>
+  );
+}
+
+function BubbleField() {
+  const group = useRef<Group>(null);
+
+  useFrame((state) => {
+    const time = state.clock.elapsedTime;
+    if (group.current) {
+      group.current.children.forEach((child, index) => {
+        child.position.y += 0.004 + (index % 4) * 0.0015;
+        child.position.x += Math.sin(time * 0.7 + index) * 0.0008;
+        if (child.position.y > 2.6) child.position.y = -2.2;
+      });
+    }
+  });
+
+  return (
+    <group ref={group}>
+      {Array.from({ length: 34 }).map((_, index) => {
+        const x = ((index * 1.37) % 7) - 3.5;
+        const y = ((index * 0.73) % 4.6) - 2.2;
+        const z = -1.1 + ((index * 0.41) % 1.8);
+        const size = 0.025 + (index % 4) * 0.012;
+        return (
+          <mesh key={index} position={[x, y, z]}>
+            <sphereGeometry args={[size, 12, 12]} />
+            <meshBasicMaterial color="#d8ffff" transparent opacity={0.36} />
+          </mesh>
+        );
+      })}
+    </group>
+  );
+}
+
+function CurrentLines() {
+  const group = useRef<Group>(null);
+
+  useFrame((state) => {
+    if (group.current) {
+      group.current.position.x = Math.sin(state.clock.elapsedTime * 0.3) * 0.18;
+      group.current.rotation.z = Math.sin(state.clock.elapsedTime * 0.22) * 0.025;
+    }
+  });
+
+  return (
+    <group ref={group} position={[0, -0.55, -0.95]}>
+      {[-1.55, -0.8, 0, 0.8, 1.55].map((y, index) => (
+        <mesh key={y} position={[0, y, 0]} rotation={[0, 0, index % 2 ? 0.035 : -0.035]}>
+          <planeGeometry args={[7.3 - index * 0.22, 0.012]} />
+          <meshBasicMaterial color={index % 2 ? "#7dfff2" : "#41f3ff"} transparent opacity={0.28} side={DoubleSide} />
+        </mesh>
       ))}
     </group>
   );
@@ -106,18 +177,20 @@ function ReefFloor() {
 
 export default function OceanScene() {
   return (
-    <Canvas camera={{ position: [0, 0, 7], fov: 44 }} dpr={[1, 1.6]}>
-      <color attach="background" args={["#020712"]} />
-      <ambientLight intensity={0.5} />
-      <pointLight position={[4, 3, 5]} intensity={18} color="#41f3ff" />
-      <pointLight position={[-4, -2, 3]} intensity={8} color="#8178ff" />
-      <Stars radius={80} depth={35} count={900} factor={4} fade speed={0.4} />
-      <Sparkles count={90} scale={7} size={2.4} speed={0.45} color="#7dfcff" />
-      <CurrentField />
-      <IntelligenceCore />
-      <DataIslands />
-      <ReefFloor />
-      <OrbitControls enableZoom={false} enablePan={false} autoRotate autoRotateSpeed={0.22} />
+    <Canvas camera={{ position: [0, 0.35, 6.2], fov: 45 }} dpr={[1, 1.6]}>
+      <color attach="background" args={["#031827"]} />
+      <fog attach="fog" args={["#031827", 5.4, 10]} />
+      <ambientLight intensity={0.8} />
+      <directionalLight position={[0, 5, 3]} intensity={2.8} color="#c7ffff" />
+      <pointLight position={[-3, 1.5, 2.8]} intensity={12} color="#41f3ff" />
+      <pointLight position={[3.5, -1.8, 2.5]} intensity={7} color="#11d7b4" />
+      <SunShafts />
+      <OceanSurface />
+      <CurrentLines />
+      <BubbleField />
+      <Sparkles count={70} scale={[7.5, 4.8, 2.6]} size={1.7} speed={0.24} color="#b9ffff" />
+      <ReefGarden />
+      <OrbitControls enableZoom={false} enablePan={false} autoRotate autoRotateSpeed={0.12} maxPolarAngle={Math.PI / 1.95} minPolarAngle={Math.PI / 2.5} />
     </Canvas>
   );
 }

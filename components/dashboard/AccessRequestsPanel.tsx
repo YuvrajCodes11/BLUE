@@ -11,6 +11,7 @@ import type { RecordStatus } from "@/types/domain";
 type AccessRow = { id: string; name: string; email: string; organization: string; message: string | null; status: RecordStatus; created_at: string };
 
 const roles: DbRole[] = ["BMU Manager", "County Officer", "KFS Officer", "Ranger", "NGO Program Manager", "Donor", "Fisher", "Government Admin"];
+const roleLabel: Partial<Record<DbRole, string>> = { "KFS Officer": "KeFS Officer" };
 
 export function AccessRequestsPanel() {
   const [rows, setRows] = useState<AccessRow[]>([]);
@@ -88,7 +89,7 @@ export function AccessRequestsPanel() {
                 </div>
                 {row.message && <p className="mt-3 text-sm text-[var(--text)]">{row.message}</p>}
                 <div className="mt-4 grid gap-3 md:grid-cols-2">
-                  <label className="text-xs font-semibold uppercase tracking-[0.2em] text-[var(--muted-text)]">Role<select value={roleById[row.id] ?? "BMU Manager"} onChange={(event)=>setRoleById((current)=>({...current,[row.id]: event.target.value as DbRole}))} className="mt-2 w-full rounded-lg border border-[var(--line)] bg-[var(--input)] px-3 py-2 text-sm text-[var(--text)]">{roles.map((role)=><option key={role}>{role}</option>)}</select></label>
+                  <label className="text-xs font-semibold uppercase tracking-[0.2em] text-[var(--muted-text)]">Role<select value={roleById[row.id] ?? "BMU Manager"} onChange={(event)=>setRoleById((current)=>({...current,[row.id]: event.target.value as DbRole}))} className="mt-2 w-full rounded-lg border border-[var(--line)] bg-[var(--input)] px-3 py-2 text-sm text-[var(--text)]">{roles.map((role)=><option key={role} value={role}>{roleLabel[role] ?? role}</option>)}</select></label>
                   <label className="text-xs font-semibold uppercase tracking-[0.2em] text-[var(--muted-text)]">County<input value={countyById[row.id] ?? "Kilifi"} onChange={(event)=>setCountyById((current)=>({...current,[row.id]: event.target.value}))} className="mt-2 w-full rounded-lg border border-[var(--line)] bg-[var(--input)] px-3 py-2 text-sm text-[var(--text)]" /></label>
                 </div>
                 <div className="mt-4 flex gap-2">
