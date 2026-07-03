@@ -1,45 +1,42 @@
 "use client";
 
-import dynamic from "next/dynamic";
-import { useEffect, useMemo, useState } from "react";
-import { Leva } from "leva";
-import { motion } from "framer-motion";
-import gsap from "gsap";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { useMemo, useState, type ReactNode } from "react";
 import {
-  Anchor,
-  BarChart3,
-  CircleDollarSign,
-  Fish,
-  Globe2,
+  ArrowRight,
+  Bell,
+  CheckCircle2,
+  Database,
+  FileText,
   Landmark,
-  Leaf,
   Lock,
   Map,
-  RadioTower,
+  Search,
+  Settings,
   ShieldCheck,
-  UsersRound,
-  Waves,
 } from "lucide-react";
 import type { PlatformModule, Role } from "@/types/blue";
 
-const OceanScene = dynamic(() => import("@/components/OceanScene"), {
-  ssr: false,
-  loading: () => <div className="h-full w-full animate-pulse rounded-[2rem] bg-cyan-300/10" />,
-});
-
-const capabilities = [
-  { title: "Fisher records", body: "Profiles, memberships, QR verification, documents, and BMU-managed registration workflows." },
-  { title: "Operational data", body: "Vessels, catch records, species monitoring, landing sites, and compliance records." },
-  { title: "Revenue workflows", body: "BMU fees, BLUE service fees, renewals, payment confirmation, and receipt records." },
-  { title: "Governance reporting", body: "Role-scoped dashboards, reports, audit visibility, and donor-ready monitoring views." },
-];
-
 const modules: PlatformModule[] = [
-  { title: "Fisheries Command", body: "BMU, vessel, catch, landing site, compliance, and species records in one operating layer.", accent: "from-cyan-300 to-blue-500" },
-  { title: "Marine Conservation", body: "Protected areas, patrol evidence, biodiversity observations, threat events, and response workflows.", accent: "from-emerald-300 to-cyan-500" },
-  { title: "NGO & Donor OS", body: "Projects, beneficiaries, outputs, KPIs, field evidence, disbursement progress, and board-ready reporting.", accent: "from-violet-300 to-cyan-400" },
-  { title: "Governance Intelligence", body: "County, national, and KeFS users see the right data through RLS-backed permissions and role analytics.", accent: "from-blue-300 to-indigo-500" },
+  {
+    title: "Registration",
+    body: "BMU managers create and maintain fisher, vessel, certificate, and membership records.",
+    accent: "from-cyan-400 to-blue-500",
+  },
+  {
+    title: "Compliance",
+    body: "Rangers and BMUs record patrols, inspections, compliance forms, evidence, and follow-up status.",
+    accent: "from-emerald-400 to-cyan-500",
+  },
+  {
+    title: "Revenue",
+    body: "Membership fees, vessel renewals, BLUE service fees, expenditure, receipts, and ledger views.",
+    accent: "from-amber-300 to-orange-500",
+  },
+  {
+    title: "Monitoring",
+    body: "County, KeFS, NGO, and donor users view role-filtered progress, outputs, KPIs, and reports.",
+    accent: "from-blue-500 to-indigo-500",
+  },
 ];
 
 const roles: Role[] = [
@@ -52,303 +49,413 @@ const roles: Role[] = [
   "Fisher",
 ];
 
-const workflowSignals = [
-  "Catch records",
-  "Species monitoring",
-  "Compliance follow-up",
-  "Donor evidence",
-];
-
 const publicRoleLabel: Partial<Record<Role, string>> = {
   "KFS Officer": "KeFS Officer",
 };
 
+const workflowSteps = [
+  ["Request access", "Users request access with role, organization, county, and location context."],
+  ["Admin approval", "The platform owner approves the request and assigns the correct role."],
+  ["Operational entry", "Authorized users create records through validated forms and scoped dashboards."],
+  ["Review and export", "Teams filter, review, export, and use records for decisions and reporting."],
+];
+
+function ProductPreview() {
+  const bars = [58, 72, 45, 82, 64, 76];
+
+  return (
+    <div className="rounded-[2rem] border border-slate-200 bg-white p-3 shadow-2xl shadow-slate-200/80">
+      <div className="overflow-hidden rounded-[1.5rem] border border-slate-200 bg-slate-50">
+        <div className="flex items-center justify-between border-b border-slate-200 bg-white px-4 py-3">
+          <div className="flex items-center gap-2">
+            <span className="h-3 w-3 rounded-full bg-cyan-400" />
+            <span className="h-3 w-3 rounded-full bg-blue-300" />
+            <span className="h-3 w-3 rounded-full bg-emerald-300" />
+          </div>
+          <div className="hidden items-center gap-2 rounded-full border border-slate-200 bg-slate-50 px-3 py-1.5 text-xs text-slate-500 sm:flex">
+            <Search className="h-3.5 w-3.5" />
+            Search records
+          </div>
+        </div>
+        <div className="grid min-h-[520px] lg:grid-cols-[220px_1fr]">
+          <aside className="hidden border-r border-slate-200 bg-[#073a5a] p-4 text-white lg:block">
+            <div className="flex items-center gap-3">
+              <span className="grid h-10 w-10 place-items-center rounded-xl bg-cyan-300 font-bold text-slate-950">B</span>
+              <div>
+                <div className="font-bold">BLUE</div>
+                <div className="text-xs text-cyan-100/70">BMU workspace</div>
+              </div>
+            </div>
+            <div className="mt-8 space-y-2 text-sm">
+              {["Dashboard", "Fishers", "Vessels", "Compliance", "Reports", "Settings"].map((item, index) => (
+                <div key={item} className={`rounded-xl px-3 py-2 ${index === 0 ? "bg-white text-slate-950" : "text-cyan-50/78"}`}>
+                  {item}
+                </div>
+              ))}
+            </div>
+          </aside>
+          <div className="p-5">
+            <div className="flex flex-wrap items-start justify-between gap-3">
+              <div>
+                <p className="text-xs font-bold uppercase tracking-[0.22em] text-cyan-700">Operational dashboard</p>
+                <h3 className="mt-2 text-2xl font-bold text-slate-950">Real records, clear decisions</h3>
+              </div>
+              <div className="flex items-center gap-2">
+                <button className="rounded-xl border border-slate-200 bg-white p-2 text-slate-600" aria-label="Notifications">
+                  <Bell className="h-4 w-4" />
+                </button>
+                <button className="rounded-xl border border-slate-200 bg-white p-2 text-slate-600" aria-label="Settings">
+                  <Settings className="h-4 w-4" />
+                </button>
+              </div>
+            </div>
+            <div className="mt-5 grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
+              {[
+                ["Fishers", "Live"],
+                ["Vessels", "Verified"],
+                ["Requests", "Pending"],
+                ["Reports", "Exports"],
+              ].map(([label, sub]) => (
+                <div key={label} className="rounded-2xl border border-slate-200 bg-white p-4">
+                  <div className="text-xs font-semibold uppercase tracking-[0.18em] text-slate-400">{sub}</div>
+                  <div className="mt-3 text-lg font-bold text-slate-950">{label}</div>
+                </div>
+              ))}
+            </div>
+            <div className="mt-5 grid gap-4 xl:grid-cols-[1fr_0.9fr]">
+              <div className="rounded-2xl border border-slate-200 bg-white p-4">
+                <div className="flex items-center justify-between">
+                  <div className="font-bold text-slate-950">Activity trend</div>
+                  <span className="rounded-full bg-cyan-50 px-3 py-1 text-xs font-semibold text-cyan-700">Live data</span>
+                </div>
+                <div className="mt-8 flex h-36 items-end gap-3">
+                  {bars.map((height, index) => (
+                    <div key={String(index)} className="flex flex-1 items-end rounded-t-xl bg-slate-100">
+                      <span className="w-full rounded-t-xl bg-gradient-to-t from-cyan-500 to-blue-400" style={{ height: `${height}%` }} />
+                    </div>
+                  ))}
+                </div>
+              </div>
+              <div className="rounded-2xl border border-slate-200 bg-white p-4">
+                <div className="font-bold text-slate-950">Review queue</div>
+                <div className="mt-4 space-y-3">
+                  {["Certificate verification", "Compliance form", "Meeting minutes"].map((item) => (
+                    <div key={item} className="flex items-center justify-between rounded-xl border border-slate-100 bg-slate-50 px-3 py-3">
+                      <span className="text-sm font-medium text-slate-700">{item}</span>
+                      <span className="rounded-full bg-amber-50 px-2.5 py-1 text-xs font-semibold text-amber-700">Review</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function InterfaceCard({
+  icon: Icon,
+  title,
+  children,
+}: {
+  icon: typeof Database;
+  title: string;
+  children: ReactNode;
+}) {
+  return (
+    <div className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm shadow-slate-200/60">
+      <div className="flex items-center gap-3">
+        <span className="grid h-11 w-11 place-items-center rounded-2xl bg-cyan-50 text-cyan-700">
+          <Icon className="h-5 w-5" />
+        </span>
+        <h3 className="text-xl font-bold text-slate-950">{title}</h3>
+      </div>
+      <div className="mt-5">{children}</div>
+    </div>
+  );
+}
+
 export default function BlueExperience() {
   const [activeRole, setActiveRole] = useState<Role>("BMU Manager");
-  const [pipelineStep, setPipelineStep] = useState(2);
-
-  useEffect(() => {
-    gsap.registerPlugin(ScrollTrigger);
-    const sections = gsap.utils.toArray<HTMLElement>(".reveal-section");
-    const animations = sections.map((section) =>
-      gsap.fromTo(
-        section,
-        { opacity: 0.45, y: 80, rotateX: 4 },
-        {
-          opacity: 1,
-          y: 0,
-          rotateX: 0,
-          ease: "power3.out",
-          scrollTrigger: {
-            trigger: section,
-            start: "top 78%",
-            end: "top 35%",
-            scrub: 0.8,
-          },
-        },
-      ),
-    );
-    return () => animations.forEach((animation) => animation.scrollTrigger?.kill());
-  }, []);
 
   const roleCopy = useMemo(() => {
     const map: Record<Role, string> = {
-      "Government Admin": "National policy, audit visibility, RLS governance, cross-county analytics, and executive reporting.",
-      "KFS Officer": "Operational fisheries intelligence, inspections, landing sites, species trends, and compliance escalation.",
-      "County Officer": "County-wide BMU performance, revenue, licensing support, activity oversight, and exportable reports.",
-      "BMU Manager": "Fisher profiles, vessels, fees, receipts, meetings, minutes, compliance, and local operations.",
-      Ranger: "Patrol logs, incidents, evidence, compliance outcomes, and field activity records.",
-      "NGO Program Manager": "Programs, beneficiaries, activities, budgets, outputs, and field evidence aligned to donor KPIs.",
-      Donor: "Funding impact, milestone completion, beneficiary reach, evidence packs, and board-level dashboards.",
-      Fisher: "Profile, vessel, membership, licence documents, QR status, receipts, and communication history.",
+      "Government Admin": "National audit visibility, user governance, cross-county oversight, platform settings, and executive reporting.",
+      "KFS Officer": "Fisheries oversight, inspection history, landing site data, species trends, and compliance escalation.",
+      "County Officer": "County-wide BMU performance, records review, operational monitoring, and exportable reports.",
+      "BMU Manager": "Fisher profiles, vessels, fees, receipts, meetings, minutes, documents, compliance, and local operations.",
+      Ranger: "Patrol logs, compliance checks, evidence uploads, field activity records, and incident follow-up.",
+      "NGO Program Manager": "Projects, beneficiaries, activities, budgets, outputs, and field evidence aligned to donor KPIs.",
+      Donor: "Read-only project performance, funding outcomes, beneficiary reach, evidence packs, and impact summaries.",
+      Fisher: "Profile, membership status, QR identity, documents, receipts, and community-related records.",
     };
     return map[activeRole];
   }, [activeRole]);
 
   return (
-    <main className="noise min-h-screen overflow-hidden bg-[#020712] text-white">
-      <Leva hidden />
-      <nav className="fixed inset-x-0 top-0 z-50 mx-auto flex max-w-7xl items-center justify-between px-5 py-5 text-sm text-cyan-50/85 backdrop-blur-xl md:px-8">
-        <a href="#hero" className="flex items-center gap-3 font-display text-lg font-bold tracking-tight text-white">
-          <span className="grid h-10 w-10 place-items-center rounded-xl bg-cyan-300 text-slate-950 shadow-[0_0_40px_rgba(65,243,255,.42)]">B</span>
-          BLUE
-        </a>
-        <div className="hidden items-center gap-7 md:flex">
-          {["Mission", "Platform", "GIS", "Roles", "Pricing"].map((item) => (
-            <a key={item} href={`#${item.toLowerCase()}`} className="font-semibold transition hover:text-cyan-200">
-              {item}
+    <main className="min-h-screen overflow-hidden bg-[#f6fbff] text-slate-950">
+      <div className="pointer-events-none fixed inset-0 -z-10 bg-[radial-gradient(circle_at_15%_0%,rgba(34,211,238,0.20),transparent_32rem),radial-gradient(circle_at_88%_8%,rgba(14,165,233,0.16),transparent_30rem),linear-gradient(180deg,#f8fdff_0%,#eef8fc_52%,#ffffff_100%)]" />
+
+      <nav className="sticky top-0 z-50 border-b border-slate-200/70 bg-white/86 backdrop-blur-xl">
+        <div className="mx-auto flex max-w-7xl items-center justify-between px-5 py-4 md:px-8">
+          <a href="#hero" className="flex items-center gap-3">
+            <span className="grid h-11 w-11 place-items-center rounded-2xl bg-cyan-300 font-display text-lg font-bold text-slate-950 shadow-lg shadow-cyan-200/60">B</span>
+            <div>
+              <div className="font-display text-lg font-bold tracking-tight text-slate-950">BLUE</div>
+              <div className="hidden text-xs font-medium text-slate-500 sm:block">Livelihoods unified ecosystem</div>
+            </div>
+          </a>
+          <div className="hidden items-center gap-7 text-sm font-semibold text-slate-600 lg:flex">
+            {["Platform", "Security", "Workflows", "Roles", "Pricing"].map((item) => (
+              <a key={item} href={`#${item.toLowerCase()}`} className="hover:text-slate-950">
+                {item}
+              </a>
+            ))}
+          </div>
+          <div className="flex items-center gap-2">
+            <a href="/login" className="rounded-full border border-slate-200 bg-white px-4 py-2 text-sm font-bold text-slate-700 shadow-sm hover:border-cyan-300 hover:text-slate-950">
+              Login
             </a>
-          ))}
-        </div>
-        <div className="flex items-center gap-3">
-          <a href="/login" className="rounded-full border border-white/20 px-4 py-2 font-semibold text-white transition hover:border-cyan-200/70 hover:bg-white/10">
-            Login
-          </a>
-          <a href="/request-access" className="rounded-full border border-cyan-200/30 bg-cyan-200/10 px-4 py-2 font-semibold text-cyan-50 transition hover:border-cyan-200/70 hover:bg-cyan-200/20">
-            Request access
-          </a>
+            <a href="/request-access" className="rounded-full bg-slate-950 px-4 py-2 text-sm font-bold text-white shadow-lg shadow-slate-300/60 hover:-translate-y-0.5 hover:bg-cyan-700">
+              Request access
+            </a>
+          </div>
         </div>
       </nav>
 
-      <section id="hero" className="relative grid min-h-screen items-center px-5 pt-28 md:px-8">
-        <div className="absolute inset-0 opacity-28">
-          <img src="https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=2200&q=80" alt="Ocean coastline" className="h-full w-full object-cover" />
-        </div>
-        <div className="absolute inset-0 bg-gradient-to-b from-[#020712]/72 via-[#020712]/78 to-[#020712]" />
-        <div className="absolute inset-0 ocean-grid opacity-70" />
-        <div className="wave-band" />
-        <div className="mx-auto grid w-full max-w-7xl items-center gap-10 lg:grid-cols-[0.95fr_1.05fr]">
-          <motion.div initial={{ opacity: 0, y: 24 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.9 }} className="relative z-10">
-            <div className="mb-6 inline-flex rounded-full border border-cyan-200/20 bg-cyan-200/10 px-4 py-2 text-xs uppercase tracking-[0.26em] text-cyan-100/90">
+      <section id="hero" className="relative px-5 py-20 md:px-8 md:py-28">
+        <div className="mx-auto grid max-w-7xl items-center gap-12 lg:grid-cols-[0.82fr_1.18fr]">
+          <div>
+            <div className="inline-flex rounded-full border border-cyan-200 bg-white px-4 py-2 text-xs font-bold uppercase tracking-[0.22em] text-cyan-700 shadow-sm">
               Blue Economy Livelihoods Unified Ecosystem
             </div>
-            <h1 className="font-display text-5xl font-bold leading-[0.92] tracking-[-0.03em] md:text-7xl xl:text-8xl">
-              Ocean <span className="liquid-text">intelligence</span> for living coastlines.
+            <h1 className="mt-7 max-w-4xl font-display text-5xl font-bold leading-[0.98] tracking-[-0.045em] text-slate-950 md:text-7xl">
+              Enterprise software for fisheries governance and BMU operations.
             </h1>
-            <p className="mt-7 max-w-2xl text-lg leading-8 text-cyan-50/78 md:text-xl">
-              BLUE unifies fisheries governance, BMU operations, conservation evidence, NGO programs, donor monitoring, GIS layers, and community records into one secure command ecosystem.
+            <p className="mt-6 max-w-2xl text-lg leading-8 text-slate-600 md:text-xl">
+              BLUE gives government teams, counties, BMUs, rangers, NGOs, donors, and communities one secure platform for records, compliance, payments, reporting, and decision-making.
             </p>
             <div className="mt-9 flex flex-wrap gap-3">
-              <a href="#platform" className="rounded-full bg-cyan-200 px-6 py-3 font-bold text-slate-950 shadow-[0_0_55px_rgba(65,243,255,.32)] transition hover:scale-[1.02]">
-                Explore platform
+              <a href="/request-access" className="inline-flex items-center gap-2 rounded-full bg-slate-950 px-6 py-3 font-bold text-white shadow-xl shadow-slate-300/70 hover:-translate-y-0.5 hover:bg-cyan-700">
+                Request access <ArrowRight className="h-4 w-4" />
               </a>
-              <a href="#dashboard" className="rounded-full border border-white/15 px-6 py-3 font-bold text-white transition hover:border-cyan-200/60 hover:bg-white/10">
-                View command preview
+              <a href="/login" className="rounded-full border border-slate-200 bg-white px-6 py-3 font-bold text-slate-800 shadow-sm hover:border-cyan-300">
+                Login
               </a>
             </div>
-          </motion.div>
-          <div className="h-[460px] rounded-[2rem] border border-cyan-200/15 bg-cyan-100/5 p-2 shadow-[0_30px_140px_rgba(0,0,0,.45)] lg:h-[600px]">
-            <div className="h-full overflow-hidden rounded-[1.65rem]">
-              <OceanScene />
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <section id="mission" className="reveal-section mx-auto grid max-w-7xl gap-6 px-5 py-24 md:grid-cols-4 md:px-8">
-        {capabilities.map((item) => (
-          <div key={item.title} className="glass holo-border rounded-3xl p-6">
-            <div className="text-2xl font-bold text-white">{item.title}</div>
-            <p className="mt-4 text-sm leading-7 text-cyan-50/66">{item.body}</p>
-          </div>
-        ))}
-      </section>
-
-      <section className="reveal-section mx-auto max-w-7xl px-5 py-10 md:px-8">
-        <div className="grid gap-5 lg:grid-cols-[1.1fr_0.9fr]">
-          <div className="ocean-photo min-h-[420px] rounded-[2rem] border border-cyan-200/15 shadow-[0_35px_120px_rgba(0,0,0,.36)]">
-            <img src="https://images.unsplash.com/photo-1518837695005-2083093ee35b?auto=format&fit=crop&w=1600&q=80" alt="Underwater blue ocean" />
-            <div className="absolute bottom-0 left-0 z-10 p-7">
-              <p className="text-sm uppercase tracking-[0.32em] text-cyan-100/80">Ocean operating layer</p>
-              <h2 className="mt-3 max-w-2xl font-display text-4xl font-bold tracking-[-0.03em] text-white md:text-6xl">Records, patrols, revenue, and evidence shaped around real coastal work.</h2>
-            </div>
-          </div>
-          <div className="grid gap-5">
-            <div className="ocean-photo min-h-[200px] rounded-[2rem] border border-cyan-200/15">
-              <img src="https://images.unsplash.com/photo-1498622205843-3b0ac17f8ba3?auto=format&fit=crop&w=1200&q=80" alt="Sea surface" />
-              <div className="absolute bottom-0 z-10 p-5">
-                <h3 className="font-display text-2xl font-bold text-white">BMU-first workflows</h3>
-                <p className="mt-2 text-sm text-cyan-50/72">Built around member records, documents, payments, and compliance.</p>
-              </div>
-            </div>
-            <div className="ocean-photo min-h-[200px] rounded-[2rem] border border-cyan-200/15">
-              <img src="https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?auto=format&fit=crop&w=1200&q=80" alt="Coastal landscape" />
-              <div className="absolute bottom-0 z-10 p-5">
-                <h3 className="font-display text-2xl font-bold text-white">Clean governance view</h3>
-                <p className="mt-2 text-sm text-cyan-50/72">County, KeFS, BMU, ranger, NGO, and donor access stays role-aware.</p>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <section id="platform" className="reveal-section mx-auto max-w-7xl px-5 py-24 md:px-8">
-        <div className="max-w-3xl">
-          <p className="text-sm uppercase tracking-[0.35em] text-cyan-200/70">What is BLUE</p>
-          <h2 className="mt-4 font-display text-5xl font-bold tracking-[-0.04em] md:text-7xl">A single nervous system for the blue economy.</h2>
-        </div>
-        <div className="mt-12 grid gap-5 md:grid-cols-2 xl:grid-cols-4">
-          {modules.map((module) => (
-            <article key={module.title} className="group glass rounded-[2rem] p-6 transition duration-500 hover:-translate-y-2">
-              <div className={`mb-10 h-1.5 w-24 rounded-full bg-gradient-to-r ${module.accent}`} />
-              <h3 className="font-display text-2xl font-bold">{module.title}</h3>
-              <p className="mt-4 leading-7 text-cyan-50/62">{module.body}</p>
-            </article>
-          ))}
-        </div>
-      </section>
-
-      <section className="reveal-section mx-auto max-w-7xl px-5 py-24 md:px-8" id="dashboard">
-        <div className="grid gap-6 lg:grid-cols-[0.8fr_1.2fr]">
-          <div className="glass rounded-[2rem] p-7">
-            <p className="text-sm uppercase tracking-[0.35em] text-cyan-200/70">Operational dashboards</p>
-            <h2 className="mt-4 font-display text-5xl font-bold tracking-[-0.04em]">Connected coastal command.</h2>
-            <p className="mt-5 leading-8 text-cyan-50/64">KPI cards, report areas, catch trends, compliance work queues, funding impact views, NGO activities, and marine intelligence surfaces connect to real Supabase records.</p>
-            <div className="mt-8 grid gap-3">
-              {[Fish, ShieldCheck, CircleDollarSign, Leaf].map((Icon, index) => (
-                <div key={String(index)} className="flex items-center gap-3 rounded-2xl border border-white/10 bg-white/[0.04] p-4">
-                  <Icon className="h-5 w-5 text-cyan-200" />
-                  <span className="text-sm text-cyan-50/72">{["Species analytics", "Compliance follow-up", "Donor milestones", "Conservation activity"][index]}</span>
+            <div className="mt-9 grid max-w-2xl gap-3 sm:grid-cols-3">
+              {["Supabase Auth + RLS", "Role dashboards", "Export-ready reports"].map((item) => (
+                <div key={item} className="flex items-center gap-2 text-sm font-semibold text-slate-600">
+                  <CheckCircle2 className="h-4 w-4 text-cyan-600" />
+                  {item}
                 </div>
               ))}
             </div>
           </div>
-          <div className="glass rounded-[2rem] p-5">
-            <div className="grid gap-4 md:grid-cols-2">
-              {workflowSignals.map((signal, index) => (
-                <div key={signal} className="rounded-3xl border border-white/10 bg-slate-950/40 p-5">
-                  <div className="flex items-center justify-between text-sm text-cyan-50/64">
-                    <span>{signal}</span>
-                    <span>Supabase</span>
-                  </div>
-                  <div className="mt-5 h-2 overflow-hidden rounded-full bg-white/10">
-                    <motion.div initial={{ x: "-100%" }} whileInView={{ x: "100%" }} viewport={{ once: true }} transition={{ duration: 1.2, delay: index * 0.08 }} className="h-full w-1/2 rounded-full bg-gradient-to-r from-cyan-300 to-teal-300" />
-                  </div>
-                  <div className="mt-5 grid h-36 place-items-center rounded-2xl border border-dashed border-white/10 bg-white/[0.035] text-center text-xs uppercase tracking-[0.2em] text-cyan-50/42">
-                    No fake values
-                  </div>
-                </div>
-              ))}
-            </div>
+          <ProductPreview />
+        </div>
+      </section>
+
+      <section id="platform" className="px-5 py-16 md:px-8">
+        <div className="mx-auto max-w-7xl">
+          <div className="max-w-3xl">
+            <p className="text-sm font-bold uppercase tracking-[0.26em] text-cyan-700">Platform modules</p>
+            <h2 className="mt-4 font-display text-4xl font-bold tracking-[-0.035em] text-slate-950 md:text-6xl">
+              Built around the work teams actually do.
+            </h2>
+            <p className="mt-5 text-lg leading-8 text-slate-600">
+              The interface is practical, permission-aware, and connected to real operational data instead of static dashboard decoration.
+            </p>
+          </div>
+          <div className="mt-10 grid gap-5 md:grid-cols-2 xl:grid-cols-4">
+            {modules.map((module) => (
+              <article key={module.title} className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm shadow-slate-200/70 hover:-translate-y-1 hover:shadow-xl hover:shadow-slate-200/80">
+                <div className={`mb-8 h-1.5 w-20 rounded-full bg-gradient-to-r ${module.accent}`} />
+                <h3 className="text-xl font-bold text-slate-950">{module.title}</h3>
+                <p className="mt-4 leading-7 text-slate-600">{module.body}</p>
+              </article>
+            ))}
           </div>
         </div>
       </section>
 
-      <section id="gis" className="reveal-section mx-auto max-w-7xl px-5 py-24 md:px-8">
-        <div className="grid gap-8 lg:grid-cols-[0.9fr_1.1fr]">
+      <section id="security" className="px-5 py-16 md:px-8">
+        <div className="mx-auto grid max-w-7xl gap-5 lg:grid-cols-3">
+          <InterfaceCard icon={Lock} title="Access control">
+            <p className="leading-7 text-slate-600">Users enter through request access, admin approval, Supabase Auth, and role-based routing.</p>
+            <div className="mt-5 space-y-2">
+              {["Approved users only", "Role dashboard redirects", "Protected routes"].map((item) => (
+                <div key={item} className="flex items-center gap-2 text-sm font-semibold text-slate-700">
+                  <CheckCircle2 className="h-4 w-4 text-emerald-500" />
+                  {item}
+                </div>
+              ))}
+            </div>
+          </InterfaceCard>
+          <InterfaceCard icon={Database} title="Real database layer">
+            <p className="leading-7 text-slate-600">Supabase PostgreSQL stores operational records, requests, BMUs, landing sites, reports, and audit data.</p>
+            <div className="mt-5 rounded-2xl border border-slate-200 bg-slate-50 p-4 font-mono text-xs text-slate-500">
+              profiles / access_requests / bmus / fishers / vessels / catch_records
+            </div>
+          </InterfaceCard>
+          <InterfaceCard icon={ShieldCheck} title="Data boundaries">
+            <p className="leading-7 text-slate-600">RLS policies and scoped UI prevent users from seeing operational data outside their role and assigned workspace.</p>
+            <div className="mt-5 rounded-2xl bg-cyan-50 p-4 text-sm font-semibold text-cyan-800">Designed for government, NGO, donor, and BMU trust.</div>
+          </InterfaceCard>
+        </div>
+      </section>
+
+      <section id="workflows" className="px-5 py-16 md:px-8">
+        <div className="mx-auto grid max-w-7xl gap-8 rounded-[2rem] border border-slate-200 bg-white p-6 shadow-sm shadow-slate-200/70 md:p-8 lg:grid-cols-[0.82fr_1.18fr]">
           <div>
-            <p className="text-sm uppercase tracking-[0.35em] text-cyan-200/70">GIS intelligence</p>
-            <h2 className="mt-4 font-display text-5xl font-bold tracking-[-0.04em] md:text-7xl">A holographic view of marine reality.</h2>
-            <p className="mt-6 leading-8 text-cyan-50/64">Landing sites, protected areas, patrol routes, fishing zones, conservation overlays, and animated markers become operational intelligence.</p>
+            <p className="text-sm font-bold uppercase tracking-[0.26em] text-cyan-700">Workflow design</p>
+            <h2 className="mt-4 font-display text-4xl font-bold tracking-[-0.035em] text-slate-950 md:text-5xl">
+              From request to report without paper-heavy handoffs.
+            </h2>
+            <p className="mt-5 leading-8 text-slate-600">
+              BLUE is structured to reduce repeated entry, centralize documents, and make records searchable for future decisions.
+            </p>
           </div>
-          <div className="glass relative min-h-[520px] overflow-hidden rounded-[2rem] p-6">
-            <div className="absolute inset-0 ocean-grid opacity-70" />
-            <svg viewBox="0 0 100 100" className="relative h-full min-h-[470px] w-full">
-              <path d="M12 70 C30 40, 52 48, 70 22 S90 30, 86 66" fill="none" stroke="rgba(65,243,255,.42)" strokeWidth="0.6" strokeDasharray="2 2" />
-              <path d="M22 28 C38 15, 55 25, 69 18" fill="none" stroke="rgba(17,215,180,.35)" strokeWidth="7" strokeLinecap="round" />
-              {[22, 42, 62, 78].map((x, index) => (
-                <g key={x}>
-                  <circle cx={x} cy={index % 2 ? 34 : 64} r="4.5" fill="rgba(65,243,255,.16)">
-                    <animate attributeName="r" values="3;7;3" dur="2.4s" repeatCount="indefinite" />
-                  </circle>
-                  <circle cx={x} cy={index % 2 ? 34 : 64} r="1.6" fill={index % 2 ? "#11d7b4" : "#41f3ff"} />
-                </g>
-              ))}
-            </svg>
+          <div className="grid gap-4 sm:grid-cols-2">
+            {workflowSteps.map(([title, body], index) => (
+              <div key={title} className="rounded-3xl border border-slate-200 bg-slate-50 p-5">
+                <div className="grid h-10 w-10 place-items-center rounded-2xl bg-white text-sm font-bold text-cyan-700 shadow-sm">{index + 1}</div>
+                <h3 className="mt-5 text-lg font-bold text-slate-950">{title}</h3>
+                <p className="mt-3 text-sm leading-6 text-slate-600">{body}</p>
+              </div>
+            ))}
           </div>
         </div>
       </section>
 
-      <section id="roles" className="reveal-section mx-auto max-w-7xl px-5 py-24 md:px-8">
-        <div className="glass rounded-[2rem] p-6 md:p-8">
-          <div className="grid gap-8 lg:grid-cols-[0.9fr_1.1fr]">
+      <section className="px-5 py-16 md:px-8">
+        <div className="mx-auto grid max-w-7xl gap-5 lg:grid-cols-[1.05fr_0.95fr]">
+          <div className="rounded-[2rem] border border-slate-200 bg-white p-6 shadow-sm shadow-slate-200/70">
+            <div className="flex items-center gap-3">
+              <span className="grid h-11 w-11 place-items-center rounded-2xl bg-blue-50 text-blue-700">
+                <Map className="h-5 w-5" />
+              </span>
+              <div>
+                <p className="text-sm font-bold uppercase tracking-[0.22em] text-cyan-700">GIS preview</p>
+                <h3 className="text-xl font-bold text-slate-950">Landing sites and zones</h3>
+              </div>
+            </div>
+            <div className="mt-6 rounded-3xl border border-slate-200 bg-[linear-gradient(90deg,rgba(14,165,233,0.10)_1px,transparent_1px),linear-gradient(rgba(14,165,233,0.10)_1px,transparent_1px)] bg-[length:44px_44px] p-6">
+              <div className="relative min-h-[310px] rounded-2xl bg-white/80 p-5">
+                {[
+                  ["BMU", "left-[18%] top-[58%]"],
+                  ["Landing", "left-[42%] top-[34%]"],
+                  ["Patrol", "left-[64%] top-[48%]"],
+                  ["Zone", "left-[76%] top-[22%]"],
+                ].map(([label, position]) => (
+                  <div key={label} className={`absolute ${position}`}>
+                    <span className="block h-3 w-3 rounded-full bg-cyan-500 ring-4 ring-cyan-100" />
+                    <span className="mt-2 block text-xs font-bold text-slate-600">{label}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+          <div className="rounded-[2rem] border border-slate-200 bg-slate-950 p-6 text-white shadow-sm shadow-slate-200/70">
+            <div className="flex items-center gap-3">
+              <span className="grid h-11 w-11 place-items-center rounded-2xl bg-cyan-300 text-slate-950">
+                <FileText className="h-5 w-5" />
+              </span>
+              <div>
+                <p className="text-sm font-bold uppercase tracking-[0.22em] text-cyan-200">Records and reports</p>
+                <h3 className="text-xl font-bold">Every record has a purpose</h3>
+              </div>
+            </div>
+            <div className="mt-6 space-y-3">
+              {["Auto serial numbers", "Certificate upload", "Revenue and expenditure", "PDF and CSV export"].map((item) => (
+                <div key={item} className="flex items-center justify-between rounded-2xl border border-white/10 bg-white/[0.06] px-4 py-3">
+                  <span className="font-semibold text-cyan-50">{item}</span>
+                  <CheckCircle2 className="h-4 w-4 text-cyan-300" />
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="roles" className="px-5 py-16 md:px-8">
+        <div className="mx-auto max-w-7xl rounded-[2rem] border border-slate-200 bg-white p-6 shadow-sm shadow-slate-200/70 md:p-8">
+          <div className="grid gap-8 lg:grid-cols-[0.85fr_1.15fr]">
             <div>
-              <p className="text-sm uppercase tracking-[0.35em] text-cyan-200/70">Role ecosystem</p>
-              <h2 className="mt-4 font-display text-5xl font-bold tracking-[-0.04em]">Seven operational roles. One secure ocean platform.</h2>
-              <p className="mt-6 leading-8 text-cyan-50/64">Each role has a distinct dashboard, permission model, analytics layer, and data visibility boundary powered by Supabase Auth and RLS.</p>
+              <p className="text-sm font-bold uppercase tracking-[0.26em] text-cyan-700">Role ecosystem</p>
+              <h2 className="mt-4 font-display text-4xl font-bold tracking-[-0.035em] text-slate-950 md:text-5xl">
+                Distinct dashboards. One shared source of truth.
+              </h2>
+              <p className="mt-5 leading-8 text-slate-600">{roleCopy}</p>
             </div>
             <div className="grid gap-3 sm:grid-cols-2">
               {roles.map((role) => (
-                <button key={role} onClick={() => setActiveRole(role)} className={`rounded-2xl border p-4 text-left transition ${activeRole === role ? "border-cyan-200/70 bg-cyan-200/14 text-white" : "border-white/10 bg-white/[0.035] text-cyan-50/64 hover:border-cyan-200/35"}`}>
+                <button
+                  key={role}
+                  onClick={() => setActiveRole(role)}
+                  className={`rounded-2xl border p-4 text-left font-bold ${
+                    activeRole === role
+                      ? "border-cyan-300 bg-cyan-50 text-cyan-800 shadow-sm"
+                      : "border-slate-200 bg-slate-50 text-slate-600 hover:border-cyan-200 hover:bg-white"
+                  }`}
+                >
                   {publicRoleLabel[role] ?? role}
                 </button>
               ))}
             </div>
           </div>
-          <div className="mt-7 rounded-3xl border border-cyan-200/15 bg-slate-950/45 p-6 text-lg leading-8 text-cyan-50/76">{roleCopy}</div>
         </div>
       </section>
 
-      <section className="reveal-section mx-auto max-w-7xl px-5 py-24 md:px-8">
-        <div className="grid gap-6 lg:grid-cols-5">
-          {[
-            [UsersRound, "Register", "Profiles, vessels, memberships"],
-            [Anchor, "Land", "Catch, species, site activity"],
-            [RadioTower, "Monitor", "Compliance, patrol, ranger evidence"],
-            [BarChart3, "Analyze", "Dashboards, trends, heatmaps"],
-            [Landmark, "Report", "Donor, county, national exports"],
-          ].map(([Icon, titleText, body]) => {
-            const StepIcon = Icon as typeof UsersRound;
-            const isActive = pipelineStep === ["Register", "Land", "Monitor", "Analyze", "Report"].indexOf(titleText as string);
-            return (
-              <button key={titleText as string} onClick={() => setPipelineStep(["Register", "Land", "Monitor", "Analyze", "Report"].indexOf(titleText as string))} className={`glass rounded-[2rem] p-5 text-left transition hover:-translate-y-1 ${isActive ? "ring-1 ring-cyan-200/70" : ""}`}>
-                <StepIcon className="h-7 w-7 text-cyan-200" />
-                <h3 className="mt-8 font-display text-2xl font-bold">{titleText as string}</h3>
-                <p className="mt-3 text-sm leading-6 text-cyan-50/58">{body as string}</p>
-              </button>
-            );
-          })}
-        </div>
-      </section>
-
-      <section id="pricing" className="reveal-section mx-auto max-w-7xl px-5 py-24 md:px-8">
-        <div className="glass rounded-[2rem] p-8 md:p-12">
-          <p className="text-sm uppercase tracking-[0.35em] text-cyan-200/70">Development timeline and pricing</p>
-          <div className="mt-6 grid gap-8 lg:grid-cols-[1fr_0.8fr]">
-            <h2 className="font-display text-5xl font-bold tracking-[-0.04em] md:text-7xl">From coastal records to national intelligence.</h2>
-            <div className="space-y-4 text-cyan-50/70">
-              <p><strong className="text-white">Phase 1:</strong> Auth, roles, BMU records, documents, QR, payments, compliance, meetings.</p>
-              <p><strong className="text-white">Phase 2:</strong> GIS, NGO projects, donor KPIs, analytics, exports, evidence packs.</p>
-              <p><strong className="text-white">Phase 3:</strong> Offline-first mobile workflows, advanced intelligence, integrations, national scale.</p>
+      <section id="pricing" className="px-5 py-16 md:px-8">
+        <div className="mx-auto grid max-w-7xl gap-5 lg:grid-cols-[1fr_0.75fr]">
+          <div className="rounded-[2rem] border border-slate-200 bg-white p-8 shadow-sm shadow-slate-200/70">
+            <p className="text-sm font-bold uppercase tracking-[0.26em] text-cyan-700">Delivery scope</p>
+            <h2 className="mt-4 font-display text-4xl font-bold tracking-[-0.035em] text-slate-950 md:text-5xl">Production-ready core in one month.</h2>
+            <p className="mt-5 leading-8 text-slate-600">
+              The current scope focuses on web-based access, role dashboards, Supabase-connected records, access approval, BMU operations, compliance, meetings, revenue, documents, reports, and clean administration.
+            </p>
+          </div>
+          <div className="rounded-[2rem] border border-cyan-200 bg-cyan-50 p-8">
+            <div className="text-sm font-bold uppercase tracking-[0.26em] text-cyan-700">Built with</div>
+            <div className="mt-5 grid gap-3">
+              {["Next.js + React", "TypeScript + Tailwind", "Supabase Auth + PostgreSQL", "RLS permissions", "Vercel deployment"].map((item) => (
+                <div key={item} className="flex items-center gap-3 font-semibold text-slate-800">
+                  <CheckCircle2 className="h-4 w-4 text-cyan-700" />
+                  {item}
+                </div>
+              ))}
             </div>
           </div>
         </div>
       </section>
 
-      <section id="contact" className="reveal-section px-5 py-24 md:px-8">
-        <div className="mx-auto max-w-4xl text-center">
-          <Map className="mx-auto h-10 w-10 text-cyan-200" />
-          <h2 className="mt-6 font-display text-5xl font-bold tracking-[-0.04em] md:text-7xl">Deploy a living ocean platform.</h2>
-          <p className="mx-auto mt-6 max-w-2xl leading-8 text-cyan-50/64">BLUE is built for the future of fisheries, conservation, funding transparency, and community decision-making.</p>
-          <div className="mt-10 flex flex-wrap justify-center gap-3">
-            <a href="/request-access" className="rounded-full bg-cyan-200 px-6 py-3 font-bold text-slate-950 shadow-[0_0_45px_rgba(65,243,255,.24)] transition hover:scale-[1.02]">Request access</a>
-            <a href="/login" className="rounded-full border border-white/15 px-6 py-3 font-bold text-white transition hover:border-cyan-200/60 hover:bg-white/10">Login</a>
+      <section id="contact" className="px-5 py-20 md:px-8">
+        <div className="mx-auto max-w-5xl rounded-[2rem] bg-slate-950 p-8 text-center text-white shadow-2xl shadow-slate-300/70 md:p-12">
+          <div className="mx-auto grid h-12 w-12 place-items-center rounded-2xl bg-cyan-300 text-slate-950">
+            <Landmark className="h-6 w-6" />
+          </div>
+          <h2 className="mx-auto mt-6 max-w-3xl font-display text-4xl font-bold tracking-[-0.035em] md:text-6xl">
+            Serious software for coastal operations.
+          </h2>
+          <p className="mx-auto mt-5 max-w-2xl leading-8 text-cyan-50/72">
+            BLUE is designed to replace paper-heavy processes with structured records, secure access, and decisions backed by live operational data.
+          </p>
+          <div className="mt-9 flex flex-wrap justify-center gap-3">
+            <a href="/request-access" className="inline-flex items-center gap-2 rounded-full bg-cyan-300 px-6 py-3 font-bold text-slate-950 hover:-translate-y-0.5">
+              Request access <ArrowRight className="h-4 w-4" />
+            </a>
+            <a href="/login" className="rounded-full border border-white/15 px-6 py-3 font-bold text-white hover:border-cyan-200/70 hover:bg-white/10">
+              Login
+            </a>
           </div>
         </div>
       </section>
 
-      <footer className="border-t border-white/10 px-5 py-10 text-center text-sm text-cyan-50/44 md:px-8">
-        BLUE — Blue Economy Livelihoods Unified Ecosystem. Built with Next.js, React, Supabase, Three.js, GSAP, and Framer Motion.
+      <footer className="border-t border-slate-200 bg-white px-5 py-10 text-center text-sm text-slate-500 md:px-8">
+        BLUE — Blue Economy Livelihoods Unified Ecosystem. Built with Next.js, React, TypeScript, Tailwind CSS, Supabase, and Vercel.
       </footer>
     </main>
   );
