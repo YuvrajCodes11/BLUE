@@ -226,7 +226,11 @@ export default function BlueExperience() {
       </nav>
 
       <section id="hero" className="relative isolate overflow-hidden px-5 py-20 md:px-8 md:py-28">
-        <div className="enterprise-ocean-motion" aria-hidden="true" />
+        <div className="enterprise-ocean-video-bg" aria-hidden="true">
+          <span />
+          <span />
+          <span />
+        </div>
         <div className="relative mx-auto grid max-w-7xl items-center gap-12 lg:grid-cols-[0.82fr_1.18fr]">
           <div className="relative z-10">
             <div className="inline-flex rounded-full border border-cyan-200 bg-white px-4 py-2 text-xs font-bold uppercase tracking-[0.22em] text-cyan-700 shadow-sm">

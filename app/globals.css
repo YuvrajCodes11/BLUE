@@ -250,38 +250,68 @@ textarea:focus {
     radial-gradient(circle at 20% 0%, rgba(65, 243, 255, 0.16), transparent 18rem);
 }
 
-.enterprise-ocean-motion {
+.enterprise-ocean-video-bg {
   position: absolute;
-  inset: -18% -10% auto;
+  inset: 0;
   z-index: -1;
-  height: min(58rem, 92vh);
   overflow: hidden;
   pointer-events: none;
   background:
-    radial-gradient(70% 56% at 24% 22%, rgba(34, 211, 238, 0.26), transparent 62%),
-    radial-gradient(52% 44% at 82% 28%, rgba(14, 165, 233, 0.18), transparent 68%),
-    linear-gradient(115deg, rgba(255, 255, 255, 0), rgba(186, 230, 253, 0.44), rgba(255, 255, 255, 0));
-  opacity: 0.92;
+    linear-gradient(180deg, rgba(239, 250, 255, 0.92), rgba(213, 244, 255, 0.62) 48%, rgba(255, 255, 255, 0.88)),
+    radial-gradient(circle at 20% 22%, rgba(34, 211, 238, 0.42), transparent 28rem),
+    radial-gradient(circle at 84% 18%, rgba(14, 165, 233, 0.34), transparent 30rem);
 }
 
-.enterprise-ocean-motion::before,
-.enterprise-ocean-motion::after {
+.enterprise-ocean-video-bg::before,
+.enterprise-ocean-video-bg::after,
+.enterprise-ocean-video-bg span {
   position: absolute;
-  inset: 0;
   content: "";
 }
 
-.enterprise-ocean-motion::before {
+.enterprise-ocean-video-bg::before {
+  inset: -20%;
   background:
-    repeating-linear-gradient(105deg, rgba(8, 145, 178, 0.08) 0 1px, transparent 1px 34px),
-    repeating-linear-gradient(25deg, rgba(14, 165, 233, 0.06) 0 1px, transparent 1px 42px);
-  filter: blur(0.3px);
-  animation: enterprise-water-drift 18s ease-in-out infinite alternate;
+    repeating-linear-gradient(105deg, rgba(8, 145, 178, 0.16) 0 2px, transparent 2px 42px),
+    repeating-linear-gradient(18deg, rgba(14, 165, 233, 0.12) 0 1px, transparent 1px 36px);
+  opacity: 0.85;
+  animation: enterprise-water-drift 9s ease-in-out infinite alternate;
 }
 
-.enterprise-ocean-motion::after {
-  background: radial-gradient(52% 28% at 50% 35%, rgba(255, 255, 255, 0.72), transparent 72%);
-  opacity: 0.55;
+.enterprise-ocean-video-bg::after {
+  inset: 0;
+  background:
+    linear-gradient(90deg, rgba(255, 255, 255, 0.2), transparent 24%, rgba(255, 255, 255, 0.64) 42%, transparent 58%, rgba(255, 255, 255, 0.24)),
+    radial-gradient(40rem 18rem at 40% 8%, rgba(255, 255, 255, 0.75), transparent 72%);
+  mix-blend-mode: soft-light;
+  animation: enterprise-water-shimmer 7s linear infinite;
+}
+
+.enterprise-ocean-video-bg span {
+  left: -10%;
+  right: -10%;
+  height: 13rem;
+  border-radius: 999px;
+  background: linear-gradient(90deg, transparent, rgba(6, 182, 212, 0.22), rgba(255, 255, 255, 0.32), rgba(14, 165, 233, 0.2), transparent);
+  filter: blur(20px);
+  transform: rotate(-7deg);
+  animation: enterprise-wave-slide 8s ease-in-out infinite alternate;
+}
+
+.enterprise-ocean-video-bg span:nth-child(1) {
+  top: 9%;
+}
+
+.enterprise-ocean-video-bg span:nth-child(2) {
+  top: 42%;
+  animation-delay: -2.8s;
+  opacity: 0.72;
+}
+
+.enterprise-ocean-video-bg span:nth-child(3) {
+  top: 69%;
+  animation-delay: -5.2s;
+  opacity: 0.54;
 }
 
 .wave-band {
@@ -296,10 +326,28 @@ textarea:focus {
 
 @keyframes enterprise-water-drift {
   from {
-    transform: translate3d(-1.5%, -1%, 0) scale(1.02);
+    transform: translate3d(-2%, -1%, 0) scale(1.05) rotate(-1deg);
   }
   to {
-    transform: translate3d(1.5%, 1%, 0) scale(1.05);
+    transform: translate3d(2%, 1%, 0) scale(1.08) rotate(1deg);
+  }
+}
+
+@keyframes enterprise-water-shimmer {
+  from {
+    transform: translateX(-18%);
+  }
+  to {
+    transform: translateX(18%);
+  }
+}
+
+@keyframes enterprise-wave-slide {
+  from {
+    transform: translate3d(-4%, 0, 0) rotate(-7deg);
+  }
+  to {
+    transform: translate3d(4%, -10px, 0) rotate(-7deg);
   }
 }
 
