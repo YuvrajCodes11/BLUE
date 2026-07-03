@@ -250,6 +250,40 @@ textarea:focus {
     radial-gradient(circle at 20% 0%, rgba(65, 243, 255, 0.16), transparent 18rem);
 }
 
+.enterprise-ocean-motion {
+  position: absolute;
+  inset: -18% -10% auto;
+  z-index: -1;
+  height: min(58rem, 92vh);
+  overflow: hidden;
+  pointer-events: none;
+  background:
+    radial-gradient(70% 56% at 24% 22%, rgba(34, 211, 238, 0.26), transparent 62%),
+    radial-gradient(52% 44% at 82% 28%, rgba(14, 165, 233, 0.18), transparent 68%),
+    linear-gradient(115deg, rgba(255, 255, 255, 0), rgba(186, 230, 253, 0.44), rgba(255, 255, 255, 0));
+  opacity: 0.92;
+}
+
+.enterprise-ocean-motion::before,
+.enterprise-ocean-motion::after {
+  position: absolute;
+  inset: 0;
+  content: "";
+}
+
+.enterprise-ocean-motion::before {
+  background:
+    repeating-linear-gradient(105deg, rgba(8, 145, 178, 0.08) 0 1px, transparent 1px 34px),
+    repeating-linear-gradient(25deg, rgba(14, 165, 233, 0.06) 0 1px, transparent 1px 42px);
+  filter: blur(0.3px);
+  animation: enterprise-water-drift 18s ease-in-out infinite alternate;
+}
+
+.enterprise-ocean-motion::after {
+  background: radial-gradient(52% 28% at 50% 35%, rgba(255, 255, 255, 0.72), transparent 72%);
+  opacity: 0.55;
+}
+
 .wave-band {
   position: absolute;
   inset: 0;
@@ -258,6 +292,15 @@ textarea:focus {
   background:
     linear-gradient(135deg, rgba(65, 243, 255, 0.16), transparent 42%),
     linear-gradient(315deg, rgba(14, 165, 233, 0.1), transparent 48%);
+}
+
+@keyframes enterprise-water-drift {
+  from {
+    transform: translate3d(-1.5%, -1%, 0) scale(1.02);
+  }
+  to {
+    transform: translate3d(1.5%, 1%, 0) scale(1.05);
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {
