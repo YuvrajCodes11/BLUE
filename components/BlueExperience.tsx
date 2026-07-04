@@ -435,19 +435,34 @@ export default function BlueExperience() {
                 <h3 className="text-xl font-bold text-slate-950">Landing sites and zones</h3>
               </div>
             </div>
-            <div className="mt-6 rounded-3xl border border-slate-200 bg-[linear-gradient(90deg,rgba(14,165,233,0.10)_1px,transparent_1px),linear-gradient(rgba(14,165,233,0.10)_1px,transparent_1px)] bg-[length:44px_44px] p-6">
-              <div className="relative min-h-[310px] rounded-2xl bg-white/80 p-5">
+            <div className="mt-6 rounded-3xl border border-slate-200 bg-white p-3 shadow-inner shadow-cyan-50">
+              <div className="gis-preview relative min-h-[340px] overflow-hidden rounded-[1.35rem] border border-cyan-100">
+                <div className="gis-scan" aria-hidden="true" />
+                <svg className="absolute inset-0 h-full w-full" viewBox="0 0 640 340" role="img" aria-label="Animated landing-site and marine-zone GIS preview">
+                  <path className="gis-coast" d="M-20 224 C70 180 130 194 196 142 C262 88 318 126 372 91 C446 42 520 84 660 34" />
+                  <path className="gis-zone" d="M52 250 C142 182 214 230 290 156 C373 74 448 136 576 92" />
+                  <path className="gis-route gis-route-a" d="M122 235 C192 180 264 171 341 142 C418 113 471 94 538 64" />
+                  <path className="gis-route gis-route-b" d="M173 264 C231 235 287 220 350 187 C425 148 485 157 570 129" />
+                  <path className="gis-boundary" d="M84 78 H560 V282 H84 Z" />
+                </svg>
                 {[
-                  ["BMU", "left-[18%] top-[58%]"],
-                  ["Landing", "left-[42%] top-[34%]"],
-                  ["Patrol", "left-[64%] top-[48%]"],
-                  ["Zone", "left-[76%] top-[22%]"],
-                ].map(([label, position]) => (
-                  <div key={label} className={`absolute ${position}`}>
-                    <span className="block h-3 w-3 rounded-full bg-cyan-500 ring-4 ring-cyan-100" />
-                    <span className="mt-2 block text-xs font-bold text-slate-600">{label}</span>
+                  ["BMU", "left-[17%] top-[61%]", "bg-emerald-400", "0s"],
+                  ["Landing", "left-[43%] top-[38%]", "bg-cyan-400", "-0.7s"],
+                  ["Patrol", "left-[63%] top-[52%]", "bg-blue-400", "-1.4s"],
+                  ["Zone", "left-[78%] top-[27%]", "bg-indigo-400", "-2.1s"],
+                ].map(([label, position, color, delay]) => (
+                  <div key={label} className={`gis-marker absolute ${position}`} style={{ animationDelay: delay }}>
+                    <span className={`block h-3.5 w-3.5 rounded-full ${color} shadow-lg shadow-cyan-300/50 ring-4 ring-white`} />
+                    <span className="mt-2 block rounded-full bg-white/90 px-2.5 py-1 text-xs font-bold text-slate-700 shadow-sm">{label}</span>
                   </div>
                 ))}
+                <div className="absolute bottom-4 left-4 right-4 grid gap-2 sm:grid-cols-3">
+                  {["Landing sites", "Patrol path", "Marine zone"].map((item) => (
+                    <div key={item} className="rounded-2xl border border-white/70 bg-white/84 px-3 py-2 text-xs font-bold text-slate-700 shadow-sm backdrop-blur">
+                      {item}
+                    </div>
+                  ))}
+                </div>
               </div>
             </div>
           </div>

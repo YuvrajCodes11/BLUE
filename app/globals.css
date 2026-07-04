@@ -324,6 +324,102 @@ textarea:focus {
     linear-gradient(315deg, rgba(14, 165, 233, 0.1), transparent 48%);
 }
 
+.gis-preview {
+  background:
+    radial-gradient(circle at 20% 22%, rgba(34, 211, 238, 0.22), transparent 12rem),
+    radial-gradient(circle at 82% 18%, rgba(59, 130, 246, 0.18), transparent 13rem),
+    linear-gradient(90deg, rgba(8, 145, 178, 0.1) 1px, transparent 1px),
+    linear-gradient(rgba(8, 145, 178, 0.1) 1px, transparent 1px),
+    linear-gradient(135deg, #effcff, #dff7ff 48%, #f8fdff);
+  background-size: auto, auto, 42px 42px, 42px 42px, auto;
+}
+
+.gis-preview::before,
+.gis-preview::after {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  content: "";
+}
+
+.gis-preview::before {
+  background:
+    linear-gradient(110deg, transparent 0 34%, rgba(255, 255, 255, 0.62) 45%, transparent 58% 100%),
+    repeating-linear-gradient(145deg, rgba(14, 165, 233, 0.12) 0 1px, transparent 1px 28px);
+  opacity: 0.68;
+  animation: gis-water-sweep 7s ease-in-out infinite alternate;
+}
+
+.gis-preview::after {
+  background: linear-gradient(180deg, transparent, rgba(3, 105, 161, 0.08));
+}
+
+.gis-coast,
+.gis-zone,
+.gis-route,
+.gis-boundary {
+  fill: none;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.gis-coast {
+  stroke: rgba(8, 145, 178, 0.32);
+  stroke-width: 18;
+}
+
+.gis-zone {
+  stroke: rgba(14, 165, 233, 0.24);
+  stroke-dasharray: 8 10;
+  stroke-width: 6;
+  animation: gis-dash 12s linear infinite;
+}
+
+.gis-route {
+  stroke: rgba(6, 182, 212, 0.86);
+  stroke-dasharray: 10 12;
+  stroke-width: 3;
+  filter: drop-shadow(0 0 8px rgba(34, 211, 238, 0.38));
+  animation: gis-dash 7s linear infinite;
+}
+
+.gis-route-b {
+  stroke: rgba(37, 99, 235, 0.58);
+  animation-duration: 9s;
+  animation-direction: reverse;
+}
+
+.gis-boundary {
+  stroke: rgba(15, 23, 42, 0.12);
+  stroke-dasharray: 6 8;
+  stroke-width: 2;
+}
+
+.gis-marker {
+  transform: translate(-50%, -50%);
+  animation: gis-marker-float 3.5s ease-in-out infinite;
+}
+
+.gis-marker::before {
+  position: absolute;
+  top: -0.36rem;
+  left: -0.36rem;
+  width: 1.55rem;
+  height: 1.55rem;
+  border-radius: 999px;
+  content: "";
+  background: rgba(34, 211, 238, 0.24);
+  animation: gis-pulse 2.8s ease-out infinite;
+}
+
+.gis-scan {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: linear-gradient(180deg, transparent 0 38%, rgba(34, 211, 238, 0.18) 50%, transparent 62% 100%);
+  animation: gis-scan 5.5s ease-in-out infinite;
+}
+
 @keyframes enterprise-water-drift {
   from {
     transform: translate3d(-2%, -1%, 0) scale(1.05) rotate(-1deg);
@@ -348,6 +444,54 @@ textarea:focus {
   }
   to {
     transform: translate3d(4%, -10px, 0) rotate(-7deg);
+  }
+}
+
+@keyframes gis-dash {
+  to {
+    stroke-dashoffset: -120;
+  }
+}
+
+@keyframes gis-marker-float {
+  0%, 100% {
+    transform: translate(-50%, -50%);
+  }
+  50% {
+    transform: translate(-50%, calc(-50% - 6px));
+  }
+}
+
+@keyframes gis-pulse {
+  0% {
+    opacity: 0.72;
+    transform: scale(0.55);
+  }
+  100% {
+    opacity: 0;
+    transform: scale(2.4);
+  }
+}
+
+@keyframes gis-scan {
+  0%, 100% {
+    transform: translateY(-60%);
+    opacity: 0;
+  }
+  35%, 70% {
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(60%);
+  }
+}
+
+@keyframes gis-water-sweep {
+  from {
+    transform: translate3d(-4%, -2%, 0) scale(1.04);
+  }
+  to {
+    transform: translate3d(4%, 2%, 0) scale(1.08);
   }
 }
 
