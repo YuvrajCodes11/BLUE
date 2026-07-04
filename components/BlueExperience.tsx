@@ -60,6 +60,13 @@ const workflowSteps = [
   ["Review and export", "Teams filter, review, export, and use records for decisions and reporting."],
 ];
 
+const oceanImages = {
+  whale: "https://images.unsplash.com/photo-1568430462989-44163eb1752f?auto=format&fit=crop&w=1800&q=85",
+  surface: "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=1600&q=85",
+  coast: "https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?auto=format&fit=crop&w=1600&q=85",
+  reef: "https://images.unsplash.com/photo-1544551763-46a013bb70d5?auto=format&fit=crop&w=1600&q=85",
+};
+
 function ProductPreview() {
   const bars = [58, 72, 45, 82, 64, 76];
 
@@ -150,6 +157,32 @@ function ProductPreview() {
             </div>
           </div>
         </div>
+      </div>
+    </div>
+  );
+}
+
+function OceanPhotoPanel({
+  image,
+  eyebrow,
+  title,
+  body,
+  tall = false,
+}: {
+  image: string;
+  eyebrow: string;
+  title: string;
+  body: string;
+  tall?: boolean;
+}) {
+  return (
+    <div className={`group relative overflow-hidden rounded-[2rem] border border-cyan-200/70 bg-slate-950 shadow-xl shadow-cyan-100/60 ${tall ? "min-h-[520px]" : "min-h-[340px]"}`}>
+      <img src={image} alt="" className="absolute inset-0 h-full w-full object-cover transition duration-700 group-hover:scale-[1.04]" />
+      <div className="absolute inset-0 bg-gradient-to-br from-slate-950/72 via-slate-950/28 to-cyan-700/10" />
+      <div className="absolute inset-x-0 bottom-0 p-6 text-white md:p-8">
+        <p className="text-xs font-bold uppercase tracking-[0.26em] text-cyan-100">{eyebrow}</p>
+        <h3 className="mt-3 max-w-xl font-display text-3xl font-bold tracking-[-0.03em] md:text-5xl">{title}</h3>
+        <p className="mt-4 max-w-lg leading-7 text-cyan-50/82">{body}</p>
       </div>
     </div>
   );
@@ -263,6 +296,32 @@ export default function BlueExperience() {
         </div>
       </section>
 
+      <section className="px-5 py-10 md:px-8">
+        <div className="mx-auto grid max-w-7xl gap-5 lg:grid-cols-[1.18fr_0.82fr]">
+          <OceanPhotoPanel
+            image={oceanImages.whale}
+            eyebrow="Blue planet context"
+            title="Built for the people protecting coastal livelihoods."
+            body="BLUE keeps the product practical, but its visual identity stays connected to fisheries, conservation, and the living ocean."
+            tall
+          />
+          <div className="grid gap-5">
+            <OceanPhotoPanel
+              image={oceanImages.surface}
+              eyebrow="Marine records"
+              title="From field activity to usable data."
+              body="Operational records become easier to store, verify, search, and report."
+            />
+            <OceanPhotoPanel
+              image={oceanImages.coast}
+              eyebrow="Community operations"
+              title="Designed for BMU workflows."
+              body="Members, vessels, payments, documents, meetings, and compliance stay in one place."
+            />
+          </div>
+        </div>
+      </section>
+
       <section id="platform" className="px-5 py-16 md:px-8">
         <div className="mx-auto max-w-7xl">
           <div className="max-w-3xl">
@@ -282,6 +341,35 @@ export default function BlueExperience() {
                 <p className="mt-4 leading-7 text-slate-600">{module.body}</p>
               </article>
             ))}
+          </div>
+        </div>
+      </section>
+
+      <section className="px-5 py-10 md:px-8">
+        <div className="mx-auto grid max-w-7xl items-center gap-8 rounded-[2rem] border border-slate-200 bg-white p-5 shadow-sm shadow-slate-200/70 md:p-8 lg:grid-cols-[0.95fr_1.05fr]">
+          <div className="relative min-h-[390px] overflow-hidden rounded-[1.5rem]">
+            <img src={oceanImages.reef} alt="" className="absolute inset-0 h-full w-full object-cover" />
+            <div className="absolute inset-0 bg-gradient-to-tr from-slate-950/64 via-transparent to-cyan-200/20" />
+            <div className="absolute bottom-5 left-5 rounded-2xl bg-white/92 p-4 shadow-xl backdrop-blur">
+              <p className="text-xs font-bold uppercase tracking-[0.2em] text-cyan-700">Conservation layer</p>
+              <p className="mt-1 max-w-xs text-sm font-semibold text-slate-800">Records, evidence, compliance, and reporting aligned around real marine work.</p>
+            </div>
+          </div>
+          <div>
+            <p className="text-sm font-bold uppercase tracking-[0.26em] text-cyan-700">Not just a database</p>
+            <h2 className="mt-4 font-display text-4xl font-bold tracking-[-0.035em] text-slate-950 md:text-5xl">
+              A cleaner operating system for coastal decisions.
+            </h2>
+            <p className="mt-5 leading-8 text-slate-600">
+              The landing page now carries real ocean imagery while the application message stays clear: BLUE is built to reduce paperwork, protect records, and help teams act faster.
+            </p>
+            <div className="mt-6 grid gap-3 sm:grid-cols-2">
+              {["BMU records", "Revenue ledger", "Compliance logs", "Export-ready reports"].map((item) => (
+                <div key={item} className="rounded-2xl border border-slate-200 bg-slate-50 p-4 font-bold text-slate-700">
+                  {item}
+                </div>
+              ))}
+            </div>
           </div>
         </div>
       </section>
