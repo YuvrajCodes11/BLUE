@@ -26,7 +26,7 @@ type WardOption = { id: string; sub_county_id: string; name: string };
 type BmuOption = { id: string; county_id: string | null; sub_county_id: string | null; ward_id: string | null; name: string };
 
 const roles: DbRole[] = ["BMU Manager", "County Officer", "KFS Officer", "Ranger", "NGO Program Manager", "Donor", "Fisher", "Government Admin"];
-const roleLabel: Partial<Record<DbRole, string>> = { "KFS Officer": "KeFS Officer" };
+const roleLabel: Partial<Record<DbRole, string>> = { "Government Admin": "BMU Manager", "KFS Officer": "KeFS Officer" };
 
 export function AccessRequestsPanel() {
   const [rows, setRows] = useState<StructuredAccessRow[]>([]);

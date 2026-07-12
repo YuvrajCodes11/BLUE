@@ -399,7 +399,7 @@ export function OfficerForm1APage() {
   }
 
   if (loading) return <LoadingState />;
-  if (!canAccess) return <EmptyState title="Officer workflow access only" body="FORM 1A is available to Government Admin, KeFS/KFS Officer, and County Officer roles." />;
+  if (!canAccess) return <EmptyState title="Officer workflow access only" body="FORM 1A is available to BMU Manager, KeFS/KFS Officer, and County Officer roles." />;
 
   return (
     <section className="grid gap-6">

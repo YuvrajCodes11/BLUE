@@ -333,7 +333,7 @@ export function BmuSetupPage() {
 
                 <div className="ocean-panel rounded-3xl p-5">
                   <h2 className="text-xl font-black text-[var(--text)]">Certificate review</h2>
-                  <p className="mt-1 text-sm text-[var(--muted-text)]">Government Admin can verify all certificates. County Officer review is scoped by county access.</p>
+                  <p className="mt-1 text-sm text-[var(--muted-text)]">BMU Manager can verify all certificates. County Officer review is scoped by county access.</p>
                   <div className="mt-5 grid gap-3">
                     {selectedCertificates.length ? selectedCertificates.map((certificate) => (
                       <CertificateCard

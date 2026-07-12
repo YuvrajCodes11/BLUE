@@ -40,7 +40,7 @@ async function requireAdmin(request: Request) {
     .maybeSingle();
 
   if (profileError || profile?.role !== "Government Admin") {
-    return { error: "Only Government Admin can approve access.", status: 403 as const };
+    return { error: "Only BMU Manager can approve access.", status: 403 as const };
   }
 
   return { supabase, adminId: userData.user.id };

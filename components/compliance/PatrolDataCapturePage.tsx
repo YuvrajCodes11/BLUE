@@ -324,7 +324,7 @@ export function PatrolDataCapturePage() {
   }
 
   if (loading) return <LoadingState />;
-  if (!canAccess) return <EmptyState title="Patrol Data Capture access only" body="Patrol Data Capture is available to Government Admin, KeFS/KFS Officer, County Officer, BMU Manager, and Ranger roles." />;
+  if (!canAccess) return <EmptyState title="Patrol Data Capture access only" body="Patrol Data Capture is available to BMU Manager, KeFS/KFS Officer, County Officer, and Ranger roles." />;
 
   return (
     <section className="grid gap-6">

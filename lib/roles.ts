@@ -1,7 +1,7 @@
 import type { NavItem, Permission, RoleSlug } from "@/types/domain";
 
 export const roleLabels: Record<RoleSlug, string> = {
-  admin: "Government Admin",
+  admin: "BMU Manager",
   kfs: "KeFS Officer",
   county: "County Officer",
   bmu: "BMU Manager",
