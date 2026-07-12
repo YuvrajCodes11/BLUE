@@ -67,6 +67,8 @@
 html {
   scroll-behavior: smooth;
   background: var(--background);
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
 }
 
 body {
@@ -114,6 +116,7 @@ button:disabled {
 input,
 select,
 textarea {
+  max-width: 100%;
   box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.04);
 }
 
@@ -248,6 +251,113 @@ textarea:focus {
   background:
     linear-gradient(90deg, var(--topbar), rgba(8, 93, 119, 0.18)),
     radial-gradient(circle at 20% 0%, rgba(65, 243, 255, 0.16), transparent 18rem);
+}
+
+@media (max-width: 767px) {
+  html,
+  body {
+    width: 100%;
+    max-width: 100%;
+  }
+
+  body {
+    background:
+      radial-gradient(circle at 10% -8%, rgba(65, 243, 255, 0.14), transparent 18rem),
+      linear-gradient(180deg, var(--background), var(--body-deep));
+  }
+
+  .ocean-app-shell::before {
+    background-size: 46px 46px;
+    opacity: 0.55;
+  }
+
+  .ocean-app-shell::after {
+    opacity: 0.2;
+  }
+
+  .ocean-panel {
+    border-radius: 1.25rem;
+    box-shadow: 0 12px 34px rgba(1, 22, 38, 0.14);
+    backdrop-filter: blur(12px);
+  }
+
+  .ocean-panel:hover {
+    transform: none;
+  }
+
+  input,
+  select,
+  textarea {
+    min-height: 44px;
+    font-size: 16px !important;
+    line-height: 1.4;
+  }
+
+  input[type="checkbox"],
+  input[type="radio"] {
+    min-height: auto;
+    font-size: initial !important;
+  }
+
+  button,
+  a,
+  input,
+  select,
+  textarea {
+    touch-action: manipulation;
+  }
+
+  button,
+  a {
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  table {
+    white-space: nowrap;
+  }
+
+  h1,
+  h2,
+  h3,
+  p,
+  a,
+  button,
+  label,
+  span,
+  div {
+    overflow-wrap: anywhere;
+  }
+
+  .dashboard-sidebar {
+    padding-top: env(safe-area-inset-top);
+  }
+
+  .ocean-topbar {
+    padding-top: calc(0.75rem + env(safe-area-inset-top));
+  }
+
+  .dashboard-sidebar nav {
+    padding-bottom: calc(1rem + env(safe-area-inset-bottom));
+  }
+}
+
+@media (max-width: 640px) {
+  .landing-product-preview {
+    margin-inline: -0.25rem;
+  }
+
+  .landing-product-preview .preview-shell {
+    border-radius: 1.25rem;
+    padding: 0.5rem;
+  }
+
+  .landing-product-preview .preview-app {
+    min-height: auto;
+  }
+
+  .landing-mobile-section {
+    border-radius: 1.35rem;
+  }
 }
 
 .enterprise-ocean-video-bg {

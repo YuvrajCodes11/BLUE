@@ -12,10 +12,10 @@ export const roleLabels: Record<RoleSlug, string> = {
 };
 
 export const rolePermissions: Record<RoleSlug, Permission[]> = {
-  admin: ["users.manage", "requests.manage", "fishers.view", "fishers.manage", "vessels.manage", "catches.create", "catches.validate", "species.view", "landing-sites.manage", "compliance.manage", "reports.export", "gis.view", "projects.manage", "beneficiaries.manage", "donor-impact.view", "settings.manage", "payments.manage", "renewals.manage", "documents.manage", "rangers.manage", "qr.verify"],
-  kfs: ["fishers.view", "catches.validate", "species.view", "landing-sites.manage", "compliance.manage", "reports.export", "gis.view", "documents.manage", "rangers.manage", "qr.verify"],
-  county: ["fishers.view", "vessels.manage", "catches.validate", "landing-sites.manage", "compliance.manage", "reports.export", "gis.view", "payments.manage", "renewals.manage", "documents.manage", "rangers.manage", "qr.verify"],
-  bmu: ["fishers.manage", "fishers.view", "vessels.manage", "catches.create", "landing-sites.manage", "compliance.manage", "reports.export", "payments.manage", "renewals.manage", "documents.manage", "rangers.manage", "qr.verify"],
+  admin: ["users.manage", "requests.manage", "fishers.view", "fishers.manage", "vessels.manage", "catches.create", "catches.validate", "species.view", "landing-sites.manage", "compliance.manage", "reports.export", "gis.view", "projects.manage", "beneficiaries.manage", "donor-impact.view", "settings.manage", "payments.manage", "renewals.manage", "documents.manage", "bmus.view", "bmus.manage", "rangers.manage", "qr.verify"],
+  kfs: ["fishers.view", "catches.validate", "species.view", "landing-sites.manage", "compliance.manage", "reports.export", "gis.view", "documents.manage", "bmus.view", "rangers.manage", "qr.verify"],
+  county: ["fishers.view", "vessels.manage", "catches.validate", "landing-sites.manage", "compliance.manage", "reports.export", "gis.view", "payments.manage", "renewals.manage", "documents.manage", "bmus.view", "bmus.manage", "rangers.manage", "qr.verify"],
+  bmu: ["fishers.manage", "fishers.view", "vessels.manage", "catches.create", "landing-sites.manage", "compliance.manage", "reports.export", "payments.manage", "renewals.manage", "documents.manage", "bmus.view", "bmus.manage", "rangers.manage", "qr.verify"],
   ranger: ["fishers.view", "compliance.manage", "gis.view", "reports.export", "qr.verify"],
   ngo: ["projects.manage", "beneficiaries.manage", "donor-impact.view", "reports.export", "gis.view", "documents.manage"],
   donor: ["donor-impact.view", "reports.export", "gis.view"],
@@ -30,7 +30,11 @@ export const baseNav: NavItem[] = [
   { label: "Catches", href: "/dashboard/catches", permission: "catches.create" },
   { label: "Species", href: "/dashboard/species", permission: "species.view" },
   { label: "Landing Sites", href: "/dashboard/landing-sites", permission: "landing-sites.manage" },
+  { label: "BMU Setup", href: "/dashboard/bmu/setup", permission: "bmus.view", roles: ["admin", "kfs", "county", "bmu"] },
   { label: "Compliance", href: "/dashboard/compliance", permission: "compliance.manage" },
+  { label: "FORM 1A", href: "/dashboard/compliance/officer-form-1a", permission: "compliance.manage", roles: ["admin", "kfs", "county"] },
+  { label: "BMU Patrol", href: "/dashboard/compliance/bmu-patrol", permission: "compliance.manage", roles: ["admin", "kfs", "county", "bmu", "ranger"] },
+  { label: "Patrol Data", href: "/dashboard/compliance/patrol-data-capture", permission: "compliance.manage", roles: ["admin", "kfs", "county", "bmu", "ranger"] },
   { label: "Payments", href: "/dashboard/payments", permission: "payments.manage" },
   { label: "Renewals", href: "/dashboard/renewals", permission: "renewals.manage" },
   { label: "Documents", href: "/dashboard/documents", permission: "documents.manage" },
@@ -50,5 +54,5 @@ export function can(role: RoleSlug, permission?: Permission) {
 }
 
 export function navForRole(role: RoleSlug) {
-  return baseNav.filter((item) => can(role, item.permission));
+  return baseNav.filter((item) => can(role, item.permission) && (!item.roles || item.roles.includes(role)));
 }

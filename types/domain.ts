@@ -30,10 +30,12 @@ export type Permission =
   | "payments.manage"
   | "renewals.manage"
   | "documents.manage"
+  | "bmus.view"
+  | "bmus.manage"
   | "rangers.manage"
   | "qr.verify";
 
-export type NavItem = { label: string; href: string; permission?: Permission };
+export type NavItem = { label: string; href: string; permission?: Permission; roles?: RoleSlug[] };
 export type Stat = { label: string; value: string; trend: string; tone: "cyan" | "emerald" | "amber" | "violet" };
 export type TableColumn<T> = { key: keyof T; label: string };
 
@@ -55,7 +57,22 @@ export type LandingSiteRecord = { id: string; site: string; county: string; acti
 export type ComplianceRecord = { id: string; type: string; officer: string; finding: string; status: RecordStatus };
 export type ProjectRecord = { id: string; project: string; donor: string; progress: string; status: RecordStatus };
 export type BeneficiaryRecord = { id: string; name: string; program: string; county: string; status: RecordStatus };
-export type AccessRequest = { id: string; name: string; email: string; organization: string; status: RecordStatus };
+export type AccessRequest = {
+  id: string;
+  name: string;
+  email: string;
+  organization: string;
+  organization_name?: string | null;
+  organization_type?: string | null;
+  requested_role?: UserRole | null;
+  access_type?: string | null;
+  county_id?: string | null;
+  sub_county_id?: string | null;
+  ward_id?: string | null;
+  bmu_id?: string | null;
+  message?: string | null;
+  status: RecordStatus;
+};
 
 export type ModuleKey =
   | "fishers"

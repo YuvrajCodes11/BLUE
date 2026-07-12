@@ -23,3 +23,19 @@ export function redirectForRole(role: string | null | undefined) {
   if (!role || !(role in roleRedirects)) return null;
   return roleRedirects[role as DbRole];
 }
+
+export const roleSlugs: Record<DbRole, string> = {
+  "Government Admin": "admin",
+  "KFS Officer": "kfs",
+  "County Officer": "county",
+  "BMU Manager": "bmu",
+  Ranger: "ranger",
+  "NGO Program Manager": "ngo",
+  Donor: "donor",
+  Fisher: "fisher",
+};
+
+export function slugForRole(role: string | null | undefined) {
+  if (!role || !(role in roleSlugs)) return null;
+  return roleSlugs[role as DbRole];
+}

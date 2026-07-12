@@ -10,9 +10,11 @@ import {
   Landmark,
   Lock,
   Map,
+  Menu,
   Search,
   Settings,
   ShieldCheck,
+  X,
 } from "lucide-react";
 import type { PlatformModule, Role } from "@/types/blue";
 
@@ -71,8 +73,8 @@ function ProductPreview() {
   const bars = [58, 72, 45, 82, 64, 76];
 
   return (
-    <div className="rounded-[2rem] border border-slate-200 bg-white p-3 shadow-2xl shadow-slate-200/80">
-      <div className="overflow-hidden rounded-[1.5rem] border border-slate-200 bg-slate-50">
+    <div className="landing-product-preview rounded-[2rem] border border-slate-200 bg-white p-3 shadow-2xl shadow-slate-200/80">
+      <div className="preview-shell overflow-hidden rounded-[1.5rem] border border-slate-200 bg-slate-50">
         <div className="flex items-center justify-between border-b border-slate-200 bg-white px-4 py-3">
           <div className="flex items-center gap-2">
             <span className="h-3 w-3 rounded-full bg-cyan-400" />
@@ -84,7 +86,7 @@ function ProductPreview() {
             Search records
           </div>
         </div>
-        <div className="grid min-h-[520px] lg:grid-cols-[220px_1fr]">
+        <div className="preview-app grid min-h-[520px] lg:grid-cols-[220px_1fr]">
           <aside className="hidden border-r border-slate-200 bg-[#073a5a] p-4 text-white lg:block">
             <div className="flex items-center gap-3">
               <span className="grid h-10 w-10 place-items-center rounded-xl bg-cyan-300 font-bold text-slate-950">B</span>
@@ -212,6 +214,7 @@ function InterfaceCard({
 
 export default function BlueExperience() {
   const [activeRole, setActiveRole] = useState<Role>("BMU Manager");
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   const roleCopy = useMemo(() => {
     const map: Record<Role, string> = {
@@ -232,9 +235,9 @@ export default function BlueExperience() {
       <div className="pointer-events-none fixed inset-0 -z-10 bg-[radial-gradient(circle_at_15%_0%,rgba(34,211,238,0.20),transparent_32rem),radial-gradient(circle_at_88%_8%,rgba(14,165,233,0.16),transparent_30rem),linear-gradient(180deg,#f8fdff_0%,#eef8fc_52%,#ffffff_100%)]" />
 
       <nav className="sticky top-0 z-50 border-b border-slate-200/70 bg-white/86 backdrop-blur-xl">
-        <div className="mx-auto flex max-w-7xl items-center justify-between px-5 py-4 md:px-8">
+        <div className="mx-auto flex max-w-7xl items-center justify-between gap-3 px-4 py-3 md:px-8 md:py-4">
           <a href="#hero" className="flex items-center gap-3">
-            <span className="grid h-11 w-11 place-items-center rounded-2xl bg-cyan-300 font-display text-lg font-bold text-slate-950 shadow-lg shadow-cyan-200/60">B</span>
+            <span className="grid h-10 w-10 place-items-center rounded-2xl bg-cyan-300 font-display text-lg font-bold text-slate-950 shadow-lg shadow-cyan-200/60 sm:h-11 sm:w-11">B</span>
             <div>
               <div className="font-display text-lg font-bold tracking-tight text-slate-950">BLUE</div>
               <div className="hidden text-xs font-medium text-slate-500 sm:block">Livelihoods unified ecosystem</div>
@@ -247,7 +250,7 @@ export default function BlueExperience() {
               </a>
             ))}
           </div>
-          <div className="flex items-center gap-2">
+          <div className="hidden items-center gap-2 sm:flex">
             <a href="/login" className="rounded-full border border-slate-200 bg-white px-4 py-2 text-sm font-bold text-slate-700 shadow-sm hover:border-cyan-300 hover:text-slate-950">
               Login
             </a>
@@ -255,10 +258,38 @@ export default function BlueExperience() {
               Request access
             </a>
           </div>
+          <button
+            type="button"
+            onClick={() => setMobileMenuOpen((open) => !open)}
+            className="grid h-11 w-11 place-items-center rounded-2xl border border-slate-200 bg-white text-slate-900 shadow-sm sm:hidden"
+            aria-label={mobileMenuOpen ? "Close navigation" : "Open navigation"}
+            aria-expanded={mobileMenuOpen}
+          >
+            {mobileMenuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
+          </button>
         </div>
+        {mobileMenuOpen && (
+          <div className="border-t border-slate-200 bg-white px-4 pb-4 shadow-xl sm:hidden">
+            <div className="grid gap-2 py-3 text-sm font-bold text-slate-700">
+              {["Platform", "Security", "Workflows", "Roles", "Pricing"].map((item) => (
+                <a key={item} href={`#${item.toLowerCase()}`} onClick={() => setMobileMenuOpen(false)} className="rounded-2xl bg-slate-50 px-4 py-3">
+                  {item}
+                </a>
+              ))}
+            </div>
+            <div className="grid grid-cols-2 gap-2">
+              <a href="/login" className="rounded-2xl border border-slate-200 bg-white px-4 py-3 text-center text-sm font-black text-slate-800">
+                Login
+              </a>
+              <a href="/request-access" className="rounded-2xl bg-slate-950 px-4 py-3 text-center text-sm font-black text-white">
+                Request access
+              </a>
+            </div>
+          </div>
+        )}
       </nav>
 
-      <section id="hero" className="relative isolate overflow-hidden px-5 py-20 md:px-8 md:py-28">
+      <section id="hero" className="relative isolate overflow-hidden px-4 py-14 sm:px-5 md:px-8 md:py-28">
         <div className="enterprise-ocean-video-bg" aria-hidden="true">
           <span />
           <span />
@@ -266,10 +297,10 @@ export default function BlueExperience() {
         </div>
         <div className="relative mx-auto grid max-w-7xl items-center gap-12 lg:grid-cols-[0.82fr_1.18fr]">
           <div className="relative z-10">
-            <div className="inline-flex rounded-full border border-cyan-200 bg-white px-4 py-2 text-xs font-bold uppercase tracking-[0.22em] text-cyan-700 shadow-sm">
+            <div className="inline-flex max-w-full rounded-full border border-cyan-200 bg-white px-4 py-2 text-[11px] font-bold uppercase tracking-[0.16em] text-cyan-700 shadow-sm sm:text-xs sm:tracking-[0.22em]">
               Blue Economy Livelihoods Unified Ecosystem
             </div>
-            <h1 className="mt-7 max-w-4xl font-display text-5xl font-bold leading-[0.98] tracking-[-0.045em] text-slate-950 md:text-7xl">
+            <h1 className="mt-7 max-w-4xl font-display text-4xl font-bold leading-[1.02] tracking-[-0.04em] text-slate-950 sm:text-5xl md:text-7xl">
               Enterprise software for fisheries governance and BMU operations.
             </h1>
             <p className="mt-6 max-w-2xl text-lg leading-8 text-slate-600 md:text-xl">
@@ -296,7 +327,7 @@ export default function BlueExperience() {
         </div>
       </section>
 
-      <section className="px-5 py-10 md:px-8">
+      <section className="px-4 py-10 sm:px-5 md:px-8">
         <div className="mx-auto grid max-w-7xl gap-5 lg:grid-cols-[1.18fr_0.82fr]">
           <OceanPhotoPanel
             image={oceanImages.whale}
@@ -322,7 +353,7 @@ export default function BlueExperience() {
         </div>
       </section>
 
-      <section id="platform" className="px-5 py-16 md:px-8">
+      <section id="platform" className="px-4 py-16 sm:px-5 md:px-8">
         <div className="mx-auto max-w-7xl">
           <div className="max-w-3xl">
             <p className="text-sm font-bold uppercase tracking-[0.26em] text-cyan-700">Platform modules</p>
@@ -345,8 +376,8 @@ export default function BlueExperience() {
         </div>
       </section>
 
-      <section className="px-5 py-10 md:px-8">
-        <div className="mx-auto grid max-w-7xl items-center gap-8 rounded-[2rem] border border-slate-200 bg-white p-5 shadow-sm shadow-slate-200/70 md:p-8 lg:grid-cols-[0.95fr_1.05fr]">
+      <section className="px-4 py-10 sm:px-5 md:px-8">
+        <div className="landing-mobile-section mx-auto grid max-w-7xl items-center gap-8 rounded-[2rem] border border-slate-200 bg-white p-4 shadow-sm shadow-slate-200/70 sm:p-5 md:p-8 lg:grid-cols-[0.95fr_1.05fr]">
           <div className="relative min-h-[390px] overflow-hidden rounded-[1.5rem]">
             <img src={oceanImages.reef} alt="" className="absolute inset-0 h-full w-full object-cover" />
             <div className="absolute inset-0 bg-gradient-to-tr from-slate-950/64 via-transparent to-cyan-200/20" />
@@ -374,7 +405,7 @@ export default function BlueExperience() {
         </div>
       </section>
 
-      <section id="security" className="px-5 py-16 md:px-8">
+      <section id="security" className="px-4 py-16 sm:px-5 md:px-8">
         <div className="mx-auto grid max-w-7xl gap-5 lg:grid-cols-3">
           <InterfaceCard icon={Lock} title="Access control">
             <p className="leading-7 text-slate-600">Users enter through request access, admin approval, Supabase Auth, and role-based routing.</p>
@@ -400,8 +431,8 @@ export default function BlueExperience() {
         </div>
       </section>
 
-      <section id="workflows" className="px-5 py-16 md:px-8">
-        <div className="mx-auto grid max-w-7xl gap-8 rounded-[2rem] border border-slate-200 bg-white p-6 shadow-sm shadow-slate-200/70 md:p-8 lg:grid-cols-[0.82fr_1.18fr]">
+      <section id="workflows" className="px-4 py-16 sm:px-5 md:px-8">
+        <div className="landing-mobile-section mx-auto grid max-w-7xl gap-8 rounded-[2rem] border border-slate-200 bg-white p-4 shadow-sm shadow-slate-200/70 sm:p-6 md:p-8 lg:grid-cols-[0.82fr_1.18fr]">
           <div>
             <p className="text-sm font-bold uppercase tracking-[0.26em] text-cyan-700">Workflow design</p>
             <h2 className="mt-4 font-display text-4xl font-bold tracking-[-0.035em] text-slate-950 md:text-5xl">
@@ -423,7 +454,7 @@ export default function BlueExperience() {
         </div>
       </section>
 
-      <section className="px-5 py-16 md:px-8">
+      <section className="px-4 py-16 sm:px-5 md:px-8">
         <div className="mx-auto grid max-w-7xl gap-5 lg:grid-cols-[1.05fr_0.95fr]">
           <div className="rounded-[2rem] border border-slate-200 bg-white p-6 shadow-sm shadow-slate-200/70">
             <div className="flex items-center gap-3">
@@ -488,8 +519,8 @@ export default function BlueExperience() {
         </div>
       </section>
 
-      <section id="roles" className="px-5 py-16 md:px-8">
-        <div className="mx-auto max-w-7xl rounded-[2rem] border border-slate-200 bg-white p-6 shadow-sm shadow-slate-200/70 md:p-8">
+      <section id="roles" className="px-4 py-16 sm:px-5 md:px-8">
+        <div className="landing-mobile-section mx-auto max-w-7xl rounded-[2rem] border border-slate-200 bg-white p-4 shadow-sm shadow-slate-200/70 sm:p-6 md:p-8">
           <div className="grid gap-8 lg:grid-cols-[0.85fr_1.15fr]">
             <div>
               <p className="text-sm font-bold uppercase tracking-[0.26em] text-cyan-700">Role ecosystem</p>
@@ -517,7 +548,7 @@ export default function BlueExperience() {
         </div>
       </section>
 
-      <section id="pricing" className="px-5 py-16 md:px-8">
+      <section id="pricing" className="px-4 py-16 sm:px-5 md:px-8">
         <div className="mx-auto grid max-w-7xl gap-5 lg:grid-cols-[1fr_0.75fr]">
           <div className="rounded-[2rem] border border-slate-200 bg-white p-8 shadow-sm shadow-slate-200/70">
             <p className="text-sm font-bold uppercase tracking-[0.26em] text-cyan-700">Delivery scope</p>
@@ -540,8 +571,8 @@ export default function BlueExperience() {
         </div>
       </section>
 
-      <section id="contact" className="px-5 py-20 md:px-8">
-        <div className="mx-auto max-w-5xl rounded-[2rem] bg-slate-950 p-8 text-center text-white shadow-2xl shadow-slate-300/70 md:p-12">
+      <section id="contact" className="px-4 py-20 sm:px-5 md:px-8">
+        <div className="landing-mobile-section mx-auto max-w-5xl rounded-[2rem] bg-slate-950 p-5 text-center text-white shadow-2xl shadow-slate-300/70 sm:p-8 md:p-12">
           <div className="mx-auto grid h-12 w-12 place-items-center rounded-2xl bg-cyan-300 text-slate-950">
             <Landmark className="h-6 w-6" />
           </div>

@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { ThemeToggle } from "@/components/dashboard/ThemeToggle";
@@ -12,7 +12,7 @@ import { redirectForRole, type DbRole } from "@/lib/role-redirect";
 const requestRoles: DbRole[] = ["BMU Manager", "County Officer", "KFS Officer", "Ranger", "NGO Program Manager", "Donor", "Fisher"];
 const requestRoleLabel: Partial<Record<DbRole, string>> = { "KFS Officer": "KeFS Officer" };
 const requestTypes = ["BMU operations", "County fisheries monitoring", "Patrol and compliance", "NGO or donor monitoring", "Fisher profile access", "Other"];
-const locations = ["Kilifi", "Kwale", "Mombasa", "Lamu", "Tana River", "Homa Bay", "Kisumu", "Migori", "Siaya", "Busia", "Other"];
+const organizationTypes = ["BMU", "County fisheries office", "National fisheries office", "NGO", "Donor", "Community organization", "Other"];
 
 const schema = z.object({
   email: z.string().email("Enter a valid email."),
@@ -21,24 +21,92 @@ const schema = z.object({
   organization: z.string().optional(),
   requestedRole: z.string().optional(),
   requestType: z.string().optional(),
-  location: z.string().optional(),
+  organizationType: z.string().optional(),
+  countyId: z.string().optional(),
+  subCountyId: z.string().optional(),
+  wardId: z.string().optional(),
+  bmuId: z.string().optional(),
   message: z.string().optional(),
 });
 type AuthValues = z.infer<typeof schema>;
+type CountyOption = { id: string; name: string };
+type SubCountyOption = { id: string; county_id: string; name: string };
+type WardOption = { id: string; sub_county_id: string; name: string };
+type BmuOption = { id: string; ward_id: string | null; name: string };
 
 export function AuthCard({ mode }: { mode: "login" | "register" | "forgot" | "access" }) {
   const router = useRouter();
   const search = useSearchParams();
   const [message, setMessage] = useState("");
   const [error, setError] = useState("");
-  const { register, handleSubmit, formState } = useForm<AuthValues>({
+  const [counties, setCounties] = useState<CountyOption[]>([]);
+  const [subCounties, setSubCounties] = useState<SubCountyOption[]>([]);
+  const [wards, setWards] = useState<WardOption[]>([]);
+  const [bmus, setBmus] = useState<BmuOption[]>([]);
+  const { register, handleSubmit, formState, watch, setValue } = useForm<AuthValues>({
     defaultValues: {
       email: search.get("email") ?? "",
       requestedRole: "BMU Manager",
       requestType: "BMU operations",
-      location: "Kilifi",
+      organizationType: "BMU",
     },
   });
+  const selectedCountyId = watch("countyId");
+  const selectedSubCountyId = watch("subCountyId");
+  const selectedWardId = watch("wardId");
+  const selectedRole = watch("requestedRole");
+
+  useEffect(() => {
+    if (mode !== "access" || !hasSupabaseConfig()) return;
+    const supabase = createClient();
+    async function loadLocations() {
+      const { data, error: locationError } = await supabase.from("counties").select("id,name").order("name");
+      if (!locationError) setCounties((data ?? []) as CountyOption[]);
+    }
+    void loadLocations();
+  }, [mode]);
+
+  useEffect(() => {
+    setValue("subCountyId", "");
+    setValue("wardId", "");
+    setValue("bmuId", "");
+    setSubCounties([]);
+    setWards([]);
+    setBmus([]);
+    if (!selectedCountyId || !hasSupabaseConfig()) return;
+    const supabase = createClient();
+    async function loadSubCounties() {
+      const { data } = await supabase.from("sub_counties").select("id,county_id,name").eq("county_id", selectedCountyId).order("name");
+      setSubCounties((data ?? []) as SubCountyOption[]);
+    }
+    void loadSubCounties();
+  }, [selectedCountyId, setValue]);
+
+  useEffect(() => {
+    setValue("wardId", "");
+    setValue("bmuId", "");
+    setWards([]);
+    setBmus([]);
+    if (!selectedSubCountyId || !hasSupabaseConfig()) return;
+    const supabase = createClient();
+    async function loadWards() {
+      const { data } = await supabase.from("wards").select("id,sub_county_id,name").eq("sub_county_id", selectedSubCountyId).order("name");
+      setWards((data ?? []) as WardOption[]);
+    }
+    void loadWards();
+  }, [selectedSubCountyId, setValue]);
+
+  useEffect(() => {
+    setValue("bmuId", "");
+    setBmus([]);
+    if (!selectedWardId || !hasSupabaseConfig()) return;
+    const supabase = createClient();
+    async function loadBmus() {
+      const { data } = await supabase.from("bmus").select("id,ward_id,name").eq("ward_id", selectedWardId).order("name");
+      setBmus((data ?? []) as BmuOption[]);
+    }
+    void loadBmus();
+  }, [selectedWardId, setValue]);
 
   async function submit(values: AuthValues) {
     setMessage("");
@@ -59,14 +127,19 @@ export function AuthCard({ mode }: { mode: "login" | "register" | "forgot" | "ac
       if (signInError) throw signInError;
       const { data: profile, error: profileError } = await supabase
         .from("profiles")
-        .select("role")
+        .select("role,is_active,consent_accepted_at,data_usage_accepted_at,onboarding_completed_at")
         .eq("id", authData.user.id)
         .maybeSingle();
       if (profileError) throw profileError;
       const destination = redirectForRole(profile?.role);
-      if (!destination) {
+      if (!profile || !destination || profile.is_active === false) {
         await supabase.auth.signOut();
         router.push(`/request-access?email=${encodeURIComponent(values.email)}`);
+        return;
+      }
+      if (!profile.consent_accepted_at || !profile.data_usage_accepted_at || !profile.onboarding_completed_at) {
+        router.push(`/onboarding?next=${encodeURIComponent(search.get("next") ?? destination)}`);
+        router.refresh();
         return;
       }
       router.push(search.get("next") ?? destination);
@@ -90,18 +163,28 @@ export function AuthCard({ mode }: { mode: "login" | "register" | "forgot" | "ac
       return;
     }
 
-    const details = [
-      values.requestedRole ? `Requested role: ${values.requestedRole}` : null,
-      values.requestType ? `Access type: ${values.requestType}` : null,
-      values.location ? `Location: ${values.location}` : null,
-      values.message ? `Message: ${values.message}` : null,
-    ].filter(Boolean).join("\n");
+    if (!values.name || !values.organization || !values.requestedRole || !values.requestType) {
+      setError("Name, organization, role, and access type are required.");
+      return;
+    }
+    if (values.requestedRole === "BMU Manager" && bmus.length > 0 && !values.bmuId) {
+      setError("BMU Manager access requires a BMU selection.");
+      return;
+    }
 
     const { error: insertError } = await supabase.from("access_requests").insert({
       name: values.name,
       email: values.email,
       organization: values.organization,
-      message: details,
+      organization_name: values.organization,
+      organization_type: values.organizationType,
+      requested_role: values.requestedRole,
+      access_type: values.requestType,
+      county_id: values.countyId || null,
+      sub_county_id: values.subCountyId || null,
+      ward_id: values.wardId || null,
+      bmu_id: values.bmuId || null,
+      message: values.message,
       status: "Pending",
     });
     if (insertError) throw insertError;
@@ -126,8 +209,8 @@ export function AuthCard({ mode }: { mode: "login" | "register" | "forgot" | "ac
         {(mode === "register" || mode === "access") && <label className="grid gap-1.5 text-xs font-bold uppercase tracking-[0.18em] text-[var(--muted-text)]">Full name<input {...register("name")} placeholder="Full name" className="rounded-xl border border-[var(--line)] bg-[var(--input)] px-4 py-3 text-sm normal-case tracking-normal text-[var(--text)] outline-none placeholder:text-[var(--muted-text)]" /></label>}
         {mode === "access" && <label className="grid gap-1.5 text-xs font-bold uppercase tracking-[0.18em] text-[var(--muted-text)]">Organization<input {...register("organization")} placeholder="Organization / BMU / county" className="rounded-xl border border-[var(--line)] bg-[var(--input)] px-4 py-3 text-sm normal-case tracking-normal text-[var(--text)] outline-none placeholder:text-[var(--muted-text)]" /></label>}
         {mode === "access" && (
-          <label className="grid gap-1.5 text-xs font-bold uppercase tracking-[0.18em] text-[var(--muted-text)]">Location<select {...register("location")} className="rounded-xl border border-[var(--line)] bg-[var(--input)] px-4 py-3 text-sm normal-case tracking-normal text-[var(--text)] outline-none placeholder:text-[var(--muted-text)]">
-              {locations.map((location) => <option key={location} value={location}>{location}</option>)}
+          <label className="grid gap-1.5 text-xs font-bold uppercase tracking-[0.18em] text-[var(--muted-text)]">Organization type<select {...register("organizationType")} className="rounded-xl border border-[var(--line)] bg-[var(--input)] px-4 py-3 text-sm normal-case tracking-normal text-[var(--text)] outline-none placeholder:text-[var(--muted-text)]">
+              {organizationTypes.map((type) => <option key={type} value={type}>{type}</option>)}
             </select></label>
         )}
         <label className="grid gap-1.5 text-xs font-bold uppercase tracking-[0.18em] text-[var(--muted-text)]">Email<input {...register("email")} placeholder="Email" className="rounded-xl border border-[var(--line)] bg-[var(--input)] px-4 py-3 text-sm normal-case tracking-normal text-[var(--text)] outline-none placeholder:text-[var(--muted-text)]" /></label>
@@ -139,6 +222,26 @@ export function AuthCard({ mode }: { mode: "login" | "register" | "forgot" | "ac
             <label className="grid gap-1.5 text-xs font-bold uppercase tracking-[0.18em] text-[var(--muted-text)]">Access type<select {...register("requestType")} className="rounded-xl border border-[var(--line)] bg-[var(--input)] px-4 py-3 text-sm normal-case tracking-normal text-[var(--text)] outline-none placeholder:text-[var(--muted-text)]">
                 {requestTypes.map((type) => <option key={type}>{type}</option>)}
               </select></label>
+          </div>
+        )}
+        {mode === "access" && (
+          <div className="grid gap-3 md:grid-cols-2">
+            <label className="grid gap-1.5 text-xs font-bold uppercase tracking-[0.18em] text-[var(--muted-text)]">County<select {...register("countyId")} className="rounded-xl border border-[var(--line)] bg-[var(--input)] px-4 py-3 text-sm normal-case tracking-normal text-[var(--text)] outline-none">
+              <option value="">Select county</option>
+              {counties.map((county) => <option key={county.id} value={county.id}>{county.name}</option>)}
+            </select></label>
+            <label className="grid gap-1.5 text-xs font-bold uppercase tracking-[0.18em] text-[var(--muted-text)]">Sub-county<select {...register("subCountyId")} disabled={!selectedCountyId} className="rounded-xl border border-[var(--line)] bg-[var(--input)] px-4 py-3 text-sm normal-case tracking-normal text-[var(--text)] outline-none disabled:opacity-60">
+              <option value="">Select sub-county</option>
+              {subCounties.map((subCounty) => <option key={subCounty.id} value={subCounty.id}>{subCounty.name}</option>)}
+            </select></label>
+            <label className="grid gap-1.5 text-xs font-bold uppercase tracking-[0.18em] text-[var(--muted-text)]">Ward<select {...register("wardId")} disabled={!selectedSubCountyId} className="rounded-xl border border-[var(--line)] bg-[var(--input)] px-4 py-3 text-sm normal-case tracking-normal text-[var(--text)] outline-none disabled:opacity-60">
+              <option value="">Select ward</option>
+              {wards.map((ward) => <option key={ward.id} value={ward.id}>{ward.name}</option>)}
+            </select></label>
+            <label className="grid gap-1.5 text-xs font-bold uppercase tracking-[0.18em] text-[var(--muted-text)]">BMU<select {...register("bmuId")} disabled={!selectedWardId} className="rounded-xl border border-[var(--line)] bg-[var(--input)] px-4 py-3 text-sm normal-case tracking-normal text-[var(--text)] outline-none disabled:opacity-60">
+              <option value="">{selectedRole === "BMU Manager" ? "Select required BMU" : "Optional BMU scope"}</option>
+              {bmus.map((bmu) => <option key={bmu.id} value={bmu.id}>{bmu.name}</option>)}
+            </select></label>
           </div>
         )}
         {mode === "access" && <label className="grid gap-1.5 text-xs font-bold uppercase tracking-[0.18em] text-[var(--muted-text)]">Message<textarea {...register("message")} placeholder="Briefly describe what access is needed for" className="min-h-28 rounded-xl border border-[var(--line)] bg-[var(--input)] px-4 py-3 text-sm normal-case tracking-normal text-[var(--text)] outline-none placeholder:text-[var(--muted-text)]" /></label>}

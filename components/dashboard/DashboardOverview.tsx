@@ -8,6 +8,7 @@ import { MapPreview } from "@/components/dashboard/MapPreview";
 import { StatCard } from "@/components/dashboard/StatCard";
 import { createClient, hasSupabaseConfig } from "@/lib/supabase";
 import { roleLabels } from "@/lib/roles";
+import { slugForRole } from "@/lib/role-redirect";
 import type { RoleSlug, Stat } from "@/types/domain";
 
 const countTargets = [
@@ -20,7 +21,8 @@ const countTargets = [
   ["ngo_projects", "Active projects", "emerald"],
 ] as const;
 
-export function DashboardOverview({ role }: { role: RoleSlug }) {
+export function DashboardOverview({ role }: { role?: RoleSlug }) {
+  const [resolvedRole, setResolvedRole] = useState<RoleSlug>(role ?? "bmu");
   const [stats, setStats] = useState<Stat[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
@@ -35,6 +37,17 @@ export function DashboardOverview({ role }: { role: RoleSlug }) {
       }
       setLoading(true);
       const supabase = createClient();
+      if (!role) {
+        const { data: sessionData } = await supabase.auth.getSession();
+        const userId = sessionData.session?.user.id;
+        if (userId) {
+          const { data: profile } = await supabase.from("profiles").select("role").eq("id", userId).maybeSingle();
+          const slug = slugForRole(profile?.role);
+          if (slug) setResolvedRole(slug as RoleSlug);
+        }
+      } else {
+        setResolvedRole(role);
+      }
       const results = await Promise.all(countTargets.map(async ([table, label, tone]) => {
         let query = supabase.from(table).select("id", { count: "exact", head: true });
         if (table === "access_requests") query = supabase.from(table).select("id", { count: "exact", head: true }).eq("status", "Pending");
@@ -53,7 +66,7 @@ export function DashboardOverview({ role }: { role: RoleSlug }) {
 
   return (
     <section>
-      <p className="text-sm uppercase tracking-[0.24em] text-cyan-200/70">{roleLabels[role]}</p>
+      <p className="text-sm uppercase tracking-[0.24em] text-cyan-200/70">{roleLabels[resolvedRole]}</p>
       <h1 className="mt-2 text-3xl font-bold tracking-tight md:text-5xl">Operational dashboard</h1>
       <div className="mt-6">{loading ? <LoadingState /> : error ? <EmptyState title="Dashboard counts unavailable" body={error} /> : <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">{stats.map((stat) => <StatCard key={stat.label} stat={stat} />)}</div>}</div>
       <div className="mt-6 grid gap-4 xl:grid-cols-[1fr_0.9fr]"><ChartCard title="Production and activity trend" /><MapPreview /></div>

@@ -47,3 +47,9 @@ public/
 supabase/functions/
 supabase/migrations/
 ```
+
+## Implementation Notes
+
+- Bilingual preservation applies only to client-provided official forms that already contain English + Swahili labels.
+- System-wide bilingual translation is not included unless separately approved.
+- Do not build a language switcher, full i18n infrastructure, or translate normal dashboards, auth, admin, reports, settings, or general UI unless the client separately approves it.
