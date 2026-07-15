@@ -31,7 +31,7 @@ const configs: Record<string, CrudConfig> = {
     fields: [{ name: "full_name", label: "Full name", required: true }, { name: "phone", label: "Phone" }, { name: "bmu_id", label: "BMU UUID", required: true }, { name: "membership_status", label: "Status", required: true }],
   },
   fishers: {
-    title: "Fishers",
+    title: "Members",
     description: "Real Supabase fisher records with BMU affiliation and membership status.",
     table: "fishers",
     statusField: "membership_status",

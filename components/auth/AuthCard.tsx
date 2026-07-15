@@ -10,8 +10,8 @@ import { createClient, hasSupabaseConfig } from "@/lib/supabase";
 import { redirectForRole, type DbRole } from "@/lib/role-redirect";
 
 const requestRoles: DbRole[] = ["BMU Manager", "County Officer", "KFS Officer", "Ranger", "NGO Program Manager", "Donor", "Fisher"];
-const requestRoleLabel: Partial<Record<DbRole, string>> = { "KFS Officer": "KeFS Officer" };
-const requestTypes = ["BMU operations", "County fisheries monitoring", "Patrol and compliance", "NGO or donor monitoring", "Fisher profile access", "Other"];
+const requestRoleLabel: Partial<Record<DbRole, string>> = { "KFS Officer": "KeFS Officer", Fisher: "Member" };
+const requestTypes = ["BMU operations", "County fisheries monitoring", "Patrol and compliance", "NGO or donor monitoring", "Member profile access", "Other"];
 const organizationTypes = ["BMU", "County fisheries office", "National fisheries office", "NGO", "Donor", "Community organization", "Other"];
 
 const schema = z.object({
@@ -124,7 +124,9 @@ export function AuthCard({ mode }: { mode: "login" | "register" | "forgot" | "ac
     const supabase = createClient();
     if (mode === "login") {
       const { data: authData, error: signInError } = await supabase.auth.signInWithPassword({ email: values.email, password: values.password ?? "" });
-      if (signInError) throw signInError;
+      if (signInError) {
+        throw new Error("Login failed. Please confirm the user has been approved and has set a password from the invite/reset email.");
+      }
       const { data: profile, error: profileError } = await supabase
         .from("profiles")
         .select("role,is_active,consent_accepted_at,data_usage_accepted_at,onboarding_completed_at")
@@ -163,8 +165,8 @@ export function AuthCard({ mode }: { mode: "login" | "register" | "forgot" | "ac
       return;
     }
 
-    if (!values.name || !values.organization || !values.requestedRole || !values.requestType) {
-      setError("Name, organization, role, and access type are required.");
+    if (!values.name || !values.organizationType || !values.requestedRole || !values.requestType) {
+      setError("Name, organization type, role, and access type are required.");
       return;
     }
     if (values.requestedRole === "BMU Manager" && bmus.length > 0 && !values.bmuId) {
@@ -175,8 +177,8 @@ export function AuthCard({ mode }: { mode: "login" | "register" | "forgot" | "ac
     const { error: insertError } = await supabase.from("access_requests").insert({
       name: values.name,
       email: values.email,
-      organization: values.organization,
-      organization_name: values.organization,
+      organization: values.organizationType,
+      organization_name: null,
       organization_type: values.organizationType,
       requested_role: values.requestedRole,
       access_type: values.requestType,
@@ -207,7 +209,6 @@ export function AuthCard({ mode }: { mode: "login" | "register" | "forgot" | "ac
       </div>
       <div className="mt-6 grid gap-3">
         {(mode === "register" || mode === "access") && <label className="grid gap-1.5 text-xs font-bold uppercase tracking-[0.18em] text-[var(--muted-text)]">Full name<input {...register("name")} placeholder="Full name" className="rounded-xl border border-[var(--line)] bg-[var(--input)] px-4 py-3 text-sm normal-case tracking-normal text-[var(--text)] outline-none placeholder:text-[var(--muted-text)]" /></label>}
-        {mode === "access" && <label className="grid gap-1.5 text-xs font-bold uppercase tracking-[0.18em] text-[var(--muted-text)]">Organization<input {...register("organization")} placeholder="Organization / BMU / county" className="rounded-xl border border-[var(--line)] bg-[var(--input)] px-4 py-3 text-sm normal-case tracking-normal text-[var(--text)] outline-none placeholder:text-[var(--muted-text)]" /></label>}
         {mode === "access" && (
           <label className="grid gap-1.5 text-xs font-bold uppercase tracking-[0.18em] text-[var(--muted-text)]">Organization type<select {...register("organizationType")} className="rounded-xl border border-[var(--line)] bg-[var(--input)] px-4 py-3 text-sm normal-case tracking-normal text-[var(--text)] outline-none placeholder:text-[var(--muted-text)]">
               {organizationTypes.map((type) => <option key={type} value={type}>{type}</option>)}

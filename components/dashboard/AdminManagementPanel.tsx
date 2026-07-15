@@ -7,7 +7,7 @@ import { createClient, hasSupabaseConfig } from "@/lib/supabase";
 import type { DbRole } from "@/lib/role-redirect";
 
 const roles: DbRole[] = ["Government Admin", "KFS Officer", "County Officer", "BMU Manager", "Ranger", "NGO Program Manager", "Donor", "Fisher"];
-const roleLabel: Partial<Record<DbRole, string>> = { "Government Admin": "BMU Manager", "KFS Officer": "KeFS Officer" };
+const roleLabel: Partial<Record<DbRole, string>> = { "Government Admin": "BMU Manager", "KFS Officer": "KeFS Officer", Fisher: "Member" };
 type ProfileRow = {
   id: string;
   full_name: string;

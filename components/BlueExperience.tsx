@@ -53,6 +53,7 @@ const roles: Role[] = [
 
 const publicRoleLabel: Partial<Record<Role, string>> = {
   "KFS Officer": "KeFS Officer",
+  Fisher: "Member",
 };
 
 const workflowSteps = [
@@ -96,7 +97,7 @@ function ProductPreview() {
               </div>
             </div>
             <div className="mt-8 space-y-2 text-sm">
-              {["Dashboard", "Fishers", "Vessels", "Compliance", "Reports", "Settings"].map((item, index) => (
+              {["Dashboard", "Members", "Vessels", "Compliance", "Reports", "Settings"].map((item, index) => (
                 <div key={item} className={`rounded-xl px-3 py-2 ${index === 0 ? "bg-white text-slate-950" : "text-cyan-50/78"}`}>
                   {item}
                 </div>
@@ -120,7 +121,7 @@ function ProductPreview() {
             </div>
             <div className="mt-5 grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
               {[
-                ["Fishers", "Live"],
+                ["Members", "Live"],
                 ["Vessels", "Verified"],
                 ["Requests", "Pending"],
                 ["Reports", "Exports"],
@@ -221,11 +222,11 @@ export default function BlueExperience() {
       "Government Admin": "National audit visibility, user governance, cross-county oversight, platform settings, and executive reporting.",
       "KFS Officer": "Fisheries oversight, inspection history, landing site data, species trends, and compliance escalation.",
       "County Officer": "County-wide BMU performance, records review, operational monitoring, and exportable reports.",
-      "BMU Manager": "Fisher profiles, vessels, fees, receipts, meetings, minutes, documents, compliance, and local operations.",
+      "BMU Manager": "Member profiles, vessels, fees, receipts, meetings, minutes, documents, compliance, and local operations.",
       Ranger: "Patrol logs, compliance checks, evidence uploads, field activity records, and incident follow-up.",
       "NGO Program Manager": "Projects, beneficiaries, activities, budgets, outputs, and field evidence aligned to donor KPIs.",
       Donor: "Read-only project performance, funding outcomes, beneficiary reach, evidence packs, and impact summaries.",
-      Fisher: "Profile, membership status, QR identity, documents, receipts, and community-related records.",
+      Fisher: "Member profile, membership status, QR identity, documents, receipts, and community-related records.",
     };
     return map[activeRole];
   }, [activeRole]);

@@ -8,7 +8,7 @@ export const roleLabels: Record<RoleSlug, string> = {
   ranger: "Ranger",
   ngo: "NGO Program Manager",
   donor: "Donor",
-  fisher: "Fisher",
+  fisher: "Member",
 };
 
 export const rolePermissions: Record<RoleSlug, Permission[]> = {
@@ -25,7 +25,7 @@ export const rolePermissions: Record<RoleSlug, Permission[]> = {
 export const baseNav: NavItem[] = [
   { label: "Overview", href: "/dashboard" },
   { label: "Register Member", href: "/dashboard/register-member", permission: "fishers.manage" },
-  { label: "Fishers", href: "/dashboard/fishers", permission: "fishers.view" },
+  { label: "Members", href: "/dashboard/fishers", permission: "fishers.view" },
   { label: "Vessels", href: "/dashboard/vessels", permission: "vessels.manage" },
   { label: "Catches", href: "/dashboard/catches", permission: "catches.create" },
   { label: "Species", href: "/dashboard/species", permission: "species.view" },

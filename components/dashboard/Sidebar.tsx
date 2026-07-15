@@ -10,7 +10,7 @@ import type { RoleSlug } from "@/types/domain";
 const icons: Record<string, ComponentType<{ className?: string }>> = {
   Overview: Gauge,
   "Register Member": UserPlus,
-  Fishers: Users,
+  Members: Users,
   Vessels: Ship,
   Catches: Fish,
   Species: Waves,
@@ -36,7 +36,7 @@ const icons: Record<string, ComponentType<{ className?: string }>> = {
 
 function groupFor(label: string) {
   if (label === "Overview") return "Command";
-  if (["Register Member", "Fishers", "Vessels", "Catches", "Species", "Landing Sites", "BMU Setup"].includes(label)) return "Fisheries Records";
+  if (["Register Member", "Members", "Vessels", "Catches", "Species", "Landing Sites", "BMU Setup"].includes(label)) return "Fisheries Records";
   if (["Compliance", "FORM 1A", "BMU Patrol", "Patrol Data", "Payments", "Renewals", "Documents", "Rangers", "Reports", "Verify Member QR", "GIS", "Projects", "Beneficiaries", "Donor Impact"].includes(label)) return "Operations";
   return "Administration";
 }
