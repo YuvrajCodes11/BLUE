@@ -194,7 +194,16 @@ export function AuthCard({ mode }: { mode: "login" | "register" | "forgot" | "ac
   }
 
   async function onSubmit(values: AuthValues) {
-    try { await submit(values); } catch (err) { setError(err instanceof Error ? err.message : "Request failed."); }
+    try {
+      await submit(values);
+    } catch (err) {
+      const fallback = mode === "login"
+        ? "Login failed. Please confirm the account is approved and the password has been set from the invite/reset email."
+        : mode === "access"
+          ? "Access request failed. Please check the required fields and try again."
+          : "Request failed. Please try again.";
+      setError(err instanceof Error ? err.message : fallback);
+    }
   }
 
   const title = mode === "login" ? "Login" : mode === "register" ? "Create account" : mode === "forgot" ? "Reset password" : "Request access";
