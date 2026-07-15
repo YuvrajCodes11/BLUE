@@ -1,0 +1,163 @@
+{"kind":"deck","id":"pr/ylsyqh","name":"Deck"}
+{"kind":"layout","layoutId":"f3da1ee9-f3b1-417a-81df-0614600baec0","name":"Master","type":"master"}
+{"kind":"layout","layoutId":"0a8cc252-ae89-4683-a869-305022fff97c","name":"Title Slide","type":"title"}
+{"kind":"slide","id":"sl/k2kf1l","slide":1,"title":"B","textShapes":5}
+{"kind":"shape","id":"sh/qtwjylkf","slide":1,"bbox":[0,0,1280,720]}
+{"kind":"shape","id":"sh/re50rq10","slide":1,"bbox":[72,54,52,52]}
+{"kind":"textbox","id":"sh/0je14v2x","slide":1,"text":"B","textPreview":"B","textChars":1,"textLines":1,"bbox":[72,62,52,32]}
+{"kind":"textbox","id":"sh/1k7ix0j2","slide":1,"text":"BLUE","textPreview":"BLUE","textChars":4,"textLines":1,"bbox":[142,58,160,44]}
+{"kind":"textbox","id":"sh/ehwj2lkr","slide":1,"text":"Blue Economy Livelihoods Unified Ecosystem","textPreview":"Blue Economy Livelihoods Unified Ecosystem","textChars":42,"textLines":1,"bbox":[72,220,860,146]}
+{"kind":"textbox","id":"sh/zi50vq1c","slide":1,"text":"A secure fisheries, BMU, compliance, reporting, and governance platform for counties, officers, NGOs, donors, and coastal communities.","textPreview":"A secure fisheries, BMU, compliance, reporting, and governance platform for counties, officers, NGOs, donors, and coastal communities.","textChars":134,"textLines":1,"bbox":[76,388,760,86]}
+{"kind":"textbox","id":"sh/gnuhsb2d","slide":1,"text":"Production software, not a paper workflow","textPreview":"Production software, not a paper workflow","textChars":41,"textLines":1,"bbox":[76,510,360,42]}
+{"kind":"image","id":"im/gru1c3et","slide":1,"name":"","alt":"Bright ocean coastline","bbox":[0,0,1280,720]}
+{"kind":"notes","id":"nt/k2kf1l","slide":1,"text":""}
+{"kind":"slide","id":"sl/ga3itx","slide":2,"title":"THE PROBLEM","textShapes":9}
+{"kind":"textbox","id":"sh/ips3e98b","slide":2,"text":"THE PROBLEM","textPreview":"THE PROBLEM","textChars":11,"textLines":1,"bbox":[72,52,540,28]}
+{"kind":"textbox","id":"sh/5s3m9472","slide":2,"text":"Paper records slow down fisheries governance","textPreview":"Paper records slow down fisheries governance","textChars":44,"textLines":1,"bbox":[72,92,880,118]}
+{"kind":"textbox","id":"sh/4rulgjqh","slide":2,"text":"BMUs and officers need one secure place to capture, verify, retrieve, and report operational data without repeated paperwork.","textPreview":"BMUs and officers need one secure place to capture, verify, retrieve, and report operational data without repeated paperwork.","textChars":125,"textLines":1,"bbox":[72,210,820,64]}
+{"kind":"shape","id":"sh/rul4beps","slide":2,"bbox":[72,296,335,238]}
+{"kind":"shape","id":"sh/6tc3i98n","slide":2,"bbox":[96,320,46,46]}
+{"kind":"textbox","id":"sh/tg3mdo7y","slide":2,"text":"Scattered records","textPreview":"Scattered records","textChars":17,"textLines":1,"bbox":[162,318,220,42]}
+{"kind":"textbox","id":"sh/sfulkjqd","slide":2,"text":"Membership, vessel, patrol, certificate, and payment details are difficult to search later.","textPreview":"Membership, vessel, patrol, certificate, and payment details are difficult to search later.","textChars":91,"textLines":1,"bbox":[96,384,287,136]}
+{"kind":"shape","id":"sh/7yhkzu9o","slide":2,"bbox":[472,296,335,238]}
+{"kind":"shape","id":"sh/mx836p83","slide":2,"bbox":[496,320,46,46]}
+{"kind":"textbox","id":"sh/0r6tsj2x","slide":2,"text":"Slow decisions","textPreview":"Slow decisions","textChars":14,"textLines":1,"bbox":[562,318,220,42]}
+{"kind":"textbox","id":"sh/1szu1oj2","slide":2,"text":"County and national teams cannot easily see clean operational status across BMUs.","textPreview":"County and national teams cannot easily see clean operational status across BMUs.","textChars":81,"textLines":1,"bbox":[496,384,287,136]}
+{"kind":"shape","id":"sh/e5obq9kr","slide":2,"bbox":[872,296,335,238]}
+{"kind":"shape","id":"sh/f6xczelc","slide":2,"bbox":[896,320,46,46]}
+{"kind":"textbox","id":"sh/ovqdwj2t","slide":2,"text":"Weak traceability","textPreview":"Weak traceability","textChars":17,"textLines":1,"bbox":[962,318,220,42]}
+{"kind":"textbox","id":"sh/pwzu5oje","slide":2,"text":"Manual approvals, inspections, and exports make accountability harder to prove.","textPreview":"Manual approvals, inspections, and exports make accountability harder to prove.","textChars":79,"textLines":1,"bbox":[896,384,287,136]}
+{"kind":"notes","id":"nt/ga3itx","slide":2,"text":""}
+{"kind":"slide","id":"sl/mswirv","slide":3,"title":"THE PLATFORM","textShapes":24}
+{"kind":"textbox","id":"sh/md4z2pgn","slide":3,"text":"THE PLATFORM","textPreview":"THE PLATFORM","textChars":12,"textLines":1,"bbox":[72,52,540,28]}
+{"kind":"textbox","id":"sh/9gvyx4fe","slide":3,"text":"BLUE turns BMU operations into connected digital workflows","textPreview":"BLUE turns BMU operations into connected digital workflows","textChars":58,"textLines":1,"bbox":[72,92,880,118]}
+{"kind":"textbox","id":"sh/8fmh4zyt","slide":3,"text":"The system organizes users, locations, records, documents, approvals, and reports around real role-based access.","textPreview":"The system organizes users, locations, records, documents, approvals, and reports around real role-based access.","textChars":112,"textLines":1,"bbox":[72,210,820,64]}
+{"kind":"shape","id":"sh/vixgzexk","slide":3,"bbox":[650,170,520,390]}
+{"kind":"shape","id":"sh/uhoz69gz","slide":3,"bbox":[650,170,210,390]}
+{"kind":"textbox","id":"sh/h4fy1ofa","slide":3,"text":"BLUE","textPreview":"BLUE","textChars":4,"textLines":1,"bbox":[678,200,140,30]}
+{"kind":"shape","id":"sh/wj6h8jyp","slide":3,"bbox":[674,258,160,34]}
+{"kind":"textbox","id":"sh/bmtgnax0","slide":3,"text":"Dashboard","textPreview":"Dashboard","textChars":9,"textLines":1,"bbox":[692,264,126,18]}
+{"kind":"shape","id":"sh/qlkfu5gf","slide":3,"bbox":[674,304,160,34]}
+{"kind":"textbox","id":"sh/ovitkj29","slide":3,"text":"Members","textPreview":"Members","textChars":7,"textLines":1,"bbox":[692,310,126,18]}
+{"kind":"shape","id":"sh/pwbad4ju","slide":3,"bbox":[674,350,160,34]}
+{"kind":"textbox","id":"sh/2t0bi9k3","slide":3,"text":"Vessels","textPreview":"Vessels","textChars":7,"textLines":1,"bbox":[692,356,126,18]}
+{"kind":"shape","id":"sh/3u9sbe1o","slide":3,"bbox":[674,396,160,34]}
+{"kind":"textbox","id":"sh/cj2toj25","slide":3,"text":"Compliance","textPreview":"Compliance","textChars":10,"textLines":1,"bbox":[692,402,126,18]}
+{"kind":"shape","id":"sh/xkbahojq","slide":3,"bbox":[674,442,160,34]}
+{"kind":"textbox","id":"sh/qhkbm9kf","slide":3,"text":"Reports","textPreview":"Reports","textChars":7,"textLines":1,"bbox":[692,448,126,18]}
+{"kind":"textbox","id":"sh/bitsfe10","slide":3,"text":"Operational workspace","textPreview":"Operational workspace","textChars":21,"textLines":1,"bbox":[900,204,320,34]}
+{"kind":"shape","id":"sh/sny9cz21","slide":3,"bbox":[900,260,160,82]}
+{"kind":"textbox","id":"sh/to7a5kjm","slide":3,"text":"Profiles","textPreview":"Profiles","textChars":8,"textLines":1,"bbox":[916,277,128,22]}
+{"kind":"textbox","id":"sh/tkzq9gva","slide":3,"text":"Structured records","textPreview":"Structured records","textChars":18,"textLines":1,"bbox":[916,305,128,18]}
+{"kind":"shape","id":"sh/8jq90bup","slide":3,"bbox":[1090,260,160,82]}
+{"kind":"textbox","id":"sh/7ih876dk","slide":3,"text":"Certificates","textPreview":"Certificates","textChars":12,"textLines":1,"bbox":[1106,277,128,22]}
+{"kind":"textbox","id":"sh/6h87y1cz","slide":3,"text":"Verification","textPreview":"Verification","textChars":12,"textLines":1,"bbox":[1106,305,128,18]}
+{"kind":"shape","id":"sh/hojqd0vm","slide":3,"bbox":[900,368,160,82]}
+{"kind":"textbox","id":"sh/gna94vu1","slide":3,"text":"Patrols","textPreview":"Patrols","textChars":7,"textLines":1,"bbox":[916,385,128,22]}
+{"kind":"textbox","id":"sh/vm18bqdg","slide":3,"text":"Compliance","textPreview":"Compliance","textChars":10,"textLines":1,"bbox":[916,413,128,18]}
+{"kind":"shape","id":"sh/ulsr2lcv","slide":3,"bbox":[1090,368,160,82]}
+{"kind":"textbox","id":"sh/5c3qh0vi","slide":3,"text":"Reports","textPreview":"Reports","textChars":7,"textLines":1,"bbox":[1106,385,128,22]}
+{"kind":"textbox","id":"sh/4ba98vux","slide":3,"text":"Export-ready","textPreview":"Export-ready","textChars":12,"textLines":1,"bbox":[1106,413,128,18]}
+{"kind":"textbox","id":"sh/mx4n2xsf","slide":3,"text":"Core capabilities","textPreview":"Core capabilities","textChars":17,"textLines":1,"bbox":[72,290,360,42]}
+{"kind":"textbox","id":"sh/nydob2t0","slide":3,"text":"Access requests and approvals","textPreview":"Access requests and approvals","textChars":29,"textLines":1,"bbox":[76,350,460,42]}
+{"kind":"textbox","id":"sh/ozm547al","slide":3,"text":"BMU setup and certificate verification","textPreview":"BMU setup and certificate verification","textChars":38,"textLines":1,"bbox":[76,402,460,42]}
+{"kind":"textbox","id":"sh/90v6dcb6","slide":3,"text":"Member and vessel records","textPreview":"Member and vessel records","textChars":25,"textLines":1,"bbox":[76,454,460,42]}
+{"kind":"textbox","id":"sh/alon6hsr","slide":3,"text":"Compliance and patrol form digitization","textPreview":"Compliance and patrol form digitization","textChars":39,"textLines":1,"bbox":[76,506,460,42]}
+{"kind":"textbox","id":"sh/bmxof2tc","slide":3,"text":"Income, expenditure, receipts, and reports","textPreview":"Income, expenditure, receipts, and reports","textChars":42,"textLines":1,"bbox":[76,558,460,42]}
+{"kind":"notes","id":"nt/mswirv","slide":3,"text":""}
+{"kind":"slide","id":"sl/34vz2u","slide":4,"title":"ROLE-BASED ACCESS","textShapes":13}
+{"kind":"textbox","id":"sh/s7y1w3yd","slide":4,"text":"ROLE-BASED ACCESS","textPreview":"ROLE-BASED ACCESS","textChars":17,"textLines":1,"bbox":[72,52,540,28]}
+{"kind":"textbox","id":"sh/rmp03yhs","slide":4,"text":"Each user sees only the work they are allowed to do","textPreview":"Each user sees only the work they are allowed to do","textChars":51,"textLines":1,"bbox":[72,92,880,118]}
+{"kind":"textbox","id":"sh/qlgjutg7","slide":4,"text":"Government, county, BMU, ranger, NGO, donor, and member access can be scoped by role and location.","textPreview":"Government, county, BMU, ranger, NGO, donor, and member access can be scoped by role and location.","textChars":98,"textLines":1,"bbox":[72,210,820,64]}
+{"kind":"shape","id":"sh/5kni1ozm","slide":4,"bbox":[82,248,490,84]}
+{"kind":"shape","id":"sh/4je1sjy1","slide":4,"bbox":[106,272,46,46]}
+{"kind":"textbox","id":"sh/3i50zehg","slide":4,"text":"BMU Manager","textPreview":"BMU Manager","textChars":11,"textLines":1,"bbox":[172,270,375,42]}
+{"kind":"textbox","id":"sh/ihwjq9gv","slide":4,"text":"Manage BMU setup, members, certificates, local records, patrols, and reports.","textPreview":"Manage BMU setup, members, certificates, local records, patrols, and reports.","textChars":77,"textLines":1,"bbox":[106,336,442,-18]}
+{"kind":"shape","id":"sh/hgnixozq","slide":4,"bbox":[622,248,490,84]}
+{"kind":"shape","id":"sh/gfe1ojy5","slide":4,"bbox":[646,272,46,46]}
+{"kind":"textbox","id":"sh/ytgbips7","slide":4,"text":"KeFS / County","textPreview":"KeFS / County","textChars":13,"textLines":1,"bbox":[712,270,375,42]}
+{"kind":"textbox","id":"sh/zupsruts","slide":4,"text":"Review fisheries records, compliance information, and county or national oversight views.","textPreview":"Review fisheries records, compliance information, and county or national oversight views.","textChars":89,"textLines":1,"bbox":[646,336,442,-18]}
+{"kind":"shape","id":"sh/0vytkzad","slide":4,"bbox":[82,358,490,84]}
+{"kind":"shape","id":"sh/lw7at4by","slide":4,"bbox":[106,382,46,46]}
+{"kind":"textbox","id":"sh/qpwbupsb","slide":4,"text":"Ranger","textPreview":"Ranger","textChars":6,"textLines":1,"bbox":[172,380,375,42]}
+{"kind":"textbox","id":"sh/bq5snutg","slide":4,"text":"Record patrol activity, compliance observations, and field follow-up.","textPreview":"Record patrol activity, compliance observations, and field follow-up.","textChars":69,"textLines":1,"bbox":[106,446,442,-18]}
+{"kind":"shape","id":"sh/crytwza1","slide":4,"bbox":[622,358,490,84]}
+{"kind":"shape","id":"sh/ds7apkbm","slide":4,"bbox":[646,382,46,46]}
+{"kind":"textbox","id":"sh/21wbq5sz","slide":4,"text":"NGO / Donor","textPreview":"NGO / Donor","textChars":11,"textLines":1,"bbox":[712,380,375,42]}
+{"kind":"textbox","id":"sh/325sjatk","slide":4,"text":"Track projects, outcomes, evidence, and impact without editing operational data.","textPreview":"Track projects, outcomes, evidence, and impact without editing operational data.","textChars":80,"textLines":1,"bbox":[646,446,442,-18]}
+{"kind":"shape","id":"sh/r618r69c","slide":4,"bbox":[82,468,1080,84]}
+{"kind":"shape","id":"sh/65s7i18r","slide":4,"bbox":[106,492,46,46]}
+{"kind":"textbox","id":"sh/t83qtgri","slide":4,"text":"Member","textPreview":"Member","textChars":6,"textLines":1,"bbox":[172,490,965,42]}
+{"kind":"textbox","id":"sh/s7upkbqx","slide":4,"text":"View personal membership profile, documents, QR identity, and receipts where enabled.","textPreview":"View personal membership profile, documents, QR identity, and receipts where enabled.","textChars":85,"textLines":1,"bbox":[106,556,1032,-18]}
+{"kind":"notes","id":"nt/34vz2u","slide":4,"text":""}
+{"kind":"slide","id":"sl/jbov0i","slide":5,"title":"COMPLIANCE ADD-ON","textShapes":13}
+{"kind":"textbox","id":"sh/wryh8nix","slide":5,"text":"COMPLIANCE ADD-ON","textPreview":"COMPLIANCE ADD-ON","textChars":17,"textLines":1,"bbox":[72,52,540,28]}
+{"kind":"textbox","id":"sh/bqp0fihc","slide":5,"text":"Official patrol forms become structured records","textPreview":"Official patrol forms become structured records","textChars":47,"textLines":1,"bbox":[72,92,880,118]}
+{"kind":"textbox","id":"sh/apgz6d0r","slide":5,"text":"The compliance module is being digitized from client-provided templates while keeping officer-side and BMU-side workflows separate.","textPreview":"The compliance module is being digitized from client-provided templates while keeping officer-side and BMU-side workflows separate.","textChars":131,"textLines":1,"bbox":[72,210,820,64]}
+{"kind":"shape","id":"sh/9o7id8z6","slide":5,"bbox":[80,250,500,92]}
+{"kind":"shape","id":"sh/onyh43il","slide":5,"bbox":[104,274,46,46]}
+{"kind":"textbox","id":"sh/nmp0byh0","slide":5,"text":"Officer-side FORM 1A patrol reporting","textPreview":"Officer-side FORM 1A patrol reporting","textChars":37,"textLines":1,"bbox":[170,272,385,42]}
+{"kind":"textbox","id":"sh/mlwz2d0f","slide":5,"text":"Structured Supabase record with role-aware access and review-ready data.","textPreview":"Structured Supabase record with role-aware access and review-ready data.","textChars":72,"textLines":1,"bbox":[104,338,452,-10]}
+{"kind":"shape","id":"sh/1kni98ja","slide":5,"bbox":[640,250,500,92]}
+{"kind":"shape","id":"sh/0jeh03ip","slide":5,"bbox":[664,274,46,46]}
+{"kind":"textbox","id":"sh/6tg3upwz","slide":5,"text":"BMU Patrol Reporting Form","textPreview":"BMU Patrol Reporting Form","textChars":25,"textLines":1,"bbox":[730,272,385,42]}
+{"kind":"textbox","id":"sh/7upknuxk","slide":5,"text":"Structured Supabase record with role-aware access and review-ready data.","textPreview":"Structured Supabase record with role-aware access and review-ready data.","textChars":72,"textLines":1,"bbox":[664,338,452,-10]}
+{"kind":"shape","id":"sh/8vilwzep","slide":5,"bbox":[80,368,500,92]}
+{"kind":"shape","id":"sh/tgrmp4fa","slide":5,"bbox":[104,392,46,46]}
+{"kind":"textbox","id":"sh/ypg3qpwn","slide":5,"text":"Patrol Data Capture Form","textPreview":"Patrol Data Capture Form","textChars":24,"textLines":1,"bbox":[170,390,385,42]}
+{"kind":"textbox","id":"sh/jqpkjux8","slide":5,"text":"Structured Supabase record with role-aware access and review-ready data.","textPreview":"Structured Supabase record with role-aware access and review-ready data.","textChars":72,"textLines":1,"bbox":[104,456,452,-10]}
+{"kind":"shape","id":"sh/krylszet","slide":5,"bbox":[640,368,500,92]}
+{"kind":"shape","id":"sh/ls72l4fe","slide":5,"bbox":[664,392,46,46]}
+{"kind":"textbox","id":"sh/alw3m5wr","slide":5,"text":"Seizure Form planned next","textPreview":"Seizure Form planned next","textChars":25,"textLines":1,"bbox":[730,390,385,42]}
+{"kind":"textbox","id":"sh/bm5kfaxc","slide":5,"text":"Structured Supabase record with role-aware access and review-ready data.","textPreview":"Structured Supabase record with role-aware access and review-ready data.","textChars":72,"textLines":1,"bbox":[664,456,452,-10]}
+{"kind":"shape","id":"sh/z6l0n6d4","slide":5,"bbox":[80,486,1080,92]}
+{"kind":"shape","id":"sh/e5czu1cj","slide":5,"bbox":[104,510,46,46]}
+{"kind":"textbox","id":"sh/1s3ipgvu","slide":5,"text":"Attachments, audit logs, and export views","textPreview":"Attachments, audit logs, and export views","textChars":41,"textLines":1,"bbox":[170,508,965,42]}
+{"kind":"textbox","id":"sh/0ruhwbu9","slide":5,"text":"Structured Supabase record with role-aware access and review-ready data.","textPreview":"Structured Supabase record with role-aware access and review-ready data.","textChars":72,"textLines":1,"bbox":[104,574,1032,-10]}
+{"kind":"notes","id":"nt/jbov0i","slide":5,"text":""}
+{"kind":"slide","id":"sl/lf37za","slide":6,"title":"TRUST MODEL","textShapes":8}
+{"kind":"shape","id":"sh/yd8fe9ob","slide":6,"bbox":[730,0,550,720]}
+{"kind":"textbox","id":"sh/ze1gne5w","slide":6,"text":"TRUST MODEL","textPreview":"TRUST MODEL","textChars":11,"textLines":1,"bbox":[72,52,540,28]}
+{"kind":"textbox","id":"sh/83axkj6t","slide":6,"text":"Data stays owned by the organization that creates it","textPreview":"Data stays owned by the organization that creates it","textChars":52,"textLines":1,"bbox":[72,92,880,118]}
+{"kind":"textbox","id":"sh/94jytony","slide":6,"text":"BLUE provides the software platform. BMUs, counties, departments, and NGOs retain control of their own operational data.","textPreview":"BLUE provides the software platform. BMUs, counties, departments, and NGOs retain control of their own operational data.","textChars":120,"textLines":1,"bbox":[72,210,820,64]}
+{"kind":"textbox","id":"sh/m1sfiton","slide":6,"text":"Role-based permissions","textPreview":"Role-based permissions","textChars":22,"textLines":1,"bbox":[80,292,470,42]}
+{"kind":"textbox","id":"sh/n21gre58","slide":6,"text":"Supabase Auth and RLS","textPreview":"Supabase Auth and RLS","textChars":21,"textLines":1,"bbox":[80,348,470,42]}
+{"kind":"textbox","id":"sh/o7qx8z69","slide":6,"text":"Private document storage","textPreview":"Private document storage","textChars":24,"textLines":1,"bbox":[80,404,470,42]}
+{"kind":"textbox","id":"sh/p8zeh4nu","slide":6,"text":"Audit logs for key actions","textPreview":"Audit logs for key actions","textChars":26,"textLines":1,"bbox":[80,460,470,42]}
+{"kind":"textbox","id":"sh/1gjatgfq","slide":6,"text":"Client-owned infrastructure where possible","textPreview":"Client-owned infrastructure where possible","textChars":42,"textLines":1,"bbox":[80,516,470,42]}
+{"kind":"image","id":"im/ovm1wbi9","slide":6,"name":"","alt":"Blue ocean water surface","bbox":[730,0,550,720]}
+{"kind":"notes","id":"nt/lf37za","slide":6,"text":""}
+{"kind":"slide","id":"sl/jy9wln","slide":7,"title":"IMPLEMENTATION ROADMAP","textShapes":18}
+{"kind":"textbox","id":"sh/vml0nu1s","slide":7,"text":"IMPLEMENTATION ROADMAP","textPreview":"IMPLEMENTATION ROADMAP","textChars":22,"textLines":1,"bbox":[72,52,540,28]}
+{"kind":"textbox","id":"sh/gnuhgzix","slide":7,"text":"The build is phased to protect quality and scope","textPreview":"The build is phased to protect quality and scope","textChars":48,"textLines":1,"bbox":[72,92,880,118]}
+{"kind":"textbox","id":"sh/honip4zi","slide":7,"text":"Each phase completes a working layer before moving to the next set of operational modules.","textPreview":"Each phase completes a working layer before moving to the next set of operational modules.","textChars":90,"textLines":1,"bbox":[72,210,820,64]}
+{"kind":"shape","id":"sh/6xczap0v","slide":7,"bbox":[72,284,196,252]}
+{"kind":"textbox","id":"sh/7ylgju1g","slide":7,"text":"1","textPreview":"1","textChars":1,"textLines":1,"bbox":[92,304,54,54]}
+{"kind":"textbox","id":"sh/8zuhcfi1","slide":7,"text":"Foundation","textPreview":"Foundation","textChars":10,"textLines":1,"bbox":[92,374,150,34]}
+{"kind":"textbox","id":"sh/tk3ilkjm","slide":7,"text":"Auth, request access, approval, role routing, onboarding gate.","textPreview":"Auth, request access, approval, role routing, onboarding gate.","textChars":62,"textLines":1,"bbox":[92,420,150,82]}
+{"kind":"shape","id":"sh/qtwzm90f","slide":7,"bbox":[304,284,196,252]}
+{"kind":"textbox","id":"sh/ru50vehk","slide":7,"text":"2","textPreview":"2","textChars":1,"textLines":1,"bbox":[324,304,54,54]}
+{"kind":"textbox","id":"sh/bmtkrqt4","slide":7,"text":"BMU setup","textPreview":"BMU setup","textChars":9,"textLines":1,"bbox":[324,374,150,34]}
+{"kind":"textbox","id":"sh/qlkjylcz","slide":7,"text":"BMU profile, certificate upload, verification, location hierarchy.","textPreview":"BMU profile, certificate upload, verification, location hierarchy.","textChars":66,"textLines":1,"bbox":[324,420,150,82]}
+{"kind":"shape","id":"sh/d8b2t0ba","slide":7,"bbox":[536,284,196,252]}
+{"kind":"textbox","id":"sh/cn210vup","slide":7,"text":"3","textPreview":"3","textChars":1,"textLines":1,"bbox":[556,304,54,54]}
+{"kind":"textbox","id":"sh/zatkvatg","slide":7,"text":"Operations","textPreview":"Operations","textChars":10,"textLines":1,"bbox":[556,374,150,34]}
+{"kind":"textbox","id":"sh/y9kj25cv","slide":7,"text":"Members, vessels, documents, meetings, income, expenditure, receipts.","textPreview":"Members, vessels, documents, meetings, income, expenditure, receipts.","textChars":69,"textLines":1,"bbox":[556,420,150,82]}
+{"kind":"shape","id":"sh/lcv2x0bm","slide":7,"bbox":[768,284,196,252]}
+{"kind":"textbox","id":"sh/0bm14fu1","slide":7,"text":"4","textPreview":"4","textChars":1,"textLines":1,"bbox":[788,304,54,54]}
+{"kind":"textbox","id":"sh/nedkzatc","slide":7,"text":"Compliance","textPreview":"Compliance","textChars":10,"textLines":1,"bbox":[788,374,150,34]}
+{"kind":"textbox","id":"sh/md4j65cr","slide":7,"text":"FORM 1A, BMU patrol, data capture, seizure forms, attachments.","textPreview":"FORM 1A, BMU patrol, data capture, seizure forms, attachments.","textChars":62,"textLines":1,"bbox":[788,420,150,82]}
+{"kind":"shape","id":"sh/i9ony9wz","slide":7,"bbox":[1000,284,196,252]}
+{"kind":"textbox","id":"sh/jah4redk","slide":7,"text":"5","textPreview":"5","textChars":1,"textLines":1,"bbox":[1020,304,54,54]}
+{"kind":"textbox","id":"sh/kbq50je5","slide":7,"text":"Readiness","textPreview":"Readiness","textChars":9,"textLines":1,"bbox":[1020,374,150,34]}
+{"kind":"textbox","id":"sh/5czmtovq","slide":7,"text":"Reports, policies, support material, QA, deployment handover.","textPreview":"Reports, policies, support material, QA, deployment handover.","textChars":61,"textLines":1,"bbox":[1020,420,150,82]}
+{"kind":"notes","id":"nt/jy9wln","slide":7,"text":""}
+{"kind":"slide","id":"sl/s1b9ks","slide":8,"title":"B","textShapes":4}
+{"kind":"shape","id":"sh/g3id8ryd","slide":8,"bbox":[0,0,1280,720]}
+{"kind":"shape","id":"sh/h4rehwzy","slide":8,"bbox":[72,54,52,52]}
+{"kind":"textbox","id":"sh/6xgv2hgb","slide":8,"text":"B","textPreview":"B","textChars":1,"textLines":1,"bbox":[72,62,52,32]}
+{"kind":"textbox","id":"sh/7ypwbmhg","slide":8,"text":"BLUE is ready to demonstrate as a serious platform, not just a website.","textPreview":"BLUE is ready to demonstrate as a serious platform, not just a website.","textChars":71,"textLines":1,"bbox":[72,190,920,150]}
+{"kind":"textbox","id":"sh/szyd4ry1","slide":8,"text":"Next: approve access for reviewers, apply the latest Supabase migrations, and review the compliance form structures inside the dashboard.","textPreview":"Next: approve access for reviewers, apply the latest Supabase migrations, and review the compliance form structures inside the dashboard.","textChars":137,"textLines":1,"bbox":[76,375,760,90]}
+{"kind":"textbox","id":"sh/t0redwzm","slide":8,"text":"blue-black-gamma.vercel.app","textPreview":"blue-black-gamma.vercel.app","textChars":27,"textLines":1,"bbox":[76,515,370,42]}
+{"kind":"image","id":"im/qlofehoj","slide":8,"name":"","alt":"Ocean texture","bbox":[0,0,1280,720]}
+{"kind":"notes","id":"nt/s1b9ks","slide":8,"text":""}
