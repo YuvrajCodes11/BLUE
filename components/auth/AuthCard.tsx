@@ -125,7 +125,7 @@ export function AuthCard({ mode }: { mode: "login" | "register" | "forgot" | "ac
     if (mode === "login") {
       const { data: authData, error: signInError } = await supabase.auth.signInWithPassword({ email: values.email, password: values.password ?? "" });
       if (signInError) {
-        throw new Error("Login failed. Please confirm the user has been approved and has set a password from the invite/reset email.");
+        throw new Error(`Login failed: ${signInError.message}. If you recently reset the password, open the newest password setup email and save the password again.`);
       }
       const { data: profile, error: profileError } = await supabase
         .from("profiles")
@@ -159,7 +159,7 @@ export function AuthCard({ mode }: { mode: "login" | "register" | "forgot" | "ac
       return;
     }
     if (mode === "forgot") {
-      const { error: resetError } = await supabase.auth.resetPasswordForEmail(values.email, { redirectTo: `${location.origin}/login` });
+      const { error: resetError } = await supabase.auth.resetPasswordForEmail(values.email, { redirectTo: `${location.origin}/set-password` });
       if (resetError) throw resetError;
       setMessage("Password reset email sent.");
       return;
@@ -257,7 +257,7 @@ export function AuthCard({ mode }: { mode: "login" | "register" | "forgot" | "ac
         {mode === "access" && <label className="grid gap-1.5 text-xs font-bold uppercase tracking-[0.18em] text-[var(--muted-text)]">Message<textarea {...register("message")} placeholder="Briefly describe what access is needed for" className="min-h-28 rounded-xl border border-[var(--line)] bg-[var(--input)] px-4 py-3 text-sm normal-case tracking-normal text-[var(--text)] outline-none placeholder:text-[var(--muted-text)]" /></label>}
         {mode !== "forgot" && mode !== "access" && <label className="grid gap-1.5 text-xs font-bold uppercase tracking-[0.18em] text-[var(--muted-text)]">Password<input {...register("password")} type="password" placeholder="Password" className="rounded-xl border border-[var(--line)] bg-[var(--input)] px-4 py-3 text-sm normal-case tracking-normal text-[var(--text)] outline-none placeholder:text-[var(--muted-text)]" /></label>}
         <button disabled={formState.isSubmitting} className="ocean-action rounded-xl px-4 py-3 font-black text-slate-950 disabled:opacity-60">{formState.isSubmitting ? "Working..." : "Continue"}</button>
-        {mode === "login" && <p className="text-center text-sm text-[var(--muted-text)]">No approved account yet? <Link className="font-bold text-cyan-500" href="/request-access">Request access</Link></p>}
+        {mode === "login" && <div className="grid gap-1 text-center text-sm text-[var(--muted-text)]"><p>No approved account yet? <Link className="font-bold text-cyan-500" href="/request-access">Request access</Link></p><p><Link className="font-bold text-cyan-500" href="/forgot-password">Forgot or set password?</Link></p></div>}
         {mode === "access" && <p className="text-center text-sm text-[var(--muted-text)]">Already approved? <Link className="font-bold text-cyan-500" href="/login">Login instead</Link></p>}
         {message && <p className="rounded-xl border border-cyan-300/20 bg-cyan-300/10 p-3 text-sm text-cyan-800">{message}</p>}
         {error && <p className="rounded-xl border border-rose-300/30 bg-rose-300/10 p-3 text-sm text-rose-800">{error}</p>}

@@ -1,6 +1,6 @@
 "use client";
 
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import { ThemeToggle } from "@/components/dashboard/ThemeToggle";
 import { createClient, hasSupabaseConfig } from "@/lib/supabase";
@@ -8,6 +8,7 @@ import { redirectForRole } from "@/lib/role-redirect";
 
 export function SetPasswordCard() {
   const router = useRouter();
+  const search = useSearchParams();
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [message, setMessage] = useState("Checking invite session...");
@@ -21,12 +22,24 @@ export function SetPasswordCard() {
         setMessage("");
         return;
       }
+
       const supabase = createClient();
+      const code = search.get("code");
+      if (code) {
+        const { error: exchangeError } = await supabase.auth.exchangeCodeForSession(code);
+        if (exchangeError) {
+          setError(`Password setup link could not be verified: ${exchangeError.message}. Please request a fresh reset link.`);
+          setMessage("");
+          return;
+        }
+        window.history.replaceState({}, "", "/set-password");
+      }
+
       const { data } = await supabase.auth.getSession();
-      setMessage(data.session ? "Set your BLUE password to continue." : "Open this page from the invite email link.");
+      setMessage(data.session ? "Set your BLUE password to continue." : "Open this page from the newest invite/reset email link.");
     }
     void checkSession();
-  }, []);
+  }, [search]);
 
   async function submit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
