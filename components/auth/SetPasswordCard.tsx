@@ -14,6 +14,7 @@ export function SetPasswordCard() {
   const [message, setMessage] = useState("Checking invite session...");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+  const nextPath = search.get("next") || null;
 
   useEffect(() => {
     async function checkSession() {
@@ -28,7 +29,10 @@ export function SetPasswordCard() {
       if (code) {
         const { error: exchangeError } = await supabase.auth.exchangeCodeForSession(code);
         if (exchangeError) {
-          setError(`Password setup link could not be verified: ${exchangeError.message}. Please request a fresh reset link.`);
+          const message = /verifier|pkce/i.test(exchangeError.message)
+            ? "Password setup link could not be verified. Request a fresh setup link in the same browser, or ask the admin for a temporary password."
+            : `Password setup link could not be verified: ${exchangeError.message}. Please request a fresh setup link.`;
+          setError(message);
           setMessage("");
           return;
         }
@@ -36,7 +40,7 @@ export function SetPasswordCard() {
       }
 
       const { data } = await supabase.auth.getSession();
-      setMessage(data.session ? "Set your BLUE password to continue." : "Open this page from the newest invite/reset email link.");
+      setMessage(data.session ? "Set your BLUE password to continue." : "Open this page from the newest setup link, or login with the temporary password first.");
     }
     void checkSession();
   }, [search]);
@@ -64,9 +68,17 @@ export function SetPasswordCard() {
       return;
     }
 
+    const { data: sessionData } = await supabase.auth.getSession();
+    if (sessionData.session?.access_token) {
+      await fetch("/api/auth/password-setup", {
+        method: "POST",
+        headers: { authorization: `Bearer ${sessionData.session.access_token}` },
+      });
+    }
+
     const { data: userData } = await supabase.auth.getUser();
     const { data: profile } = await supabase.from("profiles").select("role").eq("id", userData.user?.id).maybeSingle();
-    router.push(redirectForRole(profile?.role) ?? "/dashboard");
+    router.push(nextPath ?? redirectForRole(profile?.role) ?? "/dashboard");
     router.refresh();
   }
 

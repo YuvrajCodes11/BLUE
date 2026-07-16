@@ -40,7 +40,7 @@ async function requireAdmin(request: Request) {
     .maybeSingle();
 
   if (profileError || profile?.role !== "Government Admin") {
-    return { error: "Only BMU Manager can approve access.", status: 403 as const };
+    return { error: "Only platform admin can approve access.", status: 403 as const };
   }
 
   return { supabase, adminId: userData.user.id };
@@ -117,6 +117,7 @@ export async function PATCH(request: Request, { params }: { params: Promise<{ id
 
   let userId: string | null = null;
   let inviteSent = true;
+  let setupWarning: string | null = null;
 
   const { data: invited, error: inviteError } = await guard.supabase.auth.admin.inviteUserByEmail(email, {
     data: { full_name: fullName, approved_role: role },
@@ -137,7 +138,12 @@ export async function PATCH(request: Request, { params }: { params: Promise<{ id
 
     const publicClient = createClient(process.env.NEXT_PUBLIC_SUPABASE_URL ?? "", process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY ?? "");
     const { error: resetError } = await publicClient.auth.resetPasswordForEmail(email, { redirectTo });
-    if (resetError) return NextResponse.json({ error: resetError.message }, { status: 400 });
+    if (resetError) {
+      const rateLimited = /rate|limit|too many/i.test(resetError.message);
+      setupWarning = rateLimited
+        ? "Email rate limit reached. The profile was approved; generate a temporary password from User management."
+        : "Password setup email failed. The profile was approved; generate a temporary password from User management.";
+    }
     inviteSent = false;
   }
 
@@ -153,6 +159,10 @@ export async function PATCH(request: Request, { params }: { params: Promise<{ id
     ward_id: wardId,
     bmu_id: bmuId,
     onboarding_status: "pending",
+    password_setup_required: true,
+    password_setup_sent_at: new Date().toISOString(),
+    last_credential_action_at: new Date().toISOString(),
+    last_credential_action_by: guard.adminId,
   });
   if (profileError) return NextResponse.json({ error: profileError.message }, { status: 400 });
 
@@ -179,5 +189,5 @@ export async function PATCH(request: Request, { params }: { params: Promise<{ id
     entity_id: id,
   });
 
-  return NextResponse.json({ ok: true, email, role, inviteSent });
+  return NextResponse.json({ ok: true, email, role, inviteSent, warning: setupWarning });
 }

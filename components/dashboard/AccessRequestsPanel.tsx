@@ -114,12 +114,12 @@ export function AccessRequestsPanel() {
     });
     const result = await response.json().catch(() => ({}));
     if (!response.ok) {
-      setError(result.error ?? "Request update failed.");
+      setError([result.error, result.suggestion].filter(Boolean).join(" ") || "Request update failed.");
       setBusyId(null);
       return;
     }
     if (action === "approve") {
-      setNotice(`User approved. Password setup email sent to ${result.email}.`);
+      setNotice(result.warning ? `User approved. ${result.warning}` : `User approved. Password setup access sent to ${result.email}. If email delivery fails later, use User management to generate a temporary password.`);
     }
     await load();
     setBusyId(null);

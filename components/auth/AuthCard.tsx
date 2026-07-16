@@ -125,18 +125,31 @@ export function AuthCard({ mode }: { mode: "login" | "register" | "forgot" | "ac
     if (mode === "login") {
       const { data: authData, error: signInError } = await supabase.auth.signInWithPassword({ email: values.email, password: values.password ?? "" });
       if (signInError) {
-        throw new Error(`Login failed: ${signInError.message}. If you recently reset the password, open the newest password setup email and save the password again.`);
+        const message = /rate|limit/i.test(signInError.message)
+          ? "Login failed: too many auth attempts. Wait a few minutes or ask the admin for a temporary password."
+          : `Login failed: ${signInError.message}. If the account is approved but login still fails, ask the admin to resend setup access or issue a temporary password.`;
+        throw new Error(message);
       }
       const { data: profile, error: profileError } = await supabase
         .from("profiles")
-        .select("role,is_active,consent_accepted_at,data_usage_accepted_at,onboarding_completed_at")
+        .select("role,is_active,consent_accepted_at,data_usage_accepted_at,onboarding_completed_at,password_setup_required")
         .eq("id", authData.user.id)
         .maybeSingle();
       if (profileError) throw profileError;
       const destination = redirectForRole(profile?.role);
-      if (!profile || !destination || profile.is_active === false) {
+      if (!profile || !destination) {
         await supabase.auth.signOut();
-        router.push(`/request-access?email=${encodeURIComponent(values.email)}`);
+        setError("No approved BLUE profile was found for this email. Please request access or ask the admin to approve your account.");
+        return;
+      }
+      if (profile.is_active === false) {
+        await supabase.auth.signOut();
+        setError("This account is inactive. Please contact the BLUE admin to reactivate access.");
+        return;
+      }
+      if (profile.password_setup_required) {
+        router.push(`/set-password?next=${encodeURIComponent(search.get("next") ?? destination)}`);
+        router.refresh();
         return;
       }
       if (!profile.consent_accepted_at || !profile.data_usage_accepted_at || !profile.onboarding_completed_at) {
@@ -257,7 +270,7 @@ export function AuthCard({ mode }: { mode: "login" | "register" | "forgot" | "ac
         {mode === "access" && <label className="grid gap-1.5 text-xs font-bold uppercase tracking-[0.18em] text-[var(--muted-text)]">Message<textarea {...register("message")} placeholder="Briefly describe what access is needed for" className="min-h-28 rounded-xl border border-[var(--line)] bg-[var(--input)] px-4 py-3 text-sm normal-case tracking-normal text-[var(--text)] outline-none placeholder:text-[var(--muted-text)]" /></label>}
         {mode !== "forgot" && mode !== "access" && <label className="grid gap-1.5 text-xs font-bold uppercase tracking-[0.18em] text-[var(--muted-text)]">Password<input {...register("password")} type="password" placeholder="Password" className="rounded-xl border border-[var(--line)] bg-[var(--input)] px-4 py-3 text-sm normal-case tracking-normal text-[var(--text)] outline-none placeholder:text-[var(--muted-text)]" /></label>}
         <button disabled={formState.isSubmitting} className="ocean-action rounded-xl px-4 py-3 font-black text-slate-950 disabled:opacity-60">{formState.isSubmitting ? "Working..." : "Continue"}</button>
-        {mode === "login" && <div className="grid gap-1 text-center text-sm text-[var(--muted-text)]"><p>No approved account yet? <Link className="font-bold text-cyan-500" href="/request-access">Request access</Link></p><p><Link className="font-bold text-cyan-500" href="/forgot-password">Forgot or set password?</Link></p></div>}
+        {mode === "login" && <div className="grid gap-1 text-center text-sm text-[var(--muted-text)]"><p>No approved account yet? <Link className="font-bold text-cyan-500" href="/request-access">Request access</Link></p><p><Link className="font-bold text-cyan-500" href="/forgot-password">Forgot or set password?</Link></p><p>Account approved but cannot login? Contact admin to resend setup access or issue a temporary password.</p></div>}
         {mode === "access" && <p className="text-center text-sm text-[var(--muted-text)]">Already approved? <Link className="font-bold text-cyan-500" href="/login">Login instead</Link></p>}
         {message && <p className="rounded-xl border border-cyan-300/20 bg-cyan-300/10 p-3 text-sm text-cyan-800">{message}</p>}
         {error && <p className="rounded-xl border border-rose-300/30 bg-rose-300/10 p-3 text-sm text-rose-800">{error}</p>}
