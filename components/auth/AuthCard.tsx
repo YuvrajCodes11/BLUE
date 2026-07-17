@@ -132,7 +132,7 @@ export function AuthCard({ mode }: { mode: "login" | "register" | "forgot" | "ac
       }
       const { data: profile, error: profileError } = await supabase
         .from("profiles")
-        .select("role,is_active,consent_accepted_at,data_usage_accepted_at,onboarding_completed_at,password_setup_required")
+        .select("role,is_active,consent_accepted_at,data_usage_accepted_at,onboarding_completed_at")
         .eq("id", authData.user.id)
         .maybeSingle();
       if (profileError) throw profileError;
@@ -145,11 +145,6 @@ export function AuthCard({ mode }: { mode: "login" | "register" | "forgot" | "ac
       if (profile.is_active === false) {
         await supabase.auth.signOut();
         setError("This account is inactive. Please contact the BLUE admin to reactivate access.");
-        return;
-      }
-      if (profile.password_setup_required) {
-        router.push(`/set-password?next=${encodeURIComponent(search.get("next") ?? destination)}`);
-        router.refresh();
         return;
       }
       if (!profile.consent_accepted_at || !profile.data_usage_accepted_at || !profile.onboarding_completed_at) {
@@ -215,7 +210,12 @@ export function AuthCard({ mode }: { mode: "login" | "register" | "forgot" | "ac
         : mode === "access"
           ? "Access request failed. Please check the required fields and try again."
           : "Request failed. Please try again.";
-      setError(err instanceof Error ? err.message : fallback);
+      const errorMessage = err instanceof Error
+        ? err.message
+        : typeof err === "object" && err && "message" in err && typeof err.message === "string"
+          ? err.message
+          : fallback;
+      setError(errorMessage);
     }
   }
 

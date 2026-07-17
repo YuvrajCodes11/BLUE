@@ -56,16 +56,12 @@ export function DashboardLayout({ role, children }: { role: RoleSlug; children: 
       }
       const { data: profile, error } = await supabase
         .from("profiles")
-        .select("role,is_active,consent_accepted_at,data_usage_accepted_at,onboarding_completed_at,password_setup_required")
+        .select("role,is_active,consent_accepted_at,data_usage_accepted_at,onboarding_completed_at")
         .eq("id", user.id)
         .maybeSingle();
       if (error || !profile || profile.is_active === false) {
         await supabase.auth.signOut();
         router.push(`/request-access?email=${encodeURIComponent(user.email ?? "")}`);
-        return;
-      }
-      if (profile.password_setup_required) {
-        router.push(`/set-password?next=${encodeURIComponent(pathname)}`);
         return;
       }
       if (!profile.consent_accepted_at || !profile.data_usage_accepted_at || !profile.onboarding_completed_at) {
