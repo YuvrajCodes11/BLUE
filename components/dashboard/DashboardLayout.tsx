@@ -42,6 +42,17 @@ export function DashboardLayout({ role, children }: { role: RoleSlug; children: 
 
   useEffect(() => {
     setAllowed(false);
+    // Check demo session
+    const isDemo =
+      typeof document !== "undefined" &&
+      (document.cookie.includes("blue_demo_session=true") || Boolean(localStorage.getItem("blue_demo_user")));
+
+    if (isDemo) {
+      setProfileRole("admin");
+      setAllowed(true);
+      return;
+    }
+
     if (!hasSupabaseConfig()) {
       setAllowed(true);
       return;

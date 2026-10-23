@@ -157,6 +157,18 @@ export function PatrolDataCapturePage() {
     }
     setLoading(true);
     try {
+      const isDemo =
+        typeof document !== "undefined" &&
+        (document.cookie.includes("blue_demo_session=true") || Boolean(localStorage.getItem("blue_demo_user")));
+
+      if (isDemo) {
+        setProfile({ id: "demo-admin-uuid-001", role: "Government Admin" });
+        const [hierarchy, recordRows] = await Promise.all([fetchLocationHierarchy(), fetchPatrolDataCaptureRecords()]);
+        setLocations(hierarchy);
+        setRecords(recordRows);
+        return;
+      }
+
       const supabase = createClient();
       const { data: userData, error: userError } = await supabase.auth.getUser();
       if (userError) throw new Error(userError.message);

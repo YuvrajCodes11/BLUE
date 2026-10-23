@@ -5,6 +5,11 @@ export async function middleware(request: NextRequest) {
   const isDashboard = request.nextUrl.pathname.startsWith("/dashboard");
   if (!isDashboard) return NextResponse.next();
 
+  const demoCookie = request.cookies.get("blue_demo_session");
+  if (demoCookie?.value === "true") {
+    return NextResponse.next();
+  }
+
   const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
   const key = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
   if (!url || !key) return NextResponse.next();

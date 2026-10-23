@@ -108,6 +108,29 @@ export function BmuSetupPage() {
     }
     setLoading(true);
     try {
+      const isDemo =
+        typeof document !== "undefined" &&
+        (document.cookie.includes("blue_demo_session=true") || Boolean(localStorage.getItem("blue_demo_user")));
+
+      if (isDemo) {
+        const demoProfile: Profile = {
+          id: "demo-admin-uuid-001",
+          role: "Government Admin",
+          county_id: "a30fc6e2-6a50-472b-b6f4-ee52f229740c",
+          sub_county_id: null,
+          ward_id: null,
+          bmu_id: "775660f7-c8d8-4e7a-99e8-f65c72152ecc",
+        };
+        setProfile(demoProfile);
+        const nextContext = await fetchBmuSetupContext();
+        setContext(nextContext);
+        const nextBmuId = preferredBmuId || selectedBmuId || nextContext.bmus[0]?.id || "";
+        setSelectedBmuId(nextBmuId);
+        const bmu = nextContext.bmus.find((item) => item.id === nextBmuId);
+        if (bmu) hydrateBmuForm(bmu);
+        return;
+      }
+
       const supabase = createClient();
       const { data: userData, error: userError } = await supabase.auth.getUser();
       if (userError) throw new Error(userError.message);

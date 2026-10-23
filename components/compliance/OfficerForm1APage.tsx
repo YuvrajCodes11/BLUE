@@ -204,6 +204,18 @@ export function OfficerForm1APage() {
     }
     setLoading(true);
     try {
+      const isDemo =
+        typeof document !== "undefined" &&
+        (document.cookie.includes("blue_demo_session=true") || Boolean(localStorage.getItem("blue_demo_user")));
+
+      if (isDemo) {
+        setProfile({ id: "demo-admin-uuid-001", role: "Government Admin" });
+        const [hierarchy, reportRows] = await Promise.all([fetchLocationHierarchy(), fetchOfficerPatrolReports()]);
+        setLocations(hierarchy);
+        setReports(reportRows);
+        return;
+      }
+
       const supabase = createClient();
       const { data: userData, error: userError } = await supabase.auth.getUser();
       if (userError) throw new Error(userError.message);

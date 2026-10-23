@@ -10,10 +10,30 @@ import { roleLabels } from "@/lib/roles";
 
 export function Topbar({ onMenuClick, role }: { onMenuClick?: () => void; role?: RoleSlug }) {
   const router = useRouter();
+  const isDemo =
+    typeof document !== "undefined" &&
+    (document.cookie.includes("blue_demo_session=true") || Boolean(localStorage.getItem("blue_demo_user")));
+
   async function logout() {
+    // Clear demo session
+    if (typeof document !== "undefined") {
+      document.cookie = "blue_demo_session=; path=/; max-age=0;";
+      document.cookie = "blue_demo_role=; path=/; max-age=0;";
+      localStorage.removeItem("blue_demo_user");
+    }
+    try {
+      await fetch("/api/auth/demo-login", { method: "DELETE" });
+    } catch {
+      // ignore
+    }
+
     if (hasSupabaseConfig()) {
-      const supabase = createClient();
-      await supabase.auth.signOut();
+      try {
+        const supabase = createClient();
+        await supabase.auth.signOut();
+      } catch {
+        // ignore
+      }
     }
     router.push("/login");
     router.refresh();
@@ -25,7 +45,14 @@ export function Topbar({ onMenuClick, role }: { onMenuClick?: () => void; role?:
           <Menu className="h-5 w-5" />
         </button>
         <div className="min-w-0">
-          <p className="text-xs font-black uppercase tracking-[0.24em] text-[var(--muted-text)]">BLUE</p>
+          <div className="flex items-center gap-2">
+            <p className="text-xs font-black uppercase tracking-[0.24em] text-[var(--muted-text)]">BLUE</p>
+            {isDemo && (
+              <span className="rounded-full border border-cyan-400/40 bg-cyan-400/15 px-2 py-0.5 text-[10px] font-black uppercase tracking-wider text-cyan-500">
+                Demo Mode
+              </span>
+            )}
+          </div>
           <h1 className="truncate text-base font-black text-[var(--text)] sm:text-xl">{role ? roleLabels[role] : "Dashboard"}</h1>
         </div>
         <div className="ocean-panel hidden min-w-80 items-center gap-3 rounded-2xl px-4 py-2 text-sm text-[var(--muted-text)] md:flex">
