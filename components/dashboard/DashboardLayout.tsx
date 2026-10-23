@@ -115,9 +115,9 @@ export function DashboardLayout({ role, children }: { role: RoleSlug; children: 
           </div>
         </div>
       )}
-      <div className="min-w-0 max-w-full lg:pl-72">
+      <div className="min-w-0 max-w-full w-full overflow-x-hidden lg:pl-72">
         <Topbar role={activeRole} onMenuClick={() => setMobileMenuOpen(true)} />
-        <main className="relative min-w-0 max-w-full px-3.5 pb-28 pt-4 sm:px-6 sm:pb-24 sm:pt-6 lg:px-8 lg:pb-12 lg:pt-8">{children}</main>
+        <main className="relative min-w-0 max-w-full w-full px-3.5 pb-36 pt-4 sm:px-6 sm:pb-24 sm:pt-6 lg:px-8 lg:pb-12 lg:pt-8">{children}</main>
         <MobileQuickNav role={activeRole} />
       </div>
     </div>

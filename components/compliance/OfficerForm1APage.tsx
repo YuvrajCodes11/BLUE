@@ -418,12 +418,12 @@ export function OfficerForm1APage() {
   if (!canAccess) return <EmptyState title="Officer workflow access only" body="FORM 1A is available to BMU Manager, KeFS/KFS Officer, and County Officer roles." />;
 
   return (
-    <section className="grid gap-6">
-      <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
-        <div>
+    <section className="grid gap-6 w-full max-w-full min-w-0">
+      <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between w-full min-w-0">
+        <div className="min-w-0 max-w-full">
           <p className="text-sm font-black uppercase tracking-[0.24em] text-cyan-500">Official FORM 1A</p>
           <h1 className="mt-2 text-2xl font-black text-[var(--text)] sm:text-4xl md:text-5xl">Patrol Reporting Form</h1>
-          <p className="mt-3 max-w-3xl text-sm text-[var(--muted-text)]">
+          <p className="mt-3 max-w-3xl text-sm text-[var(--muted-text)] break-words">
             KeFS/KFS, County, and Fisheries Officer workflow for officer-side patrol reporting. This is separate from BMU Patrol Reporting.
           </p>
         </div>
@@ -545,13 +545,13 @@ export function OfficerForm1APage() {
         </div>
       )}
 
-      <div className="grid gap-4 xl:grid-cols-[0.62fr_0.38fr]">
-        <div className="ocean-panel rounded-2xl p-5">
+      <div className="grid gap-4 xl:grid-cols-[minmax(0,0.62fr)_minmax(0,0.38fr)] w-full max-w-full min-w-0">
+        <div className="ocean-panel rounded-2xl p-4 sm:p-5 w-full max-w-full min-w-0 overflow-hidden">
           <div className="flex items-center gap-3">
             <Search className="h-5 w-5 text-cyan-500" />
             <input className="w-full bg-transparent text-[var(--text)] outline-none placeholder:text-[var(--muted-text)]" value={query} onChange={(e) => setQuery(e.target.value)} placeholder="Search FORM 1A records" />
           </div>
-          <div className="mt-4 overflow-x-auto rounded-xl border border-[var(--line)]/60">
+          <div className="mt-4 w-full max-w-full min-w-0 overflow-x-auto rounded-xl border border-[var(--line)]/60">
             {filteredReports.length ? (
               <table className="w-full min-w-[760px] text-left text-sm">
                 <thead className="text-xs uppercase tracking-[0.18em] text-[var(--muted-text)]">
@@ -576,7 +576,7 @@ export function OfficerForm1APage() {
           </div>
         </div>
 
-        <div className="ocean-panel rounded-2xl p-5 shadow-sm">
+        <div className="ocean-panel rounded-2xl p-4 sm:p-5 shadow-sm w-full max-w-full min-w-0 overflow-hidden">
           <div className="flex items-center justify-between border-b border-[var(--line)] pb-3">
             <div className="flex items-center gap-2">
               <FileText className="h-5 w-5 text-cyan-400" />

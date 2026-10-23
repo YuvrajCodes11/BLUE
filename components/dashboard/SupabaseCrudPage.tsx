@@ -917,14 +917,14 @@ export function SupabaseCrudPage({ moduleKey }: { moduleKey: keyof typeof config
   );
 
   return (
-    <section className="grid gap-6">
-      <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
-        <div>
+    <section className="grid gap-6 w-full max-w-full min-w-0">
+      <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between w-full min-w-0">
+        <div className="min-w-0 max-w-full">
           <p className="text-xs font-black uppercase tracking-[0.24em] text-cyan-500">BLUE Ecosystem Module</p>
           <h1 className="mt-2 text-2xl font-black text-[var(--text)] sm:text-4xl">{config.title}</h1>
-          <p className="mt-2 max-w-3xl text-sm text-[var(--muted-text)]">{config.description}</p>
+          <p className="mt-2 max-w-3xl text-sm text-[var(--muted-text)] break-words">{config.description}</p>
         </div>
-        <div className="grid grid-cols-2 gap-2 sm:flex sm:items-center">
+        <div className="flex items-center gap-2 w-full sm:w-auto shrink-0">
           <button
             type="button"
             onClick={() => {
@@ -932,15 +932,15 @@ export function SupabaseCrudPage({ moduleKey }: { moduleKey: keyof typeof config
               setNotice(`✓ Exported ${filtered.length} ${config.title} records to CSV.`);
               setTimeout(() => setNotice(""), 3500);
             }}
-            className="inline-flex w-full sm:w-auto items-center justify-center gap-1.5 sm:gap-2 rounded-xl border border-[var(--line)] bg-[var(--soft)] px-3 sm:px-4 py-2.5 sm:py-3 text-xs sm:text-sm font-bold text-[var(--text)] transition hover:border-cyan-400 active:scale-95"
+            className="flex-1 sm:flex-none inline-flex items-center justify-center gap-1.5 sm:gap-2 rounded-xl border border-[var(--line)] bg-[var(--soft)] px-3 sm:px-4 py-2.5 sm:py-3 text-xs sm:text-sm font-bold text-[var(--text)] transition hover:border-cyan-400 active:scale-95 whitespace-nowrap"
           >
-            <Download className="h-4 w-4 text-cyan-400" /> Export CSV
+            <Download className="h-4 w-4 text-cyan-400 shrink-0" /> Export CSV
           </button>
           <button
             onClick={startCreate}
-            className="ocean-action inline-flex w-full sm:w-auto items-center justify-center gap-1.5 sm:gap-2 rounded-xl px-3 sm:px-4 py-2.5 sm:py-3 text-xs sm:text-sm font-bold text-slate-950 transition active:scale-95 shadow-md"
+            className="flex-1 sm:flex-none ocean-action inline-flex items-center justify-center gap-1.5 sm:gap-2 rounded-xl px-3 sm:px-4 py-2.5 sm:py-3 text-xs sm:text-sm font-bold text-slate-950 transition active:scale-95 shadow-md whitespace-nowrap"
           >
-            <Plus className="h-4 w-4" /> Add Record
+            <Plus className="h-4 w-4 shrink-0" /> Add Record
           </button>
         </div>
       </div>
@@ -956,7 +956,7 @@ export function SupabaseCrudPage({ moduleKey }: { moduleKey: keyof typeof config
       )}
 
       {showForm && (
-        <div className="ocean-panel rounded-2xl p-5 shadow-lg">
+        <div className="ocean-panel rounded-2xl p-4 sm:p-5 shadow-lg w-full max-w-full min-w-0 overflow-hidden">
           <div className="flex items-center justify-between border-b border-[var(--line)] pb-4">
             <h3 className="text-lg font-black text-[var(--text)]">{editing ? "Edit Record" : "Create New Record"}</h3>
             <button
@@ -1026,10 +1026,10 @@ export function SupabaseCrudPage({ moduleKey }: { moduleKey: keyof typeof config
         </div>
       )}
 
-      <div className="grid gap-4 xl:grid-cols-[1fr_0.36fr]">
-        <div className="ocean-panel rounded-2xl p-4 sm:p-5">
-          <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-            <div className="flex flex-1 items-center gap-3 rounded-xl border border-[var(--line)] bg-[var(--input)] px-3.5 py-2.5 min-w-0">
+      <div className="grid gap-4 xl:grid-cols-[minmax(0,1fr)_minmax(0,0.36fr)] w-full max-w-full min-w-0">
+        <div className="ocean-panel rounded-2xl p-4 sm:p-5 w-full max-w-full min-w-0 overflow-hidden">
+          <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between w-full min-w-0">
+            <div className="flex flex-1 items-center gap-3 rounded-xl border border-[var(--line)] bg-[var(--input)] px-3.5 py-2.5 min-w-0 w-full">
               <Search className="h-4 w-4 shrink-0 text-cyan-400" />
               <input
                 value={query}
@@ -1050,13 +1050,13 @@ export function SupabaseCrudPage({ moduleKey }: { moduleKey: keyof typeof config
             <button
               type="button"
               onClick={startCreate}
-              className="ocean-action inline-flex shrink-0 items-center justify-center gap-2 rounded-xl px-4 py-2.5 text-sm font-bold text-slate-950 shadow-md transition active:scale-95 w-full sm:w-auto"
+              className="hidden sm:inline-flex ocean-action shrink-0 items-center justify-center gap-2 rounded-xl px-4 py-2.5 text-sm font-bold text-slate-950 shadow-md transition active:scale-95"
             >
               <Plus className="h-4 w-4" /> Add Record
             </button>
           </div>
 
-          <div className="mt-4 overflow-x-auto rounded-xl border border-[var(--line)]/60">
+          <div className="mt-4 w-full max-w-full min-w-0 overflow-x-auto rounded-xl border border-[var(--line)]/60">
             {loading ? (
               <LoadingState />
             ) : filtered.length ? (
@@ -1136,7 +1136,7 @@ export function SupabaseCrudPage({ moduleKey }: { moduleKey: keyof typeof config
         </div>
 
         {/* Right Column: Detail View */}
-        <div className="ocean-panel rounded-2xl p-5 shadow-sm">
+        <div className="ocean-panel rounded-2xl p-4 sm:p-5 shadow-sm w-full max-w-full min-w-0 overflow-hidden">
           <div className="flex items-center justify-between border-b border-[var(--line)] pb-3">
             <div className="flex items-center gap-2">
               <FileText className="h-4 w-4 text-cyan-400" />

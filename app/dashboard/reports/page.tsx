@@ -91,12 +91,12 @@ export default function Page() {
   }
 
   return (
-    <section className="grid gap-6">
-      <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
-        <div>
+    <section className="grid gap-6 w-full max-w-full min-w-0">
+      <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between w-full min-w-0">
+        <div className="min-w-0 max-w-full">
           <p className="text-xs font-black uppercase tracking-[0.24em] text-cyan-500">Analytics & Governance</p>
           <h1 className="mt-2 text-2xl font-black text-[var(--text)] sm:text-4xl md:text-5xl">Official Reports & Exports</h1>
-          <p className="mt-3 max-w-3xl text-sm text-[var(--muted-text)]">
+          <p className="mt-3 max-w-3xl text-sm text-[var(--muted-text)] break-words">
             Verified fisheries reports, catch quota data, patrol compliance summaries, and donor export files.
           </p>
         </div>
@@ -117,12 +117,12 @@ export default function Page() {
         </div>
       )}
 
-      <div className="grid gap-4 xl:grid-cols-2">
+      <div className="grid gap-4 xl:grid-cols-2 w-full max-w-full min-w-0">
         <ChartCard title="Monthly Catch Volume & Fleet Activity" />
         <ChartCard title="Species Composition & Landings Trend" />
       </div>
 
-      <div className="ocean-panel rounded-2xl p-4 sm:p-5 shadow-lg">
+      <div className="ocean-panel rounded-2xl p-4 sm:p-5 shadow-lg w-full max-w-full min-w-0 overflow-hidden">
         <div className="flex flex-wrap items-center justify-between gap-3 border-b border-[var(--line)]/60 pb-4">
           <div>
             <h2 className="text-base sm:text-lg font-black text-[var(--text)]">Published Report Archive</h2>
@@ -135,7 +135,7 @@ export default function Page() {
           </div>
         </div>
 
-        <div className="mt-4 overflow-x-auto rounded-xl border border-[var(--line)]/60">
+        <div className="mt-4 w-full max-w-full min-w-0 overflow-x-auto rounded-xl border border-[var(--line)]/60">
           <table className="w-full min-w-[700px] text-left text-sm">
             <thead>
               <tr className="border-b border-[var(--line)]/60 text-xs uppercase tracking-[0.18em] text-[var(--muted-text)]">
