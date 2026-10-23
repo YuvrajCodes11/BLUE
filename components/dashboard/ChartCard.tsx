@@ -38,24 +38,24 @@ export function ChartCard({ title }: { title: string }) {
       </div>
 
       {/* KPI highlight row */}
-      <div className="mt-4 grid grid-cols-3 gap-2 border-y border-[var(--line)]/60 py-3">
-        <div>
-          <p className="text-[10px] font-bold uppercase tracking-wider text-[var(--muted-text)]">
+      <div className="mt-4 grid grid-cols-3 gap-1.5 sm:gap-2 border-y border-[var(--line)]/60 py-3">
+        <div className="min-w-0">
+          <p className="text-[9px] sm:text-[10px] font-bold uppercase tracking-wider text-[var(--muted-text)] truncate">
             Selected Month
           </p>
-          <p className="text-sm font-black text-cyan-500">{activeItem.month} 2026</p>
+          <p className="text-xs sm:text-sm font-black text-cyan-500 truncate">{activeItem.month} 2026</p>
         </div>
-        <div>
-          <p className="text-[10px] font-bold uppercase tracking-wider text-[var(--muted-text)]">
+        <div className="min-w-0">
+          <p className="text-[9px] sm:text-[10px] font-bold uppercase tracking-wider text-[var(--muted-text)] truncate">
             Volume Landed
           </p>
-          <p className="text-sm font-black text-[var(--text)]">{activeItem.tons} MT</p>
+          <p className="text-xs sm:text-sm font-black text-[var(--text)] truncate">{activeItem.tons} MT</p>
         </div>
-        <div>
-          <p className="text-[10px] font-bold uppercase tracking-wider text-[var(--muted-text)]">
+        <div className="min-w-0">
+          <p className="text-[9px] sm:text-[10px] font-bold uppercase tracking-wider text-[var(--muted-text)] truncate">
             Gross Value
           </p>
-          <p className="text-sm font-black text-emerald-500">KES {activeItem.revenue}M</p>
+          <p className="text-xs sm:text-sm font-black text-emerald-500 truncate">KES {activeItem.revenue}M</p>
         </div>
       </div>
 
@@ -64,7 +64,7 @@ export function ChartCard({ title }: { title: string }) {
         className="relative mt-5 pt-3"
         onMouseLeave={() => setActiveIdx(monthlyData.length - 1)}
       >
-        <div className="flex h-44 items-end justify-between gap-2 px-2 sm:gap-4">
+        <div className="flex h-44 items-end justify-between gap-1.5 px-1 sm:gap-4 sm:px-2">
           {monthlyData.map((item, index) => {
             const heightPercent = Math.round((item.tons / maxTons) * 100);
             const isHovered = activeIdx === index;
@@ -78,7 +78,7 @@ export function ChartCard({ title }: { title: string }) {
                 <div className="relative flex h-36 w-full items-end justify-center">
                   <div
                     style={{ height: `${heightPercent}%` }}
-                    className={`relative w-full max-w-[44px] rounded-t-xl transition-all duration-200 ${
+                    className={`relative w-full max-w-[36px] sm:max-w-[44px] rounded-t-xl transition-all duration-200 ${
                       isHovered
                         ? "bg-gradient-to-t from-cyan-500 to-cyan-300 shadow-[0_0_20px_rgba(65,243,255,.55)]"
                         : "bg-[var(--soft)]/90 hover:bg-cyan-500/40"

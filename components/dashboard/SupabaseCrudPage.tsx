@@ -918,13 +918,13 @@ export function SupabaseCrudPage({ moduleKey }: { moduleKey: keyof typeof config
 
   return (
     <section className="grid gap-6">
-      <div className="flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
+      <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
         <div>
           <p className="text-xs font-black uppercase tracking-[0.24em] text-cyan-500">BLUE Ecosystem Module</p>
-          <h1 className="mt-2 text-3xl font-black text-[var(--text)] sm:text-4xl">{config.title}</h1>
+          <h1 className="mt-2 text-2xl font-black text-[var(--text)] sm:text-4xl">{config.title}</h1>
           <p className="mt-2 max-w-3xl text-sm text-[var(--muted-text)]">{config.description}</p>
         </div>
-        <div className="flex flex-wrap items-center gap-2">
+        <div className="grid grid-cols-2 gap-2 sm:flex sm:items-center">
           <button
             type="button"
             onClick={() => {
@@ -932,13 +932,13 @@ export function SupabaseCrudPage({ moduleKey }: { moduleKey: keyof typeof config
               setNotice(`✓ Exported ${filtered.length} ${config.title} records to CSV.`);
               setTimeout(() => setNotice(""), 3500);
             }}
-            className="inline-flex items-center justify-center gap-2 rounded-xl border border-[var(--line)] bg-[var(--soft)] px-4 py-3 text-sm font-bold text-[var(--text)] transition hover:border-cyan-400 active:scale-95"
+            className="inline-flex w-full sm:w-auto items-center justify-center gap-1.5 sm:gap-2 rounded-xl border border-[var(--line)] bg-[var(--soft)] px-3 sm:px-4 py-2.5 sm:py-3 text-xs sm:text-sm font-bold text-[var(--text)] transition hover:border-cyan-400 active:scale-95"
           >
             <Download className="h-4 w-4 text-cyan-400" /> Export CSV
           </button>
           <button
             onClick={startCreate}
-            className="ocean-action inline-flex items-center justify-center gap-2 rounded-xl px-4 py-3 font-bold text-slate-950 transition active:scale-95 shadow-md"
+            className="ocean-action inline-flex w-full sm:w-auto items-center justify-center gap-1.5 sm:gap-2 rounded-xl px-3 sm:px-4 py-2.5 sm:py-3 text-xs sm:text-sm font-bold text-slate-950 transition active:scale-95 shadow-md"
           >
             <Plus className="h-4 w-4" /> Add Record
           </button>
@@ -1027,21 +1027,21 @@ export function SupabaseCrudPage({ moduleKey }: { moduleKey: keyof typeof config
       )}
 
       <div className="grid gap-4 xl:grid-cols-[1fr_0.36fr]">
-        <div className="ocean-panel rounded-2xl p-5">
+        <div className="ocean-panel rounded-2xl p-4 sm:p-5">
           <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-            <div className="flex flex-1 items-center gap-3 rounded-xl border border-[var(--line)] bg-[var(--input)] px-3.5 py-2.5">
+            <div className="flex flex-1 items-center gap-3 rounded-xl border border-[var(--line)] bg-[var(--input)] px-3.5 py-2.5 min-w-0">
               <Search className="h-4 w-4 shrink-0 text-cyan-400" />
               <input
                 value={query}
                 onChange={(e) => setQuery(e.target.value)}
                 placeholder="Search / filter entries..."
-                className="w-full bg-transparent text-sm text-[var(--text)] outline-none placeholder:text-[var(--muted-text)]"
+                className="w-full min-w-0 bg-transparent text-sm text-[var(--text)] outline-none placeholder:text-[var(--muted-text)]"
               />
               {query && (
                 <button
                   type="button"
                   onClick={() => setQuery("")}
-                  className="text-xs font-semibold text-[var(--muted-text)] hover:text-[var(--text)]"
+                  className="text-xs font-semibold text-[var(--muted-text)] hover:text-[var(--text)] shrink-0"
                 >
                   Clear
                 </button>
@@ -1050,13 +1050,13 @@ export function SupabaseCrudPage({ moduleKey }: { moduleKey: keyof typeof config
             <button
               type="button"
               onClick={startCreate}
-              className="ocean-action inline-flex shrink-0 items-center justify-center gap-2 rounded-xl px-4 py-2.5 text-sm font-bold text-slate-950 shadow-md transition active:scale-95"
+              className="ocean-action inline-flex shrink-0 items-center justify-center gap-2 rounded-xl px-4 py-2.5 text-sm font-bold text-slate-950 shadow-md transition active:scale-95 w-full sm:w-auto"
             >
               <Plus className="h-4 w-4" /> Add Record
             </button>
           </div>
 
-          <div className="mt-4 overflow-x-auto">
+          <div className="mt-4 overflow-x-auto rounded-xl border border-[var(--line)]/60">
             {loading ? (
               <LoadingState />
             ) : filtered.length ? (
@@ -1309,18 +1309,18 @@ export function SupabaseCrudPage({ moduleKey }: { moduleKey: keyof typeof config
 
       {/* Official Universal Record Dossier Modal */}
       {inspectRecord && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-sm animate-in fade-in duration-200">
-          <div className="ocean-panel relative w-full max-w-2xl rounded-2xl border border-cyan-500/30 p-6 shadow-2xl overflow-hidden max-h-[92vh] flex flex-col">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-slate-950/80 backdrop-blur-sm animate-in fade-in duration-200">
+          <div className="ocean-panel relative w-full max-w-2xl rounded-2xl border border-cyan-500/30 p-4 sm:p-6 shadow-2xl overflow-hidden max-h-[92vh] flex flex-col">
             {/* Modal Header */}
-            <div className="flex items-center justify-between border-b border-[var(--line)] pb-4">
-              <div className="flex items-center gap-2">
-                <ShieldCheck className="h-5 w-5 text-cyan-400" />
-                <span className="font-bold text-sm text-[var(--text)]">Official {config.title} Dossier</span>
+            <div className="flex items-center justify-between border-b border-[var(--line)] pb-3 sm:pb-4">
+              <div className="flex items-center gap-2 min-w-0">
+                <ShieldCheck className="h-5 w-5 text-cyan-400 shrink-0" />
+                <span className="font-bold text-sm text-[var(--text)] truncate">Official {config.title} Dossier</span>
               </div>
               <button
                 type="button"
                 onClick={() => setInspectRecord(null)}
-                className="grid h-8 w-8 place-items-center rounded-lg border border-[var(--line)] bg-[var(--soft)] text-[var(--muted-text)] hover:text-[var(--text)] transition"
+                className="grid h-8 w-8 place-items-center rounded-lg border border-[var(--line)] bg-[var(--soft)] text-[var(--muted-text)] hover:text-[var(--text)] transition shrink-0 ml-2"
               >
                 <X className="h-4 w-4" />
               </button>
@@ -1328,13 +1328,13 @@ export function SupabaseCrudPage({ moduleKey }: { moduleKey: keyof typeof config
 
             {/* Dossier Body */}
             <div className="mt-4 overflow-y-auto pr-1 flex-1 space-y-4">
-              <div className="rounded-2xl border border-cyan-500/30 bg-[var(--input)] p-5">
+              <div className="rounded-2xl border border-cyan-500/30 bg-[var(--input)] p-4 sm:p-5">
                 <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 border-b border-[var(--line)] pb-4">
                   <div>
                     <span className="text-[10px] font-mono uppercase tracking-[0.2em] text-cyan-400">
                       REPUBLIC OF KENYA · BLUE ECOSYSTEM VAULT
                     </span>
-                    <h3 className="text-xl font-black text-[var(--text)] mt-1">
+                    <h3 className="text-lg sm:text-xl font-black text-[var(--text)] mt-1">
                       {String(
                         inspectRecord.full_name ||
                         inspectRecord.vessel_name ||
@@ -1352,7 +1352,7 @@ export function SupabaseCrudPage({ moduleKey }: { moduleKey: keyof typeof config
                   )}
                 </div>
 
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mt-4">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5 sm:gap-3 mt-4">
                   {Object.entries(inspectRecord)
                     .filter(([k]) => !["id"].includes(k))
                     .map(([key, val]) => (
@@ -1367,15 +1367,15 @@ export function SupabaseCrudPage({ moduleKey }: { moduleKey: keyof typeof config
                     ))}
                 </div>
 
-                <div className="mt-4 flex flex-col sm:flex-row items-center justify-between gap-3 rounded-xl border border-[var(--line)] bg-[var(--soft)] p-3 text-xs">
+                <div className="mt-4 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 rounded-xl border border-[var(--line)] bg-[var(--soft)] p-3 text-xs">
                   <div className="flex items-center gap-2.5">
-                    <QrCode className="h-8 w-8 text-cyan-400 shrink-0" />
+                    <QrCode className="h-7 w-7 sm:h-8 sm:w-8 text-cyan-400 shrink-0" />
                     <div>
                       <span className="block text-[10px] font-bold text-[var(--muted-text)] uppercase">Registry Verification Hash</span>
                       <span className="font-mono text-[10px] text-cyan-400">SHA256: 4e9c1b...802d</span>
                     </div>
                   </div>
-                  <div className="text-right">
+                  <div className="text-left sm:text-right">
                     <span className="inline-flex items-center gap-1 text-[11px] font-bold text-emerald-400">
                       <CheckCircle2 className="h-3.5 w-3.5" /> Authenticated on Chain
                     </span>
@@ -1385,7 +1385,14 @@ export function SupabaseCrudPage({ moduleKey }: { moduleKey: keyof typeof config
             </div>
 
             {/* Modal Actions */}
-            <div className="mt-4 flex items-center justify-end gap-3 border-t border-[var(--line)] pt-3">
+            <div className="mt-4 flex flex-col-reverse sm:flex-row items-stretch sm:items-center sm:justify-end gap-2 sm:gap-3 border-t border-[var(--line)] pt-3">
+              <button
+                type="button"
+                onClick={() => setInspectRecord(null)}
+                className="rounded-xl border border-[var(--line)] bg-[var(--soft)] px-4 py-2.5 sm:py-2 text-xs font-bold text-[var(--text)] hover:border-cyan-400 transition text-center"
+              >
+                Close
+              </button>
               <button
                 type="button"
                 onClick={() => {
@@ -1393,7 +1400,7 @@ export function SupabaseCrudPage({ moduleKey }: { moduleKey: keyof typeof config
                   setInspectRecord(null);
                   startEdit(toEdit);
                 }}
-                className="inline-flex items-center gap-1.5 rounded-xl border border-emerald-500/30 bg-emerald-500/10 px-4 py-2 text-xs font-bold text-emerald-400 hover:bg-emerald-500/20 transition"
+                className="inline-flex items-center justify-center gap-1.5 rounded-xl border border-emerald-500/30 bg-emerald-500/10 px-4 py-2.5 sm:py-2 text-xs font-bold text-emerald-400 hover:bg-emerald-500/20 transition"
               >
                 <Edit2 className="h-4 w-4" /> Edit Record
               </button>
@@ -1412,16 +1419,9 @@ export function SupabaseCrudPage({ moduleKey }: { moduleKey: keyof typeof config
                   setNotice(`✓ ${config.title} record dossier exported.`);
                   setTimeout(() => setNotice(""), 3000);
                 }}
-                className="ocean-action inline-flex items-center gap-1.5 rounded-xl px-4 py-2 text-xs font-bold text-slate-950 shadow-md"
+                className="ocean-action inline-flex items-center justify-center gap-1.5 rounded-xl px-4 py-2.5 sm:py-2 text-xs font-bold text-slate-950 shadow-md"
               >
                 <Download className="h-4 w-4" /> Export Summary
-              </button>
-              <button
-                type="button"
-                onClick={() => setInspectRecord(null)}
-                className="rounded-xl border border-[var(--line)] bg-[var(--soft)] px-4 py-2 text-xs font-bold text-[var(--text)] hover:border-cyan-400 transition"
-              >
-                Close
               </button>
             </div>
           </div>
@@ -1430,18 +1430,18 @@ export function SupabaseCrudPage({ moduleKey }: { moduleKey: keyof typeof config
 
       {/* Official Document Preview Modal */}
       {previewDoc && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-sm animate-in fade-in duration-200">
-          <div className="ocean-panel relative w-full max-w-2xl rounded-2xl border border-cyan-500/30 p-6 shadow-2xl overflow-hidden max-h-[92vh] flex flex-col">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-slate-950/80 backdrop-blur-sm animate-in fade-in duration-200">
+          <div className="ocean-panel relative w-full max-w-2xl rounded-2xl border border-cyan-500/30 p-4 sm:p-6 shadow-2xl overflow-hidden max-h-[92vh] flex flex-col">
             {/* Modal Header */}
-            <div className="flex items-center justify-between border-b border-[var(--line)] pb-4">
-              <div className="flex items-center gap-2">
-                <FileText className="h-5 w-5 text-cyan-400" />
-                <span className="font-bold text-sm text-[var(--text)]">Official Document Vault Preview</span>
+            <div className="flex items-center justify-between border-b border-[var(--line)] pb-3 sm:pb-4">
+              <div className="flex items-center gap-2 min-w-0">
+                <FileText className="h-5 w-5 text-cyan-400 shrink-0" />
+                <span className="font-bold text-sm text-[var(--text)] truncate">Official Document Vault Preview</span>
               </div>
               <button
                 type="button"
                 onClick={() => setPreviewDoc(null)}
-                className="grid h-8 w-8 place-items-center rounded-lg border border-[var(--line)] bg-[var(--soft)] text-[var(--muted-text)] hover:text-[var(--text)] transition"
+                className="grid h-8 w-8 place-items-center rounded-lg border border-[var(--line)] bg-[var(--soft)] text-[var(--muted-text)] hover:text-[var(--text)] transition shrink-0 ml-2"
               >
                 <X className="h-4 w-4" />
               </button>
@@ -1449,17 +1449,17 @@ export function SupabaseCrudPage({ moduleKey }: { moduleKey: keyof typeof config
 
             {/* Document Certificate Body */}
             <div className="mt-4 overflow-y-auto pr-1 flex-1">
-              <div className="rounded-2xl border-2 border-cyan-500/40 bg-[var(--input)] p-6 text-center relative overflow-hidden">
+              <div className="rounded-2xl border-2 border-cyan-500/40 bg-[var(--input)] p-4 sm:p-6 text-center relative overflow-hidden">
                 <div className="flex justify-between items-center mb-4">
                   <span className="text-[10px] font-mono text-[var(--muted-text)]">REPUBLIC OF KENYA</span>
-                  <div className="flex items-center gap-1 rounded-full border border-emerald-400/40 bg-emerald-500/10 px-3 py-1 text-[11px] font-bold text-emerald-400">
+                  <div className="flex items-center gap-1 rounded-full border border-emerald-400/40 bg-emerald-500/10 px-2.5 sm:px-3 py-1 text-[10px] sm:text-[11px] font-bold text-emerald-400">
                     <CheckCircle2 className="h-3.5 w-3.5" /> DIGITAL SEAL VERIFIED
                   </div>
                 </div>
 
                 <div className="space-y-1 mt-1">
                   <p className="text-xs font-black tracking-[0.2em] text-cyan-400 uppercase">State Department for Blue Economy & Fisheries</p>
-                  <p className="text-[11px] font-bold tracking-wider text-[var(--muted-text)] uppercase">
+                  <p className="text-[10px] sm:text-[11px] font-bold tracking-wider text-[var(--muted-text)] uppercase">
                     Ministry of Mining, Blue Economy and Maritime Affairs
                   </p>
                   <p className="text-xs font-black text-[var(--text)] uppercase tracking-wide">
@@ -1467,8 +1467,8 @@ export function SupabaseCrudPage({ moduleKey }: { moduleKey: keyof typeof config
                   </p>
                 </div>
 
-                <div className="my-5 border-t border-b border-cyan-500/30 py-4">
-                  <h2 className="text-base font-black tracking-wide text-cyan-300 uppercase">
+                <div className="my-4 sm:my-5 border-t border-b border-cyan-500/30 py-3 sm:py-4">
+                  <h2 className="text-sm sm:text-base font-black tracking-wide text-cyan-300 uppercase">
                     {String(previewDoc.title || previewDoc.document_type || "Official Certificate")}
                   </h2>
                   <p className="text-xs text-[var(--muted-text)] font-mono mt-1">
@@ -1477,7 +1477,7 @@ export function SupabaseCrudPage({ moduleKey }: { moduleKey: keyof typeof config
                 </div>
 
                 <div className="text-left space-y-3 text-xs">
-                  <div className="grid grid-cols-2 gap-3">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5 sm:gap-3">
                     <div className="rounded-xl border border-[var(--line)] bg-[var(--soft)] p-3">
                       <span className="block text-[10px] font-bold uppercase tracking-wider text-[var(--muted-text)]">Granted Entity / Holder</span>
                       <strong className="text-sm font-bold text-[var(--text)] mt-0.5 block">
@@ -1499,10 +1499,10 @@ export function SupabaseCrudPage({ moduleKey }: { moduleKey: keyof typeof config
                     </p>
                   </div>
 
-                  <div className="flex flex-col sm:flex-row items-center justify-between gap-4 rounded-xl border border-[var(--line)] bg-[var(--soft)] p-3.5">
+                  <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 sm:gap-4 rounded-xl border border-[var(--line)] bg-[var(--soft)] p-3.5">
                     <div className="flex items-center gap-3">
-                      <div className="grid h-12 w-12 place-items-center rounded-xl bg-cyan-500/10 text-cyan-400 border border-cyan-500/30">
-                        <QrCode className="h-7 w-7" />
+                      <div className="grid h-10 w-10 sm:h-12 sm:w-12 place-items-center rounded-xl bg-cyan-500/10 text-cyan-400 border border-cyan-500/30 shrink-0">
+                        <QrCode className="h-6 w-6 sm:h-7 sm:w-7" />
                       </div>
                       <div>
                         <span className="block text-[10px] font-bold uppercase tracking-wider text-[var(--muted-text)]">Digital Ledger Seal</span>
@@ -1510,7 +1510,7 @@ export function SupabaseCrudPage({ moduleKey }: { moduleKey: keyof typeof config
                         <span className="block text-[10px] text-[var(--muted-text)]">Timestamped on BLUE Network</span>
                       </div>
                     </div>
-                    <div className="text-right">
+                    <div className="text-left sm:text-right">
                       <div className="inline-block border-t border-[var(--line)] pt-1">
                         <p className="text-xs font-black text-[var(--text)]">Director General of Fisheries</p>
                         <p className="text-[10px] text-[var(--muted-text)]">Republic of Kenya</p>
@@ -1522,7 +1522,14 @@ export function SupabaseCrudPage({ moduleKey }: { moduleKey: keyof typeof config
             </div>
 
             {/* Modal Actions */}
-            <div className="mt-4 flex items-center justify-end gap-3 border-t border-[var(--line)] pt-3">
+            <div className="mt-4 flex flex-col-reverse sm:flex-row items-stretch sm:items-center sm:justify-end gap-2 sm:gap-3 border-t border-[var(--line)] pt-3">
+              <button
+                type="button"
+                onClick={() => setPreviewDoc(null)}
+                className="rounded-xl border border-[var(--line)] bg-[var(--soft)] px-4 py-2.5 sm:py-2 text-xs font-bold text-[var(--text)] hover:border-cyan-400 transition text-center"
+              >
+                Close
+              </button>
               <button
                 type="button"
                 onClick={() => {
@@ -1542,16 +1549,9 @@ export function SupabaseCrudPage({ moduleKey }: { moduleKey: keyof typeof config
                   setNotice(`✓ ${previewDoc.title || previewDoc.document_type} PDF exported.`);
                   setTimeout(() => setNotice(""), 3000);
                 }}
-                className="ocean-action inline-flex items-center gap-1.5 rounded-xl px-4 py-2 text-xs font-bold text-slate-950 shadow-md"
+                className="ocean-action inline-flex items-center justify-center gap-1.5 rounded-xl px-4 py-2.5 sm:py-2 text-xs font-bold text-slate-950 shadow-md"
               >
                 <Download className="h-4 w-4" /> Download PDF
-              </button>
-              <button
-                type="button"
-                onClick={() => setPreviewDoc(null)}
-                className="rounded-xl border border-[var(--line)] bg-[var(--soft)] px-4 py-2 text-xs font-bold text-[var(--text)] hover:border-cyan-400 transition"
-              >
-                Close
               </button>
             </div>
           </div>

@@ -115,9 +115,9 @@ export function DashboardLayout({ role, children }: { role: RoleSlug; children: 
           </div>
         </div>
       )}
-      <div className="min-w-0 lg:pl-72">
+      <div className="min-w-0 max-w-full lg:pl-72">
         <Topbar role={activeRole} onMenuClick={() => setMobileMenuOpen(true)} />
-        <main className="relative px-4 pb-20 pt-6 sm:px-6 lg:px-8 lg:pb-12 lg:pt-8">{children}</main>
+        <main className="relative min-w-0 max-w-full px-3.5 pb-28 pt-4 sm:px-6 sm:pb-24 sm:pt-6 lg:px-8 lg:pb-12 lg:pt-8">{children}</main>
         <MobileQuickNav role={activeRole} />
       </div>
     </div>
@@ -128,12 +128,20 @@ function MobileQuickNav({ role }: { role: RoleSlug }) {
   const pathname = usePathname();
   const nav = navForRole(role).slice(0, 5);
   return (
-    <nav className="fixed inset-x-3 bottom-3 z-30 grid grid-cols-5 gap-1 rounded-3xl border border-[var(--line)] bg-[var(--topbar)] p-1.5 shadow-2xl backdrop-blur-2xl lg:hidden">
+    <nav className="fixed inset-x-2 sm:inset-x-3 bottom-2.5 sm:bottom-3 z-30 grid grid-cols-5 gap-1 rounded-2xl sm:rounded-3xl border border-[var(--line)] bg-[var(--topbar)] p-1 sm:p-1.5 shadow-2xl backdrop-blur-2xl lg:hidden">
       {nav.map((item) => {
         const active = pathname === item.href || (item.href !== "/dashboard" && pathname.startsWith(item.href));
         return (
-          <Link key={item.href} href={item.href} className={`flex min-h-12 items-center justify-center rounded-2xl px-2 text-center text-[11px] font-black leading-tight ${active ? "bg-cyan-300 text-slate-950" : "text-[var(--muted-text)]"}`}>
-            {item.label.replace("Register Member", "Register").replace("Landing Sites", "Sites").replace("Verify Member QR", "Verify")}
+          <Link
+            key={item.href}
+            href={item.href}
+            className={`flex min-h-11 sm:min-h-12 items-center justify-center rounded-xl sm:rounded-2xl px-1 sm:px-2 text-center text-[10px] sm:text-[11px] font-black leading-tight transition active:scale-95 ${
+              active ? "bg-cyan-300 text-slate-950 shadow-sm" : "text-[var(--muted-text)] hover:text-[var(--text)]"
+            }`}
+          >
+            <span className="truncate">
+              {item.label.replace("Register Member", "Register").replace("Landing Sites", "Sites").replace("Verify Member QR", "Verify")}
+            </span>
           </Link>
         );
       })}

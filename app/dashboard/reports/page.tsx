@@ -92,18 +92,18 @@ export default function Page() {
 
   return (
     <section className="grid gap-6">
-      <div className="flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
+      <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
         <div>
           <p className="text-xs font-black uppercase tracking-[0.24em] text-cyan-500">Analytics & Governance</p>
-          <h1 className="mt-2 text-3xl font-black text-[var(--text)] md:text-5xl">Official Reports & Exports</h1>
-          <p className="mt-2 max-w-3xl text-sm text-[var(--muted-text)]">
+          <h1 className="mt-2 text-2xl font-black text-[var(--text)] sm:text-4xl md:text-5xl">Official Reports & Exports</h1>
+          <p className="mt-3 max-w-3xl text-sm text-[var(--muted-text)]">
             Verified fisheries reports, catch quota data, patrol compliance summaries, and donor export files.
           </p>
         </div>
-        <div className="flex gap-2">
+        <div className="w-full sm:w-auto">
           <button
             onClick={() => triggerDownload("Complete BLUE Platform Summary", "PDF")}
-            className="ocean-action inline-flex items-center gap-2 rounded-xl px-4 py-3 text-sm font-bold text-slate-950 shadow-md transition active:scale-95"
+            className="ocean-action inline-flex w-full sm:w-auto items-center justify-center gap-2 rounded-xl px-4 py-3 text-sm font-bold text-slate-950 shadow-md transition active:scale-95"
           >
             <Download className="h-4 w-4" /> Export All Data (CSV/PDF)
           </button>
@@ -122,10 +122,10 @@ export default function Page() {
         <ChartCard title="Species Composition & Landings Trend" />
       </div>
 
-      <div className="ocean-panel rounded-2xl p-5 shadow-lg">
+      <div className="ocean-panel rounded-2xl p-4 sm:p-5 shadow-lg">
         <div className="flex flex-wrap items-center justify-between gap-3 border-b border-[var(--line)]/60 pb-4">
           <div>
-            <h2 className="text-lg font-black text-[var(--text)]">Published Report Archive</h2>
+            <h2 className="text-base sm:text-lg font-black text-[var(--text)]">Published Report Archive</h2>
             <p className="text-xs text-[var(--muted-text)]">All reports verified by County Fisheries and KeFS Officers.</p>
           </div>
           <div className="flex items-center gap-2 text-xs">
@@ -135,7 +135,7 @@ export default function Page() {
           </div>
         </div>
 
-        <div className="mt-4 overflow-x-auto">
+        <div className="mt-4 overflow-x-auto rounded-xl border border-[var(--line)]/60">
           <table className="w-full min-w-[700px] text-left text-sm">
             <thead>
               <tr className="border-b border-[var(--line)]/60 text-xs uppercase tracking-[0.18em] text-[var(--muted-text)]">
@@ -150,9 +150,11 @@ export default function Page() {
             <tbody>
               {reportArchives.map((rep) => (
                 <tr key={rep.id} className="border-b border-[var(--line)]/40 transition hover:bg-[var(--soft)]/60">
-                  <td className="px-3 py-4 font-bold text-[var(--text)] flex items-center gap-2.5">
-                    <FileText className="h-4 w-4 text-cyan-400 shrink-0" />
-                    {rep.title}
+                  <td className="px-3 py-4 font-bold text-[var(--text)]">
+                    <div className="flex items-center gap-2.5">
+                      <FileText className="h-4 w-4 text-cyan-400 shrink-0" />
+                      <span>{rep.title}</span>
+                    </div>
                   </td>
                   <td className="px-3 py-4 text-xs font-semibold text-[var(--muted-text)]">{rep.type}</td>
                   <td className="px-3 py-4 font-mono text-xs">{rep.size}</td>

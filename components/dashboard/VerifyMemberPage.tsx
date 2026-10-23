@@ -177,13 +177,13 @@ export function VerifyMemberPage() {
                 </div>
 
                 <dl className="mt-5 grid grid-cols-2 gap-3 border-t border-[var(--line)]/60 pt-4 text-xs">
-                  <div>
+                  <div className="min-w-0">
                     <dt className="font-bold text-[var(--muted-text)]">System UUID</dt>
                     <dd className="truncate font-mono font-semibold text-[var(--text)]">{row.id}</dd>
                   </div>
-                  <div>
+                  <div className="min-w-0">
                     <dt className="font-bold text-[var(--muted-text)]">Registration Date</dt>
-                    <dd className="font-semibold text-[var(--text)]">
+                    <dd className="truncate font-semibold text-[var(--text)]">
                       {new Date(row.created_at).toLocaleDateString()}
                     </dd>
                   </div>

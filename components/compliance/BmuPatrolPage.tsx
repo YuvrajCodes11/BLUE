@@ -313,13 +313,13 @@ export function BmuPatrolPage() {
 
   return (
     <section className="grid gap-6">
-      <div className="flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
+      <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
         <div>
           <p className="text-sm font-black uppercase tracking-[0.24em] text-cyan-500">BMU Compliance / Patrols</p>
-          <h1 className="mt-2 text-3xl font-black text-[var(--text)] md:text-5xl">BMU Patrol Reporting Form</h1>
-          <p className="mt-3 max-w-3xl text-[var(--muted-text)]">Structured BMU-side patrol reporting. This is separate from officer-side FORM 1A, Patrol Data Capture, and Seizure Form workflows.</p>
+          <h1 className="mt-2 text-2xl font-black text-[var(--text)] sm:text-4xl md:text-5xl">BMU Patrol Reporting Form</h1>
+          <p className="mt-3 max-w-3xl text-sm text-[var(--muted-text)]">Structured BMU-side patrol reporting. This is separate from officer-side FORM 1A, Patrol Data Capture, and Seizure Form workflows.</p>
         </div>
-        <button onClick={resetCreate} className="ocean-action inline-flex items-center justify-center gap-2 rounded-xl px-4 py-3 font-bold text-slate-950">
+        <button onClick={resetCreate} className="ocean-action inline-flex w-full sm:w-auto items-center justify-center gap-2 rounded-xl px-4 py-3 font-bold text-slate-950 transition active:scale-95 shadow-md">
           <Plus className="h-4 w-4" /> New BMU Patrol
         </button>
       </div>
@@ -475,7 +475,7 @@ export function BmuPatrolPage() {
             <Search className="h-5 w-5 text-cyan-500" />
             <input className="w-full bg-transparent text-[var(--text)] outline-none placeholder:text-[var(--muted-text)]" value={query} onChange={(e) => setQuery(e.target.value)} placeholder="Search BMU Patrol reports" />
           </div>
-          <div className="mt-4 overflow-x-auto">
+          <div className="mt-4 overflow-x-auto rounded-xl border border-[var(--line)]/60">
             {filteredReports.length ? (
               <table className="w-full min-w-[760px] text-left text-sm">
                 <thead className="text-xs uppercase tracking-[0.18em] text-[var(--muted-text)]">
@@ -590,30 +590,30 @@ export function BmuPatrolPage() {
 
       {/* Official BMU Patrol Dossier Modal */}
       {showModal && detail && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-sm animate-in fade-in duration-200">
-          <div className="ocean-panel relative w-full max-w-2xl rounded-2xl border border-cyan-500/30 p-6 shadow-2xl overflow-hidden max-h-[92vh] flex flex-col">
-            <div className="flex items-center justify-between border-b border-[var(--line)] pb-4">
-              <div className="flex items-center gap-2">
-                <ShieldCheck className="h-5 w-5 text-cyan-400" />
-                <span className="font-bold text-sm text-[var(--text)]">Official BMU Patrol Inspection Dossier</span>
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-slate-950/80 backdrop-blur-sm animate-in fade-in duration-200">
+          <div className="ocean-panel relative w-full max-w-2xl rounded-2xl border border-cyan-500/30 p-4 sm:p-6 shadow-2xl overflow-hidden max-h-[92vh] flex flex-col">
+            <div className="flex items-center justify-between border-b border-[var(--line)] pb-3 sm:pb-4">
+              <div className="flex items-center gap-2 min-w-0">
+                <ShieldCheck className="h-5 w-5 text-cyan-400 shrink-0" />
+                <span className="font-bold text-sm text-[var(--text)] truncate">Official BMU Patrol Inspection Dossier</span>
               </div>
               <button
                 type="button"
                 onClick={() => setShowModal(false)}
-                className="grid h-8 w-8 place-items-center rounded-lg border border-[var(--line)] bg-[var(--soft)] text-[var(--muted-text)] hover:text-[var(--text)] transition"
+                className="grid h-8 w-8 place-items-center rounded-lg border border-[var(--line)] bg-[var(--soft)] text-[var(--muted-text)] hover:text-[var(--text)] transition shrink-0 ml-2"
               >
                 <X className="h-4 w-4" />
               </button>
             </div>
 
             <div className="mt-4 overflow-y-auto pr-1 flex-1 space-y-4">
-              <div className="rounded-2xl border border-cyan-500/30 bg-[var(--input)] p-5">
+              <div className="rounded-2xl border border-cyan-500/30 bg-[var(--input)] p-4 sm:p-5">
                 <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 border-b border-[var(--line)] pb-4">
                   <div>
                     <span className="text-[10px] font-mono uppercase tracking-[0.2em] text-cyan-400">
                       REPUBLIC OF KENYA · STATE DEPARTMENT FOR BLUE ECONOMY
                     </span>
-                    <h3 className="text-xl font-black text-[var(--text)] mt-1">
+                    <h3 className="text-lg sm:text-xl font-black text-[var(--text)] mt-1">
                       {detail.report.bmu_name_jina_la_patrol_bmu || "BMU Inshore Patrol"}
                     </h3>
                     <p className="text-xs text-[var(--muted-text)] mt-0.5">
@@ -625,7 +625,7 @@ export function BmuPatrolPage() {
                   </div>
                 </div>
 
-                <div className="grid grid-cols-2 gap-3 mt-4 text-xs">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5 sm:gap-3 mt-4 text-xs">
                   <div className="rounded-xl border border-[var(--line)] bg-[var(--soft)] p-3">
                     <span className="block text-[10px] font-bold uppercase tracking-wider text-[var(--muted-text)]">Patrol Vessel</span>
                     <strong className="text-sm font-bold text-[var(--text)] mt-0.5 block">{detail.report.patrol_vessel_name_jina_la_chombo || "Kilifi Scout 01"}</strong>
@@ -636,7 +636,7 @@ export function BmuPatrolPage() {
                   </div>
                 </div>
 
-                <div className="mt-4 rounded-xl border border-[var(--line)] bg-[var(--soft)] p-4">
+                <div className="mt-4 rounded-xl border border-[var(--line)] bg-[var(--soft)] p-3.5 sm:p-4">
                   <h4 className="text-xs font-black uppercase tracking-wider text-cyan-400 mb-2">Washikadau / Deployed Participants ({detail.participants.length})</h4>
                   <div className="space-y-2">
                     {detail.participants.map((p, idx) => (
@@ -648,7 +648,7 @@ export function BmuPatrolPage() {
                   </div>
                 </div>
 
-                <div className="mt-4 rounded-xl border border-[var(--line)] bg-[var(--soft)] p-4">
+                <div className="mt-4 rounded-xl border border-[var(--line)] bg-[var(--soft)] p-3.5 sm:p-4">
                   <h4 className="text-xs font-black uppercase tracking-wider text-cyan-400 mb-2">Recorded Outcomes / Matokeo ({detail.outcomes.length})</h4>
                   <div className="space-y-2">
                     {detail.outcomes.map((o, idx) => (
@@ -663,15 +663,15 @@ export function BmuPatrolPage() {
                   </div>
                 </div>
 
-                <div className="mt-4 flex flex-col sm:flex-row items-center justify-between gap-3 rounded-xl border border-[var(--line)] bg-[var(--soft)] p-3 text-xs">
+                <div className="mt-4 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 rounded-xl border border-[var(--line)] bg-[var(--soft)] p-3 text-xs">
                   <div className="flex items-center gap-2.5">
-                    <QrCode className="h-8 w-8 text-cyan-400 shrink-0" />
+                    <QrCode className="h-7 w-7 sm:h-8 sm:w-8 text-cyan-400 shrink-0" />
                     <div>
                       <span className="block text-[10px] font-bold text-[var(--muted-text)] uppercase">Digital Ledger Stamp</span>
                       <span className="font-mono text-[10px] text-cyan-400">SHA256: b2a89c...10ff</span>
                     </div>
                   </div>
-                  <div className="text-right">
+                  <div className="text-left sm:text-right">
                     <span className="text-[10px] text-[var(--muted-text)] block">Verified on BLUE Coastal Patrol Hub</span>
                     <strong className="text-xs text-[var(--text)]">Directorate of Fisheries Protection</strong>
                   </div>
@@ -679,7 +679,14 @@ export function BmuPatrolPage() {
               </div>
             </div>
 
-            <div className="mt-4 flex items-center justify-end gap-3 border-t border-[var(--line)] pt-3">
+            <div className="mt-4 flex flex-col-reverse sm:flex-row items-stretch sm:items-center sm:justify-end gap-2 sm:gap-3 border-t border-[var(--line)] pt-3">
+              <button
+                type="button"
+                onClick={() => setShowModal(false)}
+                className="rounded-xl border border-[var(--line)] bg-[var(--soft)] px-4 py-2.5 sm:py-2 text-xs font-bold text-[var(--text)] hover:border-cyan-400 transition text-center"
+              >
+                Close
+              </button>
               <button
                 type="button"
                 onClick={() => {
@@ -714,16 +721,9 @@ export function BmuPatrolPage() {
                   setNotice("✓ BMU Patrol dossier exported.");
                   setTimeout(() => setNotice(""), 3000);
                 }}
-                className="ocean-action inline-flex items-center gap-1.5 rounded-xl px-4 py-2 text-xs font-bold text-slate-950 shadow-md"
+                className="ocean-action inline-flex items-center justify-center gap-1.5 rounded-xl px-4 py-2.5 sm:py-2 text-xs font-bold text-slate-950 shadow-md"
               >
                 <Download className="h-4 w-4" /> Export Report Summary
-              </button>
-              <button
-                type="button"
-                onClick={() => setShowModal(false)}
-                className="rounded-xl border border-[var(--line)] bg-[var(--soft)] px-4 py-2 text-xs font-bold text-[var(--text)] hover:border-cyan-400 transition"
-              >
-                Close
               </button>
             </div>
           </div>
