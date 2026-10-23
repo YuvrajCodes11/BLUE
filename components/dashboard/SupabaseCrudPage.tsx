@@ -892,14 +892,32 @@ export function SupabaseCrudPage({ moduleKey }: { moduleKey: keyof typeof config
 
       <div className="grid gap-4 xl:grid-cols-[1fr_0.36fr]">
         <div className="ocean-panel rounded-2xl p-5">
-          <div className="flex items-center gap-3">
-            <Search className="h-5 w-5 text-cyan-500" />
-            <input
-              value={query}
-              onChange={(e) => setQuery(e.target.value)}
-              placeholder="Search / filter entries..."
-              className="w-full bg-transparent text-sm text-[var(--text)] outline-none placeholder:text-[var(--muted-text)]"
-            />
+          <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+            <div className="flex flex-1 items-center gap-3 rounded-xl border border-[var(--line)] bg-[var(--input)] px-3.5 py-2.5">
+              <Search className="h-4 w-4 shrink-0 text-cyan-400" />
+              <input
+                value={query}
+                onChange={(e) => setQuery(e.target.value)}
+                placeholder="Search / filter entries..."
+                className="w-full bg-transparent text-sm text-[var(--text)] outline-none placeholder:text-[var(--muted-text)]"
+              />
+              {query && (
+                <button
+                  type="button"
+                  onClick={() => setQuery("")}
+                  className="text-xs font-semibold text-[var(--muted-text)] hover:text-[var(--text)]"
+                >
+                  Clear
+                </button>
+              )}
+            </div>
+            <button
+              type="button"
+              onClick={startCreate}
+              className="ocean-action inline-flex shrink-0 items-center justify-center gap-2 rounded-xl px-4 py-2.5 text-sm font-bold text-slate-950 shadow-md transition active:scale-95"
+            >
+              <Plus className="h-4 w-4" /> Add Record
+            </button>
           </div>
 
           <div className="mt-4 overflow-x-auto">
@@ -915,7 +933,7 @@ export function SupabaseCrudPage({ moduleKey }: { moduleKey: keyof typeof config
                         {column.label}
                       </th>
                     ))}
-                    <th className="px-3 py-3">Actions</th>
+                    <th className="px-3 py-3 text-right pr-4 min-w-[190px]">Actions</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -939,25 +957,30 @@ export function SupabaseCrudPage({ moduleKey }: { moduleKey: keyof typeof config
                           </td>
                         );
                       })}
-                      <td className="space-x-3 px-3 py-4 text-xs font-bold">
-                        <button
-                          onClick={() => setSelected(row)}
-                          className="text-cyan-500 hover:underline"
-                        >
-                          View
-                        </button>
-                        <button
-                          onClick={() => startEdit(row)}
-                          className="text-emerald-500 hover:underline"
-                        >
-                          Edit
-                        </button>
-                        <button
-                          onClick={() => void remove(row)}
-                          className="text-rose-500 hover:underline"
-                        >
-                          Delete
-                        </button>
+                      <td className="px-3 py-4 text-xs font-semibold whitespace-nowrap">
+                        <div className="flex items-center justify-end gap-1.5 pr-1">
+                          <button
+                            type="button"
+                            onClick={() => setSelected(row)}
+                            className="inline-flex items-center rounded-lg border border-cyan-500/30 bg-cyan-500/10 px-2.5 py-1 text-xs font-bold text-cyan-400 transition hover:bg-cyan-500/20 active:scale-95"
+                          >
+                            View
+                          </button>
+                          <button
+                            type="button"
+                            onClick={() => startEdit(row)}
+                            className="inline-flex items-center rounded-lg border border-emerald-500/30 bg-emerald-500/10 px-2.5 py-1 text-xs font-bold text-emerald-400 transition hover:bg-emerald-500/20 active:scale-95"
+                          >
+                            Edit
+                          </button>
+                          <button
+                            type="button"
+                            onClick={() => void remove(row)}
+                            className="inline-flex items-center rounded-lg border border-rose-500/30 bg-rose-500/10 px-2.5 py-1 text-xs font-bold text-rose-400 transition hover:bg-rose-500/20 active:scale-95"
+                          >
+                            Delete
+                          </button>
+                        </div>
                       </td>
                     </tr>
                   ))}
