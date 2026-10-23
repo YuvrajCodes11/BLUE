@@ -39,7 +39,7 @@ export type NavItem = { label: string; href: string; permission?: Permission; ro
 export type Stat = { label: string; value: string; trend: string; tone: "cyan" | "emerald" | "amber" | "violet" };
 export type TableColumn<T> = { key: keyof T; label: string };
 
-export type RecordStatus = "Active" | "Pending" | "Validated" | "Flagged" | "Draft" | "Closed";
+export type RecordStatus = "Active" | "Pending" | "Validated" | "Flagged" | "Draft" | "Closed" | "Verified" | "Certified";
 
 export type FisherRecord = {
   id: string;

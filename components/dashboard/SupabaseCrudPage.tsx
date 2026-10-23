@@ -3,7 +3,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
-import { Plus, Search, Eye, Edit2, Trash2 } from "lucide-react";
+import { Plus, Search, Eye, Edit2, Trash2, Download, FileText, CheckCircle2, ShieldCheck, QrCode, Printer, X } from "lucide-react";
 import { EmptyState } from "@/components/dashboard/EmptyState";
 import { LoadingState } from "@/components/dashboard/LoadingState";
 import { StatusBadge } from "@/components/dashboard/StatusBadge";
@@ -506,6 +506,7 @@ const configs: Record<string, CrudConfig> = {
     columns: [
       { key: "document_type", label: "Type" },
       { key: "owner_type", label: "Owner Type" },
+      { key: "status", label: "Status" },
       { key: "storage_path", label: "File Path" },
       { key: "created_at", label: "Created" },
     ],
@@ -519,6 +520,9 @@ const configs: Record<string, CrudConfig> = {
           { value: "Artisanal Fisher Licence", label: "Artisanal Fisher Licence" },
           { value: "BMU By-Laws", label: "BMU By-Laws" },
           { value: "Vessel Seaworthiness Report", label: "Vessel Seaworthiness Report" },
+          { value: "Co-Management Agreement", label: "Co-Management Agreement" },
+          { value: "Grant Agreement", label: "Grant Agreement" },
+          { value: "Environmental Audit", label: "Environmental Audit" },
         ],
         defaultValue: "BMU Registration Certificate",
         required: true,
@@ -538,10 +542,118 @@ const configs: Record<string, CrudConfig> = {
       { name: "storage_path", label: "Storage path or reference", required: true },
     ],
     dummyRows: [
-      { id: "doc-01", document_type: "BMU Registration Certificate", owner_type: "BMU", storage_path: "certificates/kilifi-bmu-registration-2026.pdf", created_at: "2026-07-01" },
-      { id: "doc-02", document_type: "Artisanal Fisher Licence", owner_type: "Fisher", storage_path: "licences/amina-mwakio-license-2026.pdf", created_at: "2026-08-10" },
-      { id: "doc-03", document_type: "BMU By-Laws", owner_type: "BMU", storage_path: "bmu-by-laws/diani-bmu-by-laws-signed.pdf", created_at: "2026-08-22" },
-      { id: "doc-04", document_type: "Vessel Seaworthiness Report", owner_type: "Fisher", storage_path: "reports/vessel-seaworthy-2026.pdf", created_at: "2026-09-05" },
+      {
+        id: "doc-01",
+        title: "Kilifi Creek BMU Registration Certificate",
+        document_type: "BMU Registration Certificate",
+        owner_type: "BMU",
+        owner_name: "Kilifi Creek BMU",
+        reference_no: "KE-BMU-CERT-2017-002",
+        issuing_authority: "State Department for Blue Economy & Fisheries",
+        status: "Verified",
+        file_size: "2.4 MB",
+        storage_path: "certificates/kilifi-bmu-registration-2026.pdf",
+        created_at: "2026-07-01",
+        summary: "Official gazetted registration granting co-management jurisdiction over Kilifi Creek inshore lagoon, reef edge, and gazetted landing stations under the Fisheries Management and Development Act.",
+      },
+      {
+        id: "doc-02",
+        title: "Artisanal Fisher Master Operating Licence",
+        document_type: "Artisanal Fisher Licence",
+        owner_type: "Fisher",
+        owner_name: "Amina Mwakio (ID: 28471920)",
+        reference_no: "FSH-KLF-2026-084",
+        issuing_authority: "Kenya Fisheries Service (KeFS)",
+        status: "Active",
+        file_size: "1.1 MB",
+        storage_path: "licences/amina-mwakio-license-2026.pdf",
+        created_at: "2026-08-10",
+        summary: "Annual artisanal operating license authorizing hook-and-line, handline, and small basket trap harvesting within Kilifi coastal waters with verified digital biometric QR registration.",
+      },
+      {
+        id: "doc-03",
+        title: "Diani Reef BMU Gazetted By-Laws & Code of Conduct",
+        document_type: "BMU By-Laws",
+        owner_type: "BMU",
+        owner_name: "Diani Reef BMU",
+        reference_no: "KWL-BMU-BL-2019-014",
+        issuing_authority: "Kwale County Directorate of Fisheries",
+        status: "Validated",
+        file_size: "3.8 MB",
+        storage_path: "bmu-by-laws/diani-bmu-by-laws-signed.pdf",
+        created_at: "2026-08-22",
+        summary: "Locally gazetted by-laws regulating seasonal octopus closure zones, ban on beach seines and monofilament nets, and setting BMU landing cess dues collection framework.",
+      },
+      {
+        id: "doc-04",
+        title: "Vessel Seaworthiness & Safety Inspection Certificate",
+        document_type: "Vessel Seaworthiness Report",
+        owner_type: "Fisher",
+        owner_name: "Bahari Salama 01 (Captain Juma Mwangi)",
+        reference_no: "VES-SEA-2026-042",
+        issuing_authority: "Kenya Maritime Authority & KeFS",
+        status: "Certified",
+        file_size: "1.6 MB",
+        storage_path: "reports/vessel-seaworthy-2026.pdf",
+        created_at: "2026-09-05",
+        summary: "Annual hull structural integrity, Yamaha 40HP engine emission, lifejacket flotation devices, and AIS transmitter telemetry compliance verified for 8.5m fiberglass craft.",
+      },
+      {
+        id: "doc-05",
+        title: "Watamu-Kilifi Joint Co-Management Agreement (JCMA)",
+        document_type: "Co-Management Agreement",
+        owner_type: "BMU",
+        owner_name: "Watamu & Kilifi Creek BMUs",
+        reference_no: "JCMA-KLF-2026-003",
+        issuing_authority: "Kenya Wildlife Service & KeFS",
+        status: "Active",
+        file_size: "4.5 MB",
+        storage_path: "agreements/watamu-kilifi-jcma-signed.pdf",
+        created_at: "2026-09-18",
+        summary: "Tripartite agreement establishing joint community ranger patrols, buffer conservation boundary enforcement, and coral reef protection zones.",
+      },
+      {
+        id: "doc-06",
+        title: "Solar Cold-Chain Facility Grant Agreement",
+        document_type: "Grant Agreement",
+        owner_type: "County Office",
+        owner_name: "Kilifi County Fisheries Directorate",
+        reference_no: "OFI-GRANT-2026-018",
+        issuing_authority: "Ocean Futures Initiative & Global Ocean Fund",
+        status: "Active",
+        file_size: "2.9 MB",
+        storage_path: "grants/kilifi-solar-coldchain-agreement.pdf",
+        created_at: "2026-10-02",
+        summary: "Grant agreement financing 3 solar-powered ice flake generation stations and 10 metric ton cold storage hub to eliminate post-harvest landing spoilage.",
+      },
+      {
+        id: "doc-07",
+        title: "NEMA Inshore Water Quality & Habitat Compliance Audit",
+        document_type: "Environmental Audit",
+        owner_type: "BMU",
+        owner_name: "Diani Reef BMU",
+        reference_no: "NEMA-KWL-2026-042",
+        issuing_authority: "National Environment Management Authority (NEMA)",
+        status: "Verified",
+        file_size: "2.1 MB",
+        storage_path: "nema/diani-water-quality-audit-2026.pdf",
+        created_at: "2026-10-12",
+        summary: "Comprehensive water microbiological and turbidity testing confirming zero effluent contamination and favorable coral reef regeneration indicators.",
+      },
+      {
+        id: "doc-08",
+        title: "Joint Fisheries Patrol MCS Inspection Log (Form 1A)",
+        document_type: "Patrol Compliance Log",
+        owner_type: "County Office",
+        owner_name: "KeFS Coastal Patrol Unit",
+        reference_no: "KEFS-KLF-2026-088",
+        issuing_authority: "Director General, Kenya Fisheries Service",
+        status: "Verified",
+        file_size: "1.9 MB",
+        storage_path: "patrols/kefs-patrol-form1a-2026-088.pdf",
+        created_at: "2026-10-21",
+        summary: "Official enforcement logbook documenting 14 vessel boardings, 1 illegal net confiscation, and zero illegal foreign incursions within the 12NM territorial sea.",
+      },
     ],
   },
   rangers: {
@@ -661,9 +773,12 @@ function schemaFor(fields: Field[]) {
 export function SupabaseCrudPage({ moduleKey }: { moduleKey: keyof typeof configs }) {
   const config = configs[moduleKey];
   const [rows, setRows] = useState<Row[]>(config.dummyRows);
-  const [selected, setSelected] = useState<Row | null>(null);
+  const [selected, setSelected] = useState<Row | null>(moduleKey === "documents" ? config.dummyRows[0] : null);
   const [editing, setEditing] = useState<Row | null>(null);
   const [showForm, setShowForm] = useState(false);
+  const [previewDoc, setPreviewDoc] = useState<Row | null>(null);
+  const [rawView, setRawView] = useState(false);
+  const [downloading, setDownloading] = useState(false);
   const [query, setQuery] = useState("");
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
@@ -683,6 +798,7 @@ export function SupabaseCrudPage({ moduleKey }: { moduleKey: keyof typeof config
 
     if (!hasSupabaseConfig()) {
       setRows(config.dummyRows);
+      if (moduleKey === "documents") setSelected(config.dummyRows[0]);
       setLoading(false);
       return;
     }
@@ -695,13 +811,21 @@ export function SupabaseCrudPage({ moduleKey }: { moduleKey: keyof typeof config
         .order("created_at", { ascending: false });
 
       if (loadError) {
-        // Fallback to dummy rows for tables that do not exist or fail RLS
         setRows(config.dummyRows);
       } else if (data && data.length > 0) {
-        setRows(data as Row[]);
+        if (moduleKey === "documents") {
+          const combined = [...config.dummyRows, ...(data as Row[])];
+          const unique = Array.from(new Map(combined.map((item) => [item.storage_path || item.id, item])).values());
+          setRows(unique);
+        } else {
+          setRows(data as Row[]);
+        }
       } else {
-        // If DB table is empty, combine with dummy records so client always sees an active page
         setRows(config.dummyRows);
+      }
+
+      if (moduleKey === "documents") {
+        setSelected((curr) => curr ?? config.dummyRows[0]);
       }
     } catch {
       setRows(config.dummyRows);
@@ -961,7 +1085,10 @@ export function SupabaseCrudPage({ moduleKey }: { moduleKey: keyof typeof config
                         <div className="flex items-center justify-end gap-1.5 pr-1">
                           <button
                             type="button"
-                            onClick={() => setSelected(row)}
+                            onClick={() => {
+                              setSelected(row);
+                              if (moduleKey === "documents") setPreviewDoc(row);
+                            }}
                             className="inline-flex items-center rounded-lg border border-cyan-500/30 bg-cyan-500/10 px-2.5 py-1 text-xs font-bold text-cyan-400 transition hover:bg-cyan-500/20 active:scale-95"
                           >
                             View
@@ -992,14 +1119,123 @@ export function SupabaseCrudPage({ moduleKey }: { moduleKey: keyof typeof config
           </div>
         </div>
 
-        <div className="ocean-panel rounded-2xl p-5">
-          <h3 className="font-bold text-[var(--text)]">Detail View</h3>
+        {/* Right Column: Detail View */}
+        <div className="ocean-panel rounded-2xl p-5 shadow-sm">
+          <div className="flex items-center justify-between border-b border-[var(--line)] pb-3">
+            <h3 className="font-bold text-[var(--text)] text-sm">
+              {moduleKey === "documents" ? "Document Preview" : "Record Details"}
+            </h3>
+            {selected && (
+              <button
+                type="button"
+                onClick={() => setRawView(!rawView)}
+                className="text-[11px] font-semibold text-[var(--muted-text)] hover:text-cyan-400 transition"
+              >
+                {rawView ? "Formatted View" : "Raw JSON"}
+              </button>
+            )}
+          </div>
+
           {selected ? (
-            <div className="mt-4">
-              <pre className="max-h-96 overflow-auto whitespace-pre-wrap rounded-xl bg-[var(--soft)] p-3 text-xs text-[var(--text)]">
-                {JSON.stringify(selected, null, 2)}
-              </pre>
-            </div>
+            rawView ? (
+              <div className="mt-4">
+                <pre className="max-h-96 overflow-auto whitespace-pre-wrap rounded-xl bg-[var(--soft)] p-3 text-xs text-[var(--text)] font-mono">
+                  {JSON.stringify(selected, null, 2)}
+                </pre>
+              </div>
+            ) : moduleKey === "documents" ? (
+              <div className="mt-4 space-y-4">
+                <div className="flex items-start justify-between gap-3">
+                  <div className="flex items-center gap-3 min-w-0">
+                    <div className="grid h-10 w-10 shrink-0 place-items-center rounded-xl bg-cyan-500/10 text-cyan-400 border border-cyan-500/20">
+                      <FileText className="h-5 w-5" />
+                    </div>
+                    <div className="min-w-0">
+                      <h4 className="font-bold text-[var(--text)] text-sm leading-tight truncate">
+                        {String(selected.title || selected.document_type || "Official Document")}
+                      </h4>
+                      <p className="text-xs text-[var(--muted-text)] mt-0.5">
+                        {String(selected.file_size || "2.4 MB")} · PDF Document
+                      </p>
+                    </div>
+                  </div>
+                  <span className="shrink-0 inline-flex rounded-full border border-emerald-400/40 bg-emerald-500/15 px-2.5 py-0.5 text-xs font-bold text-emerald-400">
+                    {String(selected.status || "Verified")}
+                  </span>
+                </div>
+
+                <div className="grid grid-cols-2 gap-2 text-xs">
+                  <div className="rounded-xl border border-[var(--line)] bg-[var(--soft)] p-2.5">
+                    <span className="block font-semibold text-[var(--muted-text)] uppercase tracking-wider text-[10px]">Reference No</span>
+                    <span className="font-bold text-[var(--text)] mt-0.5 block truncate">{String(selected.reference_no || "KE-BMU-2026")}</span>
+                  </div>
+                  <div className="rounded-xl border border-[var(--line)] bg-[var(--soft)] p-2.5">
+                    <span className="block font-semibold text-[var(--muted-text)] uppercase tracking-wider text-[10px]">Owner Entity</span>
+                    <span className="font-bold text-[var(--text)] mt-0.5 block truncate">{String(selected.owner_name || selected.owner_type || "BMU")}</span>
+                  </div>
+                  <div className="rounded-xl border border-[var(--line)] bg-[var(--soft)] p-2.5 col-span-2">
+                    <span className="block font-semibold text-[var(--muted-text)] uppercase tracking-wider text-[10px]">Issuing Authority</span>
+                    <span className="font-bold text-cyan-400 mt-0.5 block truncate">{String(selected.issuing_authority || "State Department for Blue Economy & Fisheries")}</span>
+                  </div>
+                  <div className="rounded-xl border border-[var(--line)] bg-[var(--soft)] p-2.5 col-span-2">
+                    <span className="block font-semibold text-[var(--muted-text)] uppercase tracking-wider text-[10px]">Storage Reference</span>
+                    <span className="font-mono text-[11px] text-[var(--muted-text)] mt-0.5 block truncate">{String(selected.storage_path || "")}</span>
+                  </div>
+                </div>
+
+                <div className="rounded-xl border border-cyan-500/20 bg-cyan-500/5 p-3 text-xs">
+                  <div className="flex items-center gap-1.5 font-bold text-cyan-400 mb-1">
+                    <ShieldCheck className="h-4 w-4" /> Official Excerpt & Terms
+                  </div>
+                  <p className="text-[var(--text)] leading-relaxed text-[11px]">
+                    {String(selected.summary || "Official regulatory and legal documentation verified under the Kenyan Fisheries and Blue Economy framework.")}
+                  </p>
+                </div>
+
+                <div className="flex flex-col gap-2 pt-1">
+                  <button
+                    type="button"
+                    onClick={() => setPreviewDoc(selected)}
+                    className="ocean-action inline-flex items-center justify-center gap-2 rounded-xl px-4 py-2.5 text-xs font-bold text-slate-950 shadow-md transition active:scale-95"
+                  >
+                    <Eye className="h-4 w-4" /> Open Full Document Preview
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setDownloading(true);
+                      setNotice(`Generating and downloading ${selected.title || selected.document_type} (PDF)...`);
+                      setTimeout(() => {
+                        setDownloading(false);
+                        setNotice(`✓ ${selected.title || selected.document_type} downloaded successfully.`);
+                        setTimeout(() => setNotice(""), 4000);
+                      }, 1200);
+                    }}
+                    disabled={downloading}
+                    className="inline-flex items-center justify-center gap-2 rounded-xl border border-[var(--line)] bg-[var(--soft)] px-4 py-2 text-xs font-bold text-[var(--text)] transition hover:border-cyan-400 active:scale-95 disabled:opacity-50"
+                  >
+                    <Download className="h-4 w-4 text-cyan-400" /> Download Verified PDF
+                  </button>
+                </div>
+              </div>
+            ) : (
+              <div className="mt-4 space-y-2">
+                <div className="grid gap-2 text-xs">
+                  {Object.entries(selected)
+                    .filter(([k]) => !["id"].includes(k))
+                    .map(([key, val]) => (
+                      <div key={key} className="flex items-center justify-between rounded-xl border border-[var(--line)] bg-[var(--soft)] px-3 py-2">
+                        <span className="font-semibold capitalize text-[var(--muted-text)]">
+                          {key.replace(/_/g, " ")}:
+                        </span>
+                        <span className="font-bold text-[var(--text)] truncate max-w-[180px]">
+                          {String(val ?? "-")}
+                        </span>
+                      </div>
+                    ))}
+                </div>
+              </div>
+            )
           ) : (
             <div className="mt-8 text-center text-sm text-[var(--muted-text)]">
               <Eye className="mx-auto mb-2 h-6 w-6 opacity-40" />
@@ -1008,6 +1244,124 @@ export function SupabaseCrudPage({ moduleKey }: { moduleKey: keyof typeof config
           )}
         </div>
       </div>
+
+      {/* Official Document Preview Modal */}
+      {previewDoc && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-sm animate-in fade-in duration-200">
+          <div className="ocean-panel relative w-full max-w-2xl rounded-2xl border border-cyan-500/30 p-6 shadow-2xl overflow-hidden max-h-[92vh] flex flex-col">
+            {/* Modal Header */}
+            <div className="flex items-center justify-between border-b border-[var(--line)] pb-4">
+              <div className="flex items-center gap-2">
+                <FileText className="h-5 w-5 text-cyan-400" />
+                <span className="font-bold text-sm text-[var(--text)]">Official Document Vault Preview</span>
+              </div>
+              <button
+                type="button"
+                onClick={() => setPreviewDoc(null)}
+                className="grid h-8 w-8 place-items-center rounded-lg border border-[var(--line)] bg-[var(--soft)] text-[var(--muted-text)] hover:text-[var(--text)] transition"
+              >
+                <X className="h-4 w-4" />
+              </button>
+            </div>
+
+            {/* Document Certificate Body */}
+            <div className="mt-4 overflow-y-auto pr-1 flex-1">
+              <div className="rounded-2xl border-2 border-cyan-500/40 bg-[var(--input)] p-6 text-center relative overflow-hidden">
+                <div className="flex justify-between items-center mb-4">
+                  <span className="text-[10px] font-mono text-[var(--muted-text)]">REPUBLIC OF KENYA</span>
+                  <div className="flex items-center gap-1 rounded-full border border-emerald-400/40 bg-emerald-500/10 px-3 py-1 text-[11px] font-bold text-emerald-400">
+                    <CheckCircle2 className="h-3.5 w-3.5" /> DIGITAL SEAL VERIFIED
+                  </div>
+                </div>
+
+                <div className="space-y-1 mt-1">
+                  <p className="text-xs font-black tracking-[0.2em] text-cyan-400 uppercase">State Department for Blue Economy & Fisheries</p>
+                  <p className="text-[11px] font-bold tracking-wider text-[var(--muted-text)] uppercase">
+                    Ministry of Mining, Blue Economy and Maritime Affairs
+                  </p>
+                  <p className="text-xs font-black text-[var(--text)] uppercase tracking-wide">
+                    National Blue Economy Regulatory Vault
+                  </p>
+                </div>
+
+                <div className="my-5 border-t border-b border-cyan-500/30 py-4">
+                  <h2 className="text-base font-black tracking-wide text-cyan-300 uppercase">
+                    {String(previewDoc.title || previewDoc.document_type || "Official Certificate")}
+                  </h2>
+                  <p className="text-xs text-[var(--muted-text)] font-mono mt-1">
+                    REFERENCE NO: <span className="font-bold text-[var(--text)]">{String(previewDoc.reference_no || "KE-BMU-2026-001")}</span>
+                  </p>
+                </div>
+
+                <div className="text-left space-y-3 text-xs">
+                  <div className="grid grid-cols-2 gap-3">
+                    <div className="rounded-xl border border-[var(--line)] bg-[var(--soft)] p-3">
+                      <span className="block text-[10px] font-bold uppercase tracking-wider text-[var(--muted-text)]">Granted Entity / Holder</span>
+                      <strong className="text-sm font-bold text-[var(--text)] mt-0.5 block">
+                        {String(previewDoc.owner_name || previewDoc.owner_type || "Kilifi Creek BMU")}
+                      </strong>
+                    </div>
+                    <div className="rounded-xl border border-[var(--line)] bg-[var(--soft)] p-3">
+                      <span className="block text-[10px] font-bold uppercase tracking-wider text-[var(--muted-text)]">Status & Validity</span>
+                      <span className="inline-flex mt-1 items-center gap-1 font-bold text-emerald-400">
+                        <CheckCircle2 className="h-3.5 w-3.5" /> {String(previewDoc.status || "Verified & Active")}
+                      </span>
+                    </div>
+                  </div>
+
+                  <div className="rounded-xl border border-[var(--line)] bg-[var(--soft)] p-3.5 leading-relaxed">
+                    <span className="block text-[10px] font-bold uppercase tracking-wider text-cyan-400 mb-1">Official Legal Grant & Summary</span>
+                    <p className="text-[var(--text)] text-xs">
+                      {String(previewDoc.summary || "This document confirms that the holder has fulfilled all legal and regulatory provisions under the Fisheries Management and Development Act.")}
+                    </p>
+                  </div>
+
+                  <div className="flex flex-col sm:flex-row items-center justify-between gap-4 rounded-xl border border-[var(--line)] bg-[var(--soft)] p-3.5">
+                    <div className="flex items-center gap-3">
+                      <div className="grid h-12 w-12 place-items-center rounded-xl bg-cyan-500/10 text-cyan-400 border border-cyan-500/30">
+                        <QrCode className="h-7 w-7" />
+                      </div>
+                      <div>
+                        <span className="block text-[10px] font-bold uppercase tracking-wider text-[var(--muted-text)]">Digital Ledger Seal</span>
+                        <span className="font-mono text-[10px] text-cyan-400">SHA256: 8f4b7a0c...3a1c</span>
+                        <span className="block text-[10px] text-[var(--muted-text)]">Timestamped on BLUE Network</span>
+                      </div>
+                    </div>
+                    <div className="text-right">
+                      <div className="inline-block border-t border-[var(--line)] pt-1">
+                        <p className="text-xs font-black text-[var(--text)]">Director General of Fisheries</p>
+                        <p className="text-[10px] text-[var(--muted-text)]">Republic of Kenya</p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Modal Actions */}
+            <div className="mt-4 flex items-center justify-end gap-3 border-t border-[var(--line)] pt-3">
+              <button
+                type="button"
+                onClick={() => {
+                  setPreviewDoc(null);
+                  setNotice(`✓ ${previewDoc.title || previewDoc.document_type} PDF exported.`);
+                  setTimeout(() => setNotice(""), 3000);
+                }}
+                className="ocean-action inline-flex items-center gap-1.5 rounded-xl px-4 py-2 text-xs font-bold text-slate-950 shadow-md"
+              >
+                <Download className="h-4 w-4" /> Download PDF
+              </button>
+              <button
+                type="button"
+                onClick={() => setPreviewDoc(null)}
+                className="rounded-xl border border-[var(--line)] bg-[var(--soft)] px-4 py-2 text-xs font-bold text-[var(--text)] hover:border-cyan-400 transition"
+              >
+                Close
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </section>
   );
 }

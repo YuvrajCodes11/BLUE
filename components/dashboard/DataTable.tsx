@@ -10,7 +10,7 @@ type DataTableProps = {
 };
 
 function isStatus(value: unknown): value is RecordStatus {
-  return typeof value === "string" && ["Active", "Pending", "Validated", "Flagged", "Draft", "Closed"].includes(value);
+  return typeof value === "string" && ["Active", "Pending", "Validated", "Flagged", "Draft", "Closed", "Verified", "Certified"].includes(value);
 }
 
 export function DataTable({ columns, rows }: DataTableProps) {
