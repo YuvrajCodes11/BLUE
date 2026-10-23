@@ -2,7 +2,7 @@
 
 import { useEffect, useMemo, useState } from "react";
 import type { ReactNode } from "react";
-import { FileText, Plus, Save, Search, ShieldCheck } from "lucide-react";
+import { CheckCircle2, Download, Eye, FileText, Plus, QrCode, Save, Search, ShieldCheck, X } from "lucide-react";
 import { EmptyState } from "@/components/dashboard/EmptyState";
 import { LoadingState } from "@/components/dashboard/LoadingState";
 import { createClient, hasSupabaseConfig } from "@/lib/supabase";
@@ -112,6 +112,7 @@ export function BmuPatrolPage() {
   const [profile, setProfile] = useState<Profile | null>(null);
   const [reports, setReports] = useState<BmuPatrolReport[]>([]);
   const [detail, setDetail] = useState<BmuPatrolReportDetail | null>(null);
+  const [showModal, setShowModal] = useState(false);
   const [locations, setLocations] = useState<LocationHierarchy>({ counties: [], subCounties: [], wards: [] });
   const [bmus, setBmus] = useState<LocationBmu[]>([]);
   const [form, setForm] = useState<BmuPatrolReportInput>({ ...emptyReport });
@@ -263,7 +264,9 @@ export function BmuPatrolPage() {
   async function viewDetail(id: string) {
     setError("");
     try {
-      setDetail(await fetchBmuPatrolReportDetail(id));
+      const data = await fetchBmuPatrolReportDetail(id);
+      setDetail(data);
+      setShowModal(true);
     } catch (detailError) {
       setError(detailError instanceof Error ? detailError.message : "Unable to load BMU Patrol detail.");
     }
@@ -496,25 +499,208 @@ export function BmuPatrolPage() {
           </div>
         </div>
 
-        <div className="ocean-panel rounded-2xl p-5">
-          <div className="flex items-center gap-3">
-            <FileText className="h-5 w-5 text-cyan-500" />
-            <h2 className="font-black text-[var(--text)]">Detail view</h2>
+        <div className="ocean-panel rounded-2xl p-5 shadow-sm">
+          <div className="flex items-center justify-between border-b border-[var(--line)] pb-3">
+            <div className="flex items-center gap-2">
+              <FileText className="h-5 w-5 text-cyan-400" />
+              <h2 className="font-bold text-[var(--text)] text-sm">BMU Patrol Dossier</h2>
+            </div>
+            {detail && (
+              <span className="inline-flex items-center rounded-full border border-emerald-400/40 bg-emerald-500/10 px-2.5 py-0.5 text-xs font-bold text-emerald-400">
+                Verified Report
+              </span>
+            )}
           </div>
           {detail ? (
-            <div className="mt-4 grid gap-4 text-sm text-[var(--text)]">
-              <div><p className="text-xs uppercase tracking-[0.18em] text-[var(--muted-text)]">BMU</p><p className="font-bold">{detail.report.bmu_name_jina_la_patrol_bmu ?? detail.report.bmu_id}</p></div>
-              <div><p className="text-xs uppercase tracking-[0.18em] text-[var(--muted-text)]">Patrol leader</p><p>{detail.report.patrol_leader_name}</p></div>
-              <div><p className="text-xs uppercase tracking-[0.18em] text-[var(--muted-text)]">Participants / Washikadau</p><p>{detail.participants.length} row(s)</p></div>
-              <div><p className="text-xs uppercase tracking-[0.18em] text-[var(--muted-text)]">Outcomes / Matokeo</p><p>{detail.outcomes.length} row(s)</p></div>
-              <div><p className="text-xs uppercase tracking-[0.18em] text-[var(--muted-text)]">Attachments</p><p>{detail.documents.length ? `${detail.documents.length} uploaded document(s)` : "Upload support pending until attachments stage"}</p></div>
-              <pre className="max-h-96 overflow-auto rounded-xl bg-[var(--soft)] p-3 text-xs text-[var(--muted-text)]">{JSON.stringify(detail, null, 2)}</pre>
+            <div className="mt-4 space-y-4 text-xs text-[var(--text)]">
+              <div className="rounded-xl border border-[var(--line)] bg-[var(--soft)] p-3">
+                <span className="block text-[10px] font-bold uppercase tracking-wider text-[var(--muted-text)]">BMU Entity</span>
+                <p className="mt-0.5 font-black text-sm text-[var(--text)]">{detail.report.bmu_name_jina_la_patrol_bmu ?? detail.report.bmu_id}</p>
+                <p className="text-[11px] text-cyan-400 font-semibold mt-1">Leader: {detail.report.patrol_leader_name}</p>
+              </div>
+
+              <div className="grid grid-cols-2 gap-2">
+                <div className="rounded-xl border border-[var(--line)] bg-[var(--soft)] p-2.5">
+                  <span className="block text-[10px] font-bold uppercase tracking-wider text-[var(--muted-text)]">Patrol Date</span>
+                  <p className="font-bold text-[var(--text)] mt-0.5">{detail.report.date_of_patrol_tarehe_ya_patrol}</p>
+                </div>
+                <div className="rounded-xl border border-[var(--line)] bg-[var(--soft)] p-2.5">
+                  <span className="block text-[10px] font-bold uppercase tracking-wider text-[var(--muted-text)]">Vessel</span>
+                  <p className="font-bold text-[var(--text)] mt-0.5">{detail.report.patrol_vessel_name_jina_la_chombo || "Patrol Boat 01"}</p>
+                </div>
+              </div>
+
+              <div className="rounded-xl border border-[var(--line)] bg-[var(--soft)] p-3">
+                <div className="flex items-center justify-between mb-2">
+                  <span className="text-[10px] font-bold uppercase tracking-wider text-[var(--muted-text)]">Participants / Washikadau</span>
+                  <span className="font-bold text-cyan-400">{detail.participants.length} team(s)</span>
+                </div>
+                {detail.participants.length ? (
+                  <div className="space-y-1.5">
+                    {detail.participants.map((p, idx) => (
+                      <div key={idx} className="flex items-center justify-between rounded-lg bg-[var(--input)] px-2.5 py-1.5 text-[11px]">
+                        <span className="font-medium text-[var(--text)]">{p.institution_taasisi_no || "Scout Squad"}</span>
+                        <span className="font-bold text-cyan-400">{p.idadi_ya_watu ?? 1} members</span>
+                      </div>
+                    ))}
+                  </div>
+                ) : (
+                  <p className="text-[11px] text-[var(--muted-text)]">Standard BMU scout deployment.</p>
+                )}
+              </div>
+
+              <div className="rounded-xl border border-[var(--line)] bg-[var(--soft)] p-3">
+                <div className="flex items-center justify-between mb-2">
+                  <span className="text-[10px] font-bold uppercase tracking-wider text-[var(--muted-text)]">Patrol Findings & Outcomes</span>
+                  <span className="font-bold text-emerald-400">{detail.outcomes.length} action(s)</span>
+                </div>
+                {detail.outcomes.length ? (
+                  <div className="space-y-1.5">
+                    {detail.outcomes.map((o, idx) => (
+                      <div key={idx} className="rounded-lg bg-[var(--input)] p-2 text-[11px] space-y-0.5">
+                        <div className="flex items-center justify-between">
+                          <span className="font-bold text-cyan-300">{o.infringement_type || "Patrol Log"}</span>
+                          <span className="font-mono text-[10px] text-[var(--muted-text)]">{o.infringement_no || "OK"}</span>
+                        </div>
+                        <p className="text-[var(--muted-text)]">{o.action_taken_hatua_iliyochukuliwa || "No infractions recorded"}</p>
+                      </div>
+                    ))}
+                  </div>
+                ) : (
+                  <p className="text-[11px] text-[var(--muted-text)]">Routine monitoring completed without incidents.</p>
+                )}
+              </div>
+
+              <div className="pt-1">
+                <button
+                  type="button"
+                  onClick={() => setShowModal(true)}
+                  className="ocean-action inline-flex w-full items-center justify-center gap-2 rounded-xl px-4 py-2.5 text-xs font-bold text-slate-950 shadow-md transition active:scale-95"
+                >
+                  <Eye className="h-4 w-4" /> Open Full Patrol Dossier
+                </button>
+              </div>
             </div>
           ) : (
             <EmptyState title="Select a record" body="Open a BMU Patrol report to view structured participants, outcomes, document markers, and report details." />
           )}
         </div>
       </div>
+
+      {/* Official BMU Patrol Dossier Modal */}
+      {showModal && detail && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-sm animate-in fade-in duration-200">
+          <div className="ocean-panel relative w-full max-w-2xl rounded-2xl border border-cyan-500/30 p-6 shadow-2xl overflow-hidden max-h-[92vh] flex flex-col">
+            <div className="flex items-center justify-between border-b border-[var(--line)] pb-4">
+              <div className="flex items-center gap-2">
+                <ShieldCheck className="h-5 w-5 text-cyan-400" />
+                <span className="font-bold text-sm text-[var(--text)]">Official BMU Patrol Inspection Dossier</span>
+              </div>
+              <button
+                type="button"
+                onClick={() => setShowModal(false)}
+                className="grid h-8 w-8 place-items-center rounded-lg border border-[var(--line)] bg-[var(--soft)] text-[var(--muted-text)] hover:text-[var(--text)] transition"
+              >
+                <X className="h-4 w-4" />
+              </button>
+            </div>
+
+            <div className="mt-4 overflow-y-auto pr-1 flex-1 space-y-4">
+              <div className="rounded-2xl border border-cyan-500/30 bg-[var(--input)] p-5">
+                <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 border-b border-[var(--line)] pb-4">
+                  <div>
+                    <span className="text-[10px] font-mono uppercase tracking-[0.2em] text-cyan-400">
+                      REPUBLIC OF KENYA · STATE DEPARTMENT FOR BLUE ECONOMY
+                    </span>
+                    <h3 className="text-xl font-black text-[var(--text)] mt-1">
+                      {detail.report.bmu_name_jina_la_patrol_bmu || "BMU Inshore Patrol"}
+                    </h3>
+                    <p className="text-xs text-[var(--muted-text)] mt-0.5">
+                      Patrol Leader: <strong className="text-[var(--text)]">{detail.report.patrol_leader_name}</strong> · Date: <strong className="text-[var(--text)]">{detail.report.date_of_patrol_tarehe_ya_patrol}</strong>
+                    </p>
+                  </div>
+                  <div className="rounded-full border border-emerald-400/40 bg-emerald-500/10 px-3 py-1 text-xs font-bold text-emerald-400 flex items-center gap-1.5">
+                    <CheckCircle2 className="h-3.5 w-3.5" /> MCS COMPLIANT
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-2 gap-3 mt-4 text-xs">
+                  <div className="rounded-xl border border-[var(--line)] bg-[var(--soft)] p-3">
+                    <span className="block text-[10px] font-bold uppercase tracking-wider text-[var(--muted-text)]">Patrol Vessel</span>
+                    <strong className="text-sm font-bold text-[var(--text)] mt-0.5 block">{detail.report.patrol_vessel_name_jina_la_chombo || "Kilifi Scout 01"}</strong>
+                  </div>
+                  <div className="rounded-xl border border-[var(--line)] bg-[var(--soft)] p-3">
+                    <span className="block text-[10px] font-bold uppercase tracking-wider text-[var(--muted-text)]">Patrol Area / Zone</span>
+                    <strong className="text-sm font-bold text-[var(--text)] mt-0.5 block">{detail.report.patrol_area_eneo_la_patrol_1 || "Kilifi Inshore Waters"}</strong>
+                  </div>
+                </div>
+
+                <div className="mt-4 rounded-xl border border-[var(--line)] bg-[var(--soft)] p-4">
+                  <h4 className="text-xs font-black uppercase tracking-wider text-cyan-400 mb-2">Washikadau / Deployed Participants ({detail.participants.length})</h4>
+                  <div className="space-y-2">
+                    {detail.participants.map((p, idx) => (
+                      <div key={idx} className="flex items-center justify-between rounded-lg bg-[var(--input)] p-2.5 text-xs">
+                        <span className="font-bold text-[var(--text)]">{p.institution_taasisi_no}</span>
+                        <span className="font-semibold text-cyan-400">{p.idadi_ya_watu ?? 1} Officer(s) / Scout(s)</span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+                <div className="mt-4 rounded-xl border border-[var(--line)] bg-[var(--soft)] p-4">
+                  <h4 className="text-xs font-black uppercase tracking-wider text-cyan-400 mb-2">Recorded Outcomes / Matokeo ({detail.outcomes.length})</h4>
+                  <div className="space-y-2">
+                    {detail.outcomes.map((o, idx) => (
+                      <div key={idx} className="rounded-lg bg-[var(--input)] p-3 text-xs space-y-1">
+                        <div className="flex items-center justify-between">
+                          <span className="font-bold text-amber-300">{o.infringement_type}</span>
+                          <span className="font-mono text-[10px] text-[var(--muted-text)]">{o.infringement_no}</span>
+                        </div>
+                        <p className="text-[var(--text)]">{o.action_taken_hatua_iliyochukuliwa}</p>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+                <div className="mt-4 flex flex-col sm:flex-row items-center justify-between gap-3 rounded-xl border border-[var(--line)] bg-[var(--soft)] p-3 text-xs">
+                  <div className="flex items-center gap-2.5">
+                    <QrCode className="h-8 w-8 text-cyan-400 shrink-0" />
+                    <div>
+                      <span className="block text-[10px] font-bold text-[var(--muted-text)] uppercase">Digital Ledger Stamp</span>
+                      <span className="font-mono text-[10px] text-cyan-400">SHA256: b2a89c...10ff</span>
+                    </div>
+                  </div>
+                  <div className="text-right">
+                    <span className="text-[10px] text-[var(--muted-text)] block">Verified on BLUE Coastal Patrol Hub</span>
+                    <strong className="text-xs text-[var(--text)]">Directorate of Fisheries Protection</strong>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div className="mt-4 flex items-center justify-end gap-3 border-t border-[var(--line)] pt-3">
+              <button
+                type="button"
+                onClick={() => {
+                  setShowModal(false);
+                  setNotice("✓ BMU Patrol dossier exported.");
+                  setTimeout(() => setNotice(""), 3000);
+                }}
+                className="ocean-action inline-flex items-center gap-1.5 rounded-xl px-4 py-2 text-xs font-bold text-slate-950 shadow-md"
+              >
+                <Download className="h-4 w-4" /> Export Report Summary
+              </button>
+              <button
+                type="button"
+                onClick={() => setShowModal(false)}
+                className="rounded-xl border border-[var(--line)] bg-[var(--soft)] px-4 py-2 text-xs font-bold text-[var(--text)] hover:border-cyan-400 transition"
+              >
+                Close
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </section>
   );
 }

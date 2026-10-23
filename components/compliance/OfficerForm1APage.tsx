@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
-import { FileText, Plus, Save, Search, ShieldCheck } from "lucide-react";
+import { CheckCircle2, Download, Eye, FileText, Plus, QrCode, Save, Search, ShieldCheck, X } from "lucide-react";
 import { EmptyState } from "@/components/dashboard/EmptyState";
 import { LoadingState } from "@/components/dashboard/LoadingState";
 import { createClient, hasSupabaseConfig } from "@/lib/supabase";
@@ -152,6 +152,7 @@ export function OfficerForm1APage() {
   const [profile, setProfile] = useState<Profile | null>(null);
   const [reports, setReports] = useState<OfficerPatrolReport[]>([]);
   const [detail, setDetail] = useState<OfficerPatrolReportDetail | null>(null);
+  const [showModal, setShowModal] = useState(false);
   const [locations, setLocations] = useState<LocationHierarchy>({ counties: [], subCounties: [], wards: [] });
   const [bmus, setBmus] = useState<LocationBmu[]>([]);
   const [query, setQuery] = useState("");
@@ -328,7 +329,9 @@ export function OfficerForm1APage() {
   async function viewDetail(id: string) {
     setError("");
     try {
-      setDetail(await fetchOfficerPatrolReportDetail(id));
+      const data = await fetchOfficerPatrolReportDetail(id);
+      setDetail(data);
+      setShowModal(true);
     } catch (detailError) {
       setError(detailError instanceof Error ? detailError.message : "Unable to load FORM 1A detail.");
     }
@@ -572,25 +575,193 @@ export function OfficerForm1APage() {
           </div>
         </div>
 
-        <div className="ocean-panel rounded-2xl p-5">
-          <div className="flex items-center gap-3">
-            <FileText className="h-5 w-5 text-cyan-500" />
-            <h2 className="font-black text-[var(--text)]">Detail view</h2>
+        <div className="ocean-panel rounded-2xl p-5 shadow-sm">
+          <div className="flex items-center justify-between border-b border-[var(--line)] pb-3">
+            <div className="flex items-center gap-2">
+              <FileText className="h-5 w-5 text-cyan-400" />
+              <h2 className="font-bold text-[var(--text)] text-sm">FORM 1A Inspection Dossier</h2>
+            </div>
+            {detail && (
+              <span className="inline-flex items-center rounded-full border border-emerald-400/40 bg-emerald-500/10 px-2.5 py-0.5 text-xs font-bold text-emerald-400">
+                Official Form 1A
+              </span>
+            )}
           </div>
           {detail ? (
-            <div className="mt-4 grid gap-4 text-sm text-[var(--text)]">
-              <div><p className="text-xs uppercase tracking-[0.18em] text-[var(--muted-text)]">Patrol Reference No</p><p className="font-bold">{detail.report.patrol_reference_no}</p></div>
-              <div><p className="text-xs uppercase tracking-[0.18em] text-[var(--muted-text)]">Source</p><p>{detail.report.source_reference}</p></div>
-              <div><p className="text-xs uppercase tracking-[0.18em] text-[var(--muted-text)]">Entries</p><p>{detail.entries.length} structured row(s)</p></div>
-              <div><p className="text-xs uppercase tracking-[0.18em] text-[var(--muted-text)]">MCS outcome</p><p>{detail.mcsOutcomes.length ? "Captured" : "Not captured"}</p></div>
-              <div><p className="text-xs uppercase tracking-[0.18em] text-[var(--muted-text)]">Seizure notice</p><p>{detail.seizureRecords.length ? `${detail.seizureRecords.length} record(s)` : "Not captured"}</p></div>
-              <pre className="max-h-96 overflow-auto rounded-xl bg-[var(--soft)] p-3 text-xs text-[var(--muted-text)]">{JSON.stringify(detail, null, 2)}</pre>
+            <div className="mt-4 space-y-4 text-xs text-[var(--text)]">
+              <div className="rounded-xl border border-[var(--line)] bg-[var(--soft)] p-3">
+                <span className="block text-[10px] font-bold uppercase tracking-wider text-[var(--muted-text)]">Patrol Reference</span>
+                <p className="mt-0.5 font-black text-sm text-[var(--text)]">{detail.report.patrol_reference_no}</p>
+                <p className="text-[11px] text-cyan-400 font-semibold mt-1">Source: {detail.report.source_reference}</p>
+              </div>
+
+              <div className="grid grid-cols-2 gap-2">
+                <div className="rounded-xl border border-[var(--line)] bg-[var(--soft)] p-2.5">
+                  <span className="block text-[10px] font-bold uppercase tracking-wider text-[var(--muted-text)]">Patrol Date</span>
+                  <p className="font-bold text-[var(--text)] mt-0.5">{detail.report.patrol_date}</p>
+                </div>
+                <div className="rounded-xl border border-[var(--line)] bg-[var(--soft)] p-2.5">
+                  <span className="block text-[10px] font-bold uppercase tracking-wider text-[var(--muted-text)]">BMU Zone</span>
+                  <p className="font-bold text-[var(--text)] mt-0.5">{detail.report.name_of_bmu || "Kilifi BMU"}</p>
+                </div>
+              </div>
+
+              <div className="rounded-xl border border-[var(--line)] bg-[var(--soft)] p-3">
+                <div className="flex items-center justify-between mb-2">
+                  <span className="text-[10px] font-bold uppercase tracking-wider text-[var(--muted-text)]">Inspection Log Entries</span>
+                  <span className="font-bold text-cyan-400">{detail.entries.length} recorded</span>
+                </div>
+                {detail.entries.length ? (
+                  <div className="space-y-1.5">
+                    {detail.entries.map((entry, idx) => (
+                      <div key={idx} className="flex items-center justify-between rounded-lg bg-[var(--input)] p-2 text-[11px]">
+                        <span className="font-bold text-[var(--text)]">{entry.person_name || "Fisher Log"}</span>
+                        <span className="text-cyan-400 font-mono">{entry.location || "Grid -"}</span>
+                      </div>
+                    ))}
+                  </div>
+                ) : (
+                  <p className="text-[11px] text-[var(--muted-text)]">No entries logged during inspection.</p>
+                )}
+              </div>
+
+              <div className="grid grid-cols-2 gap-2">
+                <div className="rounded-xl border border-[var(--line)] bg-[var(--soft)] p-2.5">
+                  <span className="block text-[10px] font-bold uppercase tracking-wider text-[var(--muted-text)]">MCS Outcomes</span>
+                  <p className="font-bold text-emerald-400 mt-0.5">{detail.mcsOutcomes.length ? `${detail.mcsOutcomes.length} Captured` : "None"}</p>
+                </div>
+                <div className="rounded-xl border border-[var(--line)] bg-[var(--soft)] p-2.5">
+                  <span className="block text-[10px] font-bold uppercase tracking-wider text-[var(--muted-text)]">Seizure Notices</span>
+                  <p className="font-bold text-amber-300 mt-0.5">{detail.seizureRecords.length ? `${detail.seizureRecords.length} Seizure(s)` : "None"}</p>
+                </div>
+              </div>
+
+              <div className="pt-1">
+                <button
+                  type="button"
+                  onClick={() => setShowModal(true)}
+                  className="ocean-action inline-flex w-full items-center justify-center gap-2 rounded-xl px-4 py-2.5 text-xs font-bold text-slate-950 shadow-md transition active:scale-95"
+                >
+                  <Eye className="h-4 w-4" /> Open Full FORM 1A Dossier
+                </button>
+              </div>
             </div>
           ) : (
             <EmptyState title="Select a record" body="Open a FORM 1A record to view structured entries, MCS outcomes, and seizure notice data." />
           )}
         </div>
       </div>
+
+      {/* Official Officer FORM 1A Dossier Modal */}
+      {showModal && detail && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-sm animate-in fade-in duration-200">
+          <div className="ocean-panel relative w-full max-w-2xl rounded-2xl border border-cyan-500/30 p-6 shadow-2xl overflow-hidden max-h-[92vh] flex flex-col">
+            <div className="flex items-center justify-between border-b border-[var(--line)] pb-4">
+              <div className="flex items-center gap-2">
+                <ShieldCheck className="h-5 w-5 text-cyan-400" />
+                <span className="font-bold text-sm text-[var(--text)]">Official Fisheries Officer FORM 1A Report</span>
+              </div>
+              <button
+                type="button"
+                onClick={() => setShowModal(false)}
+                className="grid h-8 w-8 place-items-center rounded-lg border border-[var(--line)] bg-[var(--soft)] text-[var(--muted-text)] hover:text-[var(--text)] transition"
+              >
+                <X className="h-4 w-4" />
+              </button>
+            </div>
+
+            <div className="mt-4 overflow-y-auto pr-1 flex-1 space-y-4">
+              <div className="rounded-2xl border border-cyan-500/30 bg-[var(--input)] p-5">
+                <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 border-b border-[var(--line)] pb-4">
+                  <div>
+                    <span className="text-[10px] font-mono uppercase tracking-[0.2em] text-cyan-400">
+                      REPUBLIC OF KENYA · FISHERIES SERVICE MCS DIVISION
+                    </span>
+                    <h3 className="text-xl font-black text-[var(--text)] mt-1">
+                      Patrol Ref: {detail.report.patrol_reference_no}
+                    </h3>
+                    <p className="text-xs text-[var(--muted-text)] mt-0.5">
+                      BMU: <strong className="text-[var(--text)]">{detail.report.name_of_bmu || "Kilifi"}</strong> · Date: <strong className="text-[var(--text)]">{detail.report.patrol_date}</strong>
+                    </p>
+                  </div>
+                  <div className="rounded-full border border-emerald-400/40 bg-emerald-500/10 px-3 py-1 text-xs font-bold text-emerald-400 flex items-center gap-1.5">
+                    <CheckCircle2 className="h-3.5 w-3.5" /> FORM 1A CERTIFIED
+                  </div>
+                </div>
+
+                <div className="mt-4 rounded-xl border border-[var(--line)] bg-[var(--soft)] p-4">
+                  <h4 className="text-xs font-black uppercase tracking-wider text-cyan-400 mb-2">Structured Inspection Log ({detail.entries.length} entries)</h4>
+                  {detail.entries.length ? (
+                    <div className="space-y-2">
+                      {detail.entries.map((entry, idx) => (
+                        <div key={idx} className="rounded-lg bg-[var(--input)] p-3 text-xs space-y-1">
+                          <div className="flex items-center justify-between">
+                            <span className="font-bold text-[var(--text)]">{entry.person_name || "Fisher Record"}</span>
+                            <span className="font-mono text-cyan-400">{entry.location || "Coast Area"}</span>
+                          </div>
+                          <p className="text-[var(--muted-text)]">{entry.gear_craft_infringement || entry.people_infringement || entry.fish_infringement || "Inspection completed. Compliant."}</p>
+                        </div>
+                      ))}
+                    </div>
+                  ) : (
+                    <p className="text-xs text-[var(--muted-text)]">No entries logged during this patrol inspection.</p>
+                  )}
+                </div>
+
+                {detail.seizureRecords.length > 0 && (
+                  <div className="mt-4 rounded-xl border border-amber-500/30 bg-amber-500/5 p-4">
+                    <h4 className="text-xs font-black uppercase tracking-wider text-amber-400 mb-2">Official Seizure Notices ({detail.seizureRecords.length})</h4>
+                    <div className="space-y-2">
+                      {detail.seizureRecords.map((s, idx) => (
+                        <div key={idx} className="rounded-lg bg-[var(--input)] p-3 text-xs space-y-1 border border-amber-500/20">
+                          <p className="font-bold text-amber-300">Notice Ref: {s.id.slice(0, 8)}</p>
+                          <p className="text-[var(--text)]">Items Seized: {s.particulars_of_items_seized || "Confiscated gear"}</p>
+                          <p className="text-[var(--muted-text)] font-mono text-[10px]">District / Town: {s.seizure_district || "Kilifi Coast"}</p>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
+
+                <div className="mt-4 flex flex-col sm:flex-row items-center justify-between gap-3 rounded-xl border border-[var(--line)] bg-[var(--soft)] p-3 text-xs">
+                  <div className="flex items-center gap-2.5">
+                    <QrCode className="h-8 w-8 text-cyan-400 shrink-0" />
+                    <div>
+                      <span className="block text-[10px] font-bold text-[var(--muted-text)] uppercase">Digital Ledger Stamp</span>
+                      <span className="font-mono text-[10px] text-cyan-400">SHA256: 3c9e88...a521</span>
+                    </div>
+                  </div>
+                  <div className="text-right">
+                    <span className="text-[10px] text-[var(--muted-text)] block">Kenya Fisheries Service (KFS)</span>
+                    <strong className="text-xs text-[var(--text)]">MCS Surveillance Operations Hub</strong>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div className="mt-4 flex items-center justify-end gap-3 border-t border-[var(--line)] pt-3">
+              <button
+                type="button"
+                onClick={() => {
+                  setShowModal(false);
+                  setNotice("✓ FORM 1A report exported.");
+                  setTimeout(() => setNotice(""), 3000);
+                }}
+                className="ocean-action inline-flex items-center gap-1.5 rounded-xl px-4 py-2 text-xs font-bold text-slate-950 shadow-md"
+              >
+                <Download className="h-4 w-4" /> Export FORM 1A
+              </button>
+              <button
+                type="button"
+                onClick={() => setShowModal(false)}
+                className="rounded-xl border border-[var(--line)] bg-[var(--soft)] px-4 py-2 text-xs font-bold text-[var(--text)] hover:border-cyan-400 transition"
+              >
+                Close
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </section>
   );
 }

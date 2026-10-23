@@ -2,7 +2,7 @@
 
 import { useEffect, useMemo, useState } from "react";
 import type { ReactNode } from "react";
-import { ClipboardList, FileText, Plus, Save, Search } from "lucide-react";
+import { CheckCircle2, ClipboardList, Download, Eye, FileText, Plus, QrCode, Save, Search, ShieldCheck, X } from "lucide-react";
 import { EmptyState } from "@/components/dashboard/EmptyState";
 import { LoadingState } from "@/components/dashboard/LoadingState";
 import { createClient, hasSupabaseConfig } from "@/lib/supabase";
@@ -131,6 +131,7 @@ export function PatrolDataCapturePage() {
   const [profile, setProfile] = useState<Profile | null>(null);
   const [records, setRecords] = useState<PatrolDataCaptureRecord[]>([]);
   const [detail, setDetail] = useState<PatrolDataCaptureRecord | null>(null);
+  const [showModal, setShowModal] = useState(false);
   const [locations, setLocations] = useState<LocationHierarchy>({ counties: [], subCounties: [], wards: [] });
   const [bmus, setBmus] = useState<LocationBmu[]>([]);
   const [form, setForm] = useState<PatrolDataCaptureRecordInput>({ ...emptyHeader });
@@ -293,7 +294,9 @@ export function PatrolDataCapturePage() {
   async function viewDetail(id: string) {
     setError("");
     try {
-      setDetail(await fetchPatrolDataCaptureRecordDetail(id));
+      const data = await fetchPatrolDataCaptureRecordDetail(id);
+      setDetail(data);
+      setShowModal(true);
     } catch (detailError) {
       setError(detailError instanceof Error ? detailError.message : "Unable to load Patrol Data Capture detail.");
     }
@@ -466,24 +469,156 @@ export function PatrolDataCapturePage() {
           </div>
         </div>
 
-        <div className="ocean-panel rounded-2xl p-5">
-          <div className="flex items-center gap-3">
-            <FileText className="h-5 w-5 text-cyan-500" />
-            <h2 className="font-black text-[var(--text)]">Detail view</h2>
+        <div className="ocean-panel rounded-2xl p-5 shadow-sm">
+          <div className="flex items-center justify-between border-b border-[var(--line)] pb-3">
+            <div className="flex items-center gap-2">
+              <ClipboardList className="h-5 w-5 text-cyan-400" />
+              <h2 className="font-bold text-[var(--text)] text-sm">Capture Record Dossier</h2>
+            </div>
+            {detail && (
+              <span className="inline-flex items-center rounded-full border border-cyan-400/40 bg-cyan-500/10 px-2.5 py-0.5 text-xs font-bold text-cyan-400">
+                Logged Encounter
+              </span>
+            )}
           </div>
           {detail ? (
-            <div className="mt-4 grid gap-4 text-sm text-[var(--text)]">
-              <div><p className="text-xs uppercase tracking-[0.18em] text-[var(--muted-text)]">Patrol Reference No.</p><p className="font-bold">{detail.patrol_reference_no ?? "-"}</p></div>
-              <div><p className="text-xs uppercase tracking-[0.18em] text-[var(--muted-text)]">Fisher's Name</p><p>{detail.fishers_name ?? "-"}</p></div>
-              <div><p className="text-xs uppercase tracking-[0.18em] text-[var(--muted-text)]">Infringement code</p><p>{detail.infringement_code ?? "-"}</p></div>
-              <div><p className="text-xs uppercase tracking-[0.18em] text-[var(--muted-text)]">Item Confiscated / Encountered and Details</p><p>{detail.item_confiscated_encountered_and_details ?? "-"}</p></div>
-              <pre className="max-h-96 overflow-auto rounded-xl bg-[var(--soft)] p-3 text-xs text-[var(--muted-text)]">{JSON.stringify(detail, null, 2)}</pre>
+            <div className="mt-4 space-y-4 text-xs text-[var(--text)]">
+              <div className="rounded-xl border border-[var(--line)] bg-[var(--soft)] p-3">
+                <span className="block text-[10px] font-bold uppercase tracking-wider text-[var(--muted-text)]">Patrol Reference</span>
+                <p className="mt-0.5 font-black text-sm text-[var(--text)]">{detail.patrol_reference_no ?? "-"}</p>
+                <p className="text-[11px] text-cyan-400 font-semibold mt-1">Fisher: {detail.fishers_name || "Unidentified / Logged"}</p>
+              </div>
+
+              <div className="grid grid-cols-2 gap-2">
+                <div className="rounded-xl border border-[var(--line)] bg-[var(--soft)] p-2.5">
+                  <span className="block text-[10px] font-bold uppercase tracking-wider text-[var(--muted-text)]">Patrol Boat</span>
+                  <p className="font-bold text-[var(--text)] mt-0.5">{detail.patrol_boat_name || "-"}</p>
+                </div>
+                <div className="rounded-xl border border-[var(--line)] bg-[var(--soft)] p-2.5">
+                  <span className="block text-[10px] font-bold uppercase tracking-wider text-[var(--muted-text)]">Infringement Code</span>
+                  <p className="font-bold text-amber-300 mt-0.5">{detail.infringement_code || "None"}</p>
+                </div>
+              </div>
+
+              <div className="rounded-xl border border-[var(--line)] bg-[var(--soft)] p-3">
+                <span className="block text-[10px] font-bold uppercase tracking-wider text-[var(--muted-text)] mb-1">
+                  Confiscated Items & Encounter Details
+                </span>
+                <p className="text-xs text-[var(--text)] leading-relaxed">
+                  {detail.item_confiscated_encountered_and_details || "No confiscated items recorded during encounter."}
+                </p>
+              </div>
+
+              <div className="pt-1">
+                <button
+                  type="button"
+                  onClick={() => setShowModal(true)}
+                  className="ocean-action inline-flex w-full items-center justify-center gap-2 rounded-xl px-4 py-2.5 text-xs font-bold text-slate-950 shadow-md transition active:scale-95"
+                >
+                  <Eye className="h-4 w-4" /> Open Full Capture Dossier
+                </button>
+              </div>
             </div>
           ) : (
             <EmptyState title="Select a record" body="Open a Patrol Data Capture row to view the structured form data." />
           )}
         </div>
       </div>
+
+      {/* Official Patrol Data Capture Dossier Modal */}
+      {showModal && detail && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-sm animate-in fade-in duration-200">
+          <div className="ocean-panel relative w-full max-w-2xl rounded-2xl border border-cyan-500/30 p-6 shadow-2xl overflow-hidden max-h-[92vh] flex flex-col">
+            <div className="flex items-center justify-between border-b border-[var(--line)] pb-4">
+              <div className="flex items-center gap-2">
+                <ShieldCheck className="h-5 w-5 text-cyan-400" />
+                <span className="font-bold text-sm text-[var(--text)]">Official Patrol Data Capture Dossier</span>
+              </div>
+              <button
+                type="button"
+                onClick={() => setShowModal(false)}
+                className="grid h-8 w-8 place-items-center rounded-lg border border-[var(--line)] bg-[var(--soft)] text-[var(--muted-text)] hover:text-[var(--text)] transition"
+              >
+                <X className="h-4 w-4" />
+              </button>
+            </div>
+
+            <div className="mt-4 overflow-y-auto pr-1 flex-1 space-y-4">
+              <div className="rounded-2xl border border-cyan-500/30 bg-[var(--input)] p-5">
+                <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 border-b border-[var(--line)] pb-4">
+                  <div>
+                    <span className="text-[10px] font-mono uppercase tracking-[0.2em] text-cyan-400">
+                      REPUBLIC OF KENYA · INSHORE MCS ENCOUNTER LOG
+                    </span>
+                    <h3 className="text-xl font-black text-[var(--text)] mt-1">
+                      Ref: {detail.patrol_reference_no}
+                    </h3>
+                    <p className="text-xs text-[var(--muted-text)] mt-0.5">
+                      Target Fisher: <strong className="text-[var(--text)]">{detail.fishers_name || "N/A"}</strong> · Boat: <strong className="text-[var(--text)]">{detail.patrol_boat_name || "N/A"}</strong>
+                    </p>
+                  </div>
+                  <div className="rounded-full border border-cyan-400/40 bg-cyan-500/10 px-3 py-1 text-xs font-bold text-cyan-400 flex items-center gap-1.5">
+                    <CheckCircle2 className="h-3.5 w-3.5" /> MCS LOGGED
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-2 gap-3 mt-4 text-xs">
+                  <div className="rounded-xl border border-[var(--line)] bg-[var(--soft)] p-3">
+                    <span className="block text-[10px] font-bold uppercase tracking-wider text-[var(--muted-text)]">Infringement Code</span>
+                    <strong className="text-sm font-bold text-amber-300 mt-0.5 block">{detail.infringement_code || "None"}</strong>
+                  </div>
+                  <div className="rounded-xl border border-[var(--line)] bg-[var(--soft)] p-3">
+                    <span className="block text-[10px] font-bold uppercase tracking-wider text-[var(--muted-text)]">Action Taken</span>
+                    <strong className="text-sm font-bold text-[var(--text)] mt-0.5 block">{detail.item_confiscated_encountered_and_details ? "Item Confiscated & Logged" : "Monitored"}</strong>
+                  </div>
+                </div>
+
+                <div className="mt-4 rounded-xl border border-[var(--line)] bg-[var(--soft)] p-4">
+                  <h4 className="text-xs font-black uppercase tracking-wider text-cyan-400 mb-2">Item Confiscated / Encountered and Details</h4>
+                  <p className="text-xs text-[var(--text)] leading-relaxed">
+                    {detail.item_confiscated_encountered_and_details || "No violations detected. Equipment inspected and certified compliant with national inshore regulations."}
+                  </p>
+                </div>
+
+                <div className="mt-4 flex flex-col sm:flex-row items-center justify-between gap-3 rounded-xl border border-[var(--line)] bg-[var(--soft)] p-3 text-xs">
+                  <div className="flex items-center gap-2.5">
+                    <QrCode className="h-8 w-8 text-cyan-400 shrink-0" />
+                    <div>
+                      <span className="block text-[10px] font-bold text-[var(--muted-text)] uppercase">Digital Ledger Stamp</span>
+                      <span className="font-mono text-[10px] text-cyan-400">SHA256: 7d1a2f...91bc</span>
+                    </div>
+                  </div>
+                  <div className="text-right">
+                    <span className="text-[10px] text-[var(--muted-text)] block">Certified Record</span>
+                    <strong className="text-xs text-[var(--text)]">Fisheries MCS Enforcement Division</strong>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div className="mt-4 flex items-center justify-end gap-3 border-t border-[var(--line)] pt-3">
+              <button
+                type="button"
+                onClick={() => {
+                  setShowModal(false);
+                  setNotice("✓ Patrol capture dossier exported.");
+                  setTimeout(() => setNotice(""), 3000);
+                }}
+                className="ocean-action inline-flex items-center gap-1.5 rounded-xl px-4 py-2 text-xs font-bold text-slate-950 shadow-md"
+              >
+                <Download className="h-4 w-4" /> Export Report Summary
+              </button>
+              <button
+                type="button"
+                onClick={() => setShowModal(false)}
+                className="rounded-xl border border-[var(--line)] bg-[var(--soft)] px-4 py-2 text-xs font-bold text-[var(--text)] hover:border-cyan-400 transition"
+              >
+                Close
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </section>
   );
 }

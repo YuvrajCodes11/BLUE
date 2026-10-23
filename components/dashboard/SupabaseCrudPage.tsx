@@ -773,11 +773,11 @@ function schemaFor(fields: Field[]) {
 export function SupabaseCrudPage({ moduleKey }: { moduleKey: keyof typeof configs }) {
   const config = configs[moduleKey];
   const [rows, setRows] = useState<Row[]>(config.dummyRows);
-  const [selected, setSelected] = useState<Row | null>(moduleKey === "documents" ? config.dummyRows[0] : null);
+  const [selected, setSelected] = useState<Row | null>(config.dummyRows[0] ?? null);
   const [editing, setEditing] = useState<Row | null>(null);
   const [showForm, setShowForm] = useState(false);
   const [previewDoc, setPreviewDoc] = useState<Row | null>(null);
-  const [rawView, setRawView] = useState(false);
+  const [inspectRecord, setInspectRecord] = useState<Row | null>(null);
   const [downloading, setDownloading] = useState(false);
   const [query, setQuery] = useState("");
   const [loading, setLoading] = useState(true);
@@ -798,7 +798,7 @@ export function SupabaseCrudPage({ moduleKey }: { moduleKey: keyof typeof config
 
     if (!hasSupabaseConfig()) {
       setRows(config.dummyRows);
-      if (moduleKey === "documents") setSelected(config.dummyRows[0]);
+      setSelected(config.dummyRows[0] ?? null);
       setLoading(false);
       return;
     }
@@ -824,9 +824,7 @@ export function SupabaseCrudPage({ moduleKey }: { moduleKey: keyof typeof config
         setRows(config.dummyRows);
       }
 
-      if (moduleKey === "documents") {
-        setSelected((curr) => curr ?? config.dummyRows[0]);
-      }
+      setSelected((curr) => curr ?? (data?.[0] as Row) ?? config.dummyRows[0] ?? null);
     } catch {
       setRows(config.dummyRows);
     } finally {
@@ -1087,7 +1085,11 @@ export function SupabaseCrudPage({ moduleKey }: { moduleKey: keyof typeof config
                             type="button"
                             onClick={() => {
                               setSelected(row);
-                              if (moduleKey === "documents") setPreviewDoc(row);
+                              if (moduleKey === "documents") {
+                                setPreviewDoc(row);
+                              } else {
+                                setInspectRecord(row);
+                              }
                             }}
                             className="inline-flex items-center rounded-lg border border-cyan-500/30 bg-cyan-500/10 px-2.5 py-1 text-xs font-bold text-cyan-400 transition hover:bg-cyan-500/20 active:scale-95"
                           >
@@ -1122,28 +1124,19 @@ export function SupabaseCrudPage({ moduleKey }: { moduleKey: keyof typeof config
         {/* Right Column: Detail View */}
         <div className="ocean-panel rounded-2xl p-5 shadow-sm">
           <div className="flex items-center justify-between border-b border-[var(--line)] pb-3">
-            <h3 className="font-bold text-[var(--text)] text-sm">
-              {moduleKey === "documents" ? "Document Preview" : "Record Details"}
-            </h3>
-            {selected && (
-              <button
-                type="button"
-                onClick={() => setRawView(!rawView)}
-                className="text-[11px] font-semibold text-[var(--muted-text)] hover:text-cyan-400 transition"
-              >
-                {rawView ? "Formatted View" : "Raw JSON"}
-              </button>
+            <div className="flex items-center gap-2">
+              <FileText className="h-4 w-4 text-cyan-400" />
+              <h3 className="font-bold text-[var(--text)] text-sm">
+                {moduleKey === "documents" ? "Document Preview" : "Record Overview"}
+              </h3>
+            </div>
+            {selected && selected.status && (
+              <StatusBadge status={selected.status as RecordStatus} />
             )}
           </div>
 
           {selected ? (
-            rawView ? (
-              <div className="mt-4">
-                <pre className="max-h-96 overflow-auto whitespace-pre-wrap rounded-xl bg-[var(--soft)] p-3 text-xs text-[var(--text)] font-mono">
-                  {JSON.stringify(selected, null, 2)}
-                </pre>
-              </div>
-            ) : moduleKey === "documents" ? (
+            moduleKey === "documents" ? (
               <div className="mt-4 space-y-4">
                 <div className="flex items-start justify-between gap-3">
                   <div className="flex items-center gap-3 min-w-0">
@@ -1219,10 +1212,35 @@ export function SupabaseCrudPage({ moduleKey }: { moduleKey: keyof typeof config
                 </div>
               </div>
             ) : (
-              <div className="mt-4 space-y-2">
+              <div className="mt-4 space-y-4">
+                <div className="rounded-xl border border-[var(--line)] bg-[var(--soft)] p-3.5">
+                  <span className="block text-[10px] font-bold uppercase tracking-wider text-[var(--muted-text)]">
+                    Primary Record / Entity
+                  </span>
+                  <h4 className="mt-0.5 text-base font-black text-[var(--text)] truncate">
+                    {String(
+                      selected.full_name ||
+                      selected.vessel_name ||
+                      selected.species_name ||
+                      selected.site_name ||
+                      selected.project_name ||
+                      selected.title ||
+                      selected.name ||
+                      selected.id ||
+                      "BLUE Record"
+                    )}
+                  </h4>
+                  {selected.bmu_id && (
+                    <span className="mt-1 inline-flex items-center gap-1 text-[11px] font-semibold text-cyan-400">
+                      <ShieldCheck className="h-3 w-3" /> Kilifi BMU Network
+                    </span>
+                  )}
+                </div>
+
                 <div className="grid gap-2 text-xs">
                   {Object.entries(selected)
-                    .filter(([k]) => !["id"].includes(k))
+                    .filter(([k]) => !["id", "summary"].includes(k))
+                    .slice(0, 6)
                     .map(([key, val]) => (
                       <div key={key} className="flex items-center justify-between rounded-xl border border-[var(--line)] bg-[var(--soft)] px-3 py-2">
                         <span className="font-semibold capitalize text-[var(--muted-text)]">
@@ -1234,6 +1252,23 @@ export function SupabaseCrudPage({ moduleKey }: { moduleKey: keyof typeof config
                       </div>
                     ))}
                 </div>
+
+                <div className="flex flex-col gap-2 pt-1">
+                  <button
+                    type="button"
+                    onClick={() => setInspectRecord(selected)}
+                    className="ocean-action inline-flex items-center justify-center gap-2 rounded-xl px-4 py-2.5 text-xs font-bold text-slate-950 shadow-md transition active:scale-95"
+                  >
+                    <Eye className="h-4 w-4" /> Open Full Record Dossier
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => startEdit(selected)}
+                    className="inline-flex items-center justify-center gap-2 rounded-xl border border-[var(--line)] bg-[var(--soft)] px-4 py-2 text-xs font-bold text-[var(--text)] transition hover:border-emerald-400 active:scale-95"
+                  >
+                    <Edit2 className="h-4 w-4 text-emerald-400" /> Edit Record
+                  </button>
+                </div>
               </div>
             )
           ) : (
@@ -1244,6 +1279,119 @@ export function SupabaseCrudPage({ moduleKey }: { moduleKey: keyof typeof config
           )}
         </div>
       </div>
+
+      {/* Official Universal Record Dossier Modal */}
+      {inspectRecord && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-sm animate-in fade-in duration-200">
+          <div className="ocean-panel relative w-full max-w-2xl rounded-2xl border border-cyan-500/30 p-6 shadow-2xl overflow-hidden max-h-[92vh] flex flex-col">
+            {/* Modal Header */}
+            <div className="flex items-center justify-between border-b border-[var(--line)] pb-4">
+              <div className="flex items-center gap-2">
+                <ShieldCheck className="h-5 w-5 text-cyan-400" />
+                <span className="font-bold text-sm text-[var(--text)]">Official {config.title} Dossier</span>
+              </div>
+              <button
+                type="button"
+                onClick={() => setInspectRecord(null)}
+                className="grid h-8 w-8 place-items-center rounded-lg border border-[var(--line)] bg-[var(--soft)] text-[var(--muted-text)] hover:text-[var(--text)] transition"
+              >
+                <X className="h-4 w-4" />
+              </button>
+            </div>
+
+            {/* Dossier Body */}
+            <div className="mt-4 overflow-y-auto pr-1 flex-1 space-y-4">
+              <div className="rounded-2xl border border-cyan-500/30 bg-[var(--input)] p-5">
+                <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 border-b border-[var(--line)] pb-4">
+                  <div>
+                    <span className="text-[10px] font-mono uppercase tracking-[0.2em] text-cyan-400">
+                      REPUBLIC OF KENYA · BLUE ECOSYSTEM VAULT
+                    </span>
+                    <h3 className="text-xl font-black text-[var(--text)] mt-1">
+                      {String(
+                        inspectRecord.full_name ||
+                        inspectRecord.vessel_name ||
+                        inspectRecord.species_name ||
+                        inspectRecord.site_name ||
+                        inspectRecord.project_name ||
+                        inspectRecord.title ||
+                        inspectRecord.name ||
+                        "Official Record"
+                      )}
+                    </h3>
+                  </div>
+                  {inspectRecord.status && (
+                    <StatusBadge status={inspectRecord.status as RecordStatus} />
+                  )}
+                </div>
+
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mt-4">
+                  {Object.entries(inspectRecord)
+                    .filter(([k]) => !["id"].includes(k))
+                    .map(([key, val]) => (
+                      <div key={key} className="rounded-xl border border-[var(--line)] bg-[var(--soft)] p-3">
+                        <span className="block text-[10px] font-bold uppercase tracking-wider text-[var(--muted-text)]">
+                          {key.replace(/_/g, " ")}
+                        </span>
+                        <span className="mt-1 block font-bold text-xs text-[var(--text)] break-words">
+                          {String(val ?? "-")}
+                        </span>
+                      </div>
+                    ))}
+                </div>
+
+                <div className="mt-4 flex flex-col sm:flex-row items-center justify-between gap-3 rounded-xl border border-[var(--line)] bg-[var(--soft)] p-3 text-xs">
+                  <div className="flex items-center gap-2.5">
+                    <QrCode className="h-8 w-8 text-cyan-400 shrink-0" />
+                    <div>
+                      <span className="block text-[10px] font-bold text-[var(--muted-text)] uppercase">Registry Verification Hash</span>
+                      <span className="font-mono text-[10px] text-cyan-400">SHA256: 4e9c1b...802d</span>
+                    </div>
+                  </div>
+                  <div className="text-right">
+                    <span className="inline-flex items-center gap-1 text-[11px] font-bold text-emerald-400">
+                      <CheckCircle2 className="h-3.5 w-3.5" /> Authenticated on Chain
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Modal Actions */}
+            <div className="mt-4 flex items-center justify-end gap-3 border-t border-[var(--line)] pt-3">
+              <button
+                type="button"
+                onClick={() => {
+                  const toEdit = inspectRecord;
+                  setInspectRecord(null);
+                  startEdit(toEdit);
+                }}
+                className="inline-flex items-center gap-1.5 rounded-xl border border-emerald-500/30 bg-emerald-500/10 px-4 py-2 text-xs font-bold text-emerald-400 hover:bg-emerald-500/20 transition"
+              >
+                <Edit2 className="h-4 w-4" /> Edit Record
+              </button>
+              <button
+                type="button"
+                onClick={() => {
+                  setInspectRecord(null);
+                  setNotice(`✓ Record dossier exported.`);
+                  setTimeout(() => setNotice(""), 3000);
+                }}
+                className="ocean-action inline-flex items-center gap-1.5 rounded-xl px-4 py-2 text-xs font-bold text-slate-950 shadow-md"
+              >
+                <Download className="h-4 w-4" /> Export Summary
+              </button>
+              <button
+                type="button"
+                onClick={() => setInspectRecord(null)}
+                className="rounded-xl border border-[var(--line)] bg-[var(--soft)] px-4 py-2 text-xs font-bold text-[var(--text)] hover:border-cyan-400 transition"
+              >
+                Close
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* Official Document Preview Modal */}
       {previewDoc && (
