@@ -110,8 +110,8 @@ export function VerifyMemberPage() {
   }
 
   return (
-    <section>
-      <div className="ocean-panel rounded-3xl p-6 shadow-md">
+    <section className="grid gap-6">
+      <div className="ocean-panel rounded-2xl p-5 shadow-sm">
         <p className="text-xs font-black uppercase tracking-[0.24em] text-cyan-500">Member Verification</p>
         <h1 className="mt-2 text-3xl font-black text-[var(--text)] md:text-5xl">Verify Member QR</h1>
         <p className="mt-3 max-w-3xl text-sm text-[var(--muted-text)]">

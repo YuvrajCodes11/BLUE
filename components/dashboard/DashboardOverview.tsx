@@ -80,7 +80,7 @@ export function DashboardOverview({ role }: { role?: RoleSlug }) {
   }, [role]);
 
   return (
-    <section>
+    <section className="grid gap-6">
       <p className="text-xs font-black uppercase tracking-[0.24em] text-cyan-500">
         {roleLabels[resolvedRole] ?? "Operational Command"}
       </p>

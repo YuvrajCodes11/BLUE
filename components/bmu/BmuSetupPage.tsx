@@ -32,11 +32,11 @@ const reviewerRoles = new Set(["Government Admin", "County Officer"]);
 const emptyContext: BmuSetupContext = { bmus: [], certificates: [], locations: { counties: [], subCounties: [], wards: [] } };
 
 function fieldClass() {
-  return "min-h-11 rounded-xl border border-[var(--line)] bg-[var(--input)] px-3 py-2 text-sm text-[var(--text)] outline-none placeholder:text-[var(--muted-text)]";
+  return "w-full min-w-0 min-h-11 rounded-xl border border-[var(--line)] bg-[var(--input)] px-3.5 py-2 text-sm text-[var(--text)] outline-none placeholder:text-[var(--muted-text)] transition focus:border-cyan-400";
 }
 
 function Label({ children }: { children: string }) {
-  return <label className="text-xs font-black uppercase tracking-[0.16em] text-[var(--muted-text)]">{children}</label>;
+  return <span className="block text-xs font-black uppercase tracking-[0.16em] text-[var(--muted-text)]">{children}</span>;
 }
 
 function statusTone(status?: string | null) {
@@ -270,124 +270,322 @@ export function BmuSetupPage() {
   if (!profile || !allowedRoles.has(profile.role)) return <EmptyState title="BMU setup unavailable" body="Your role does not have access to BMU setup or certificate review." />;
 
   return (
-    <section className="grid gap-5">
+    <section className="grid gap-6">
       <div className="flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
         <div>
-          <p className="text-xs font-black uppercase tracking-[0.24em] text-cyan-500">BMU Setup</p>
-          <h1 className="mt-2 text-3xl font-black text-[var(--text)] sm:text-4xl">Profile and certificate verification</h1>
-          <p className="mt-2 max-w-3xl text-sm text-[var(--muted-text)]">Manage BMU registration details and keep verification certificates private with authorized access only.</p>
+          <p className="text-xs font-black uppercase tracking-[0.24em] text-cyan-500">BMU Setup & Verification</p>
+          <h1 className="mt-2 text-3xl font-black text-[var(--text)] sm:text-4xl">Profile and Certificate Verification</h1>
+          <p className="mt-2 max-w-3xl text-sm text-[var(--muted-text)]">
+            Manage BMU registration details, upload official certificates, and perform authorized compliance reviews.
+          </p>
         </div>
-        <button onClick={() => void load(selectedBmuId)} className="inline-flex min-h-11 items-center justify-center gap-2 rounded-xl border border-[var(--line)] bg-[var(--soft)] px-4 text-sm font-black text-[var(--text)]">
+        <button
+          onClick={() => void load(selectedBmuId)}
+          className="ocean-panel inline-flex min-h-11 items-center justify-center gap-2 rounded-xl px-4 py-2 text-sm font-bold text-[var(--text)] transition hover:border-cyan-400"
+        >
           <RefreshCw className="h-4 w-4" /> Refresh
         </button>
       </div>
 
-      {error && <div className="rounded-2xl border border-rose-300/40 bg-rose-300/10 p-4 text-sm font-semibold text-rose-700">{error}</div>}
-      {notice && <div className="rounded-2xl border border-emerald-300/40 bg-emerald-300/10 p-4 text-sm font-semibold text-emerald-700">{notice}</div>}
+      {(error || notice) && (
+        <div
+          className={`rounded-2xl border px-4 py-3 text-sm font-semibold ${
+            error ? "border-rose-400/40 bg-rose-500/10 text-rose-500" : "border-emerald-400/40 bg-emerald-500/10 text-emerald-600"
+          }`}
+        >
+          {error || notice}
+        </div>
+      )}
 
-      <div className="grid gap-5 xl:grid-cols-[22rem_1fr]">
-        <aside className="ocean-panel rounded-3xl p-4">
-          <h2 className="text-lg font-black text-[var(--text)]">Accessible BMUs</h2>
-          <p className="mt-1 text-sm text-[var(--muted-text)]">Shown according to your assigned role and location scope.</p>
-          <div className="mt-4 grid gap-2">
-            {context.bmus.length ? context.bmus.map((bmu) => (
-              <button key={bmu.id} onClick={() => selectBmu(bmu.id)} className={`rounded-2xl border p-4 text-left transition ${selectedBmuId === bmu.id ? "border-cyan-300 bg-cyan-300/12" : "border-[var(--line)] bg-[var(--soft)] hover:border-cyan-300/60"}`}>
-                <div className="flex items-center justify-between gap-3">
-                  <strong className="text-sm text-[var(--text)]">{bmu.name}</strong>
+      {/* Accessible BMUs Selector */}
+      <div className="ocean-panel rounded-2xl p-5 shadow-sm">
+        <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
+          <div>
+            <h2 className="text-base font-bold text-[var(--text)]">Accessible BMUs</h2>
+            <p className="text-xs text-[var(--muted-text)]">Shown according to your assigned role and location scope.</p>
+          </div>
+          <span className="text-xs font-semibold text-cyan-400">
+            {context.bmus.length} {context.bmus.length === 1 ? "BMU" : "BMUs"} accessible
+          </span>
+        </div>
+        <div className="mt-4 grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
+          {context.bmus.length ? (
+            context.bmus.map((bmu) => (
+              <button
+                key={bmu.id}
+                type="button"
+                onClick={() => selectBmu(bmu.id)}
+                className={`flex flex-col justify-between rounded-xl border p-4 text-left transition ${
+                  selectedBmuId === bmu.id
+                    ? "border-cyan-400 bg-cyan-500/10 shadow-sm ring-1 ring-cyan-400/30"
+                    : "border-[var(--line)] bg-[var(--soft)] hover:border-cyan-400/50"
+                }`}
+              >
+                <div className="flex items-start justify-between gap-2">
+                  <strong className="text-sm font-bold text-[var(--text)]">{bmu.name}</strong>
                   <CertificateBadge status={bmu.certificate_status} />
                 </div>
-                <p className="mt-2 text-xs text-[var(--muted-text)]">{bmu.registration_code ?? "No registration code"} · {bmu.county ?? "County not set"}</p>
+                <p className="mt-2 text-xs text-[var(--muted-text)]">
+                  {bmu.registration_code ?? "No registration code"} · {bmu.county ?? "County not set"}
+                </p>
               </button>
-            )) : <EmptyState title="No BMUs available" body="No BMU records are currently available under your access scope." />}
-          </div>
-        </aside>
-
-        <div className="grid gap-5">
-          {selectedBmu && bmuForm ? (
-            <>
-              <div className="ocean-panel rounded-3xl p-5">
-                <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
-                  <div>
-                    <h2 className="text-xl font-black text-[var(--text)]">BMU profile</h2>
-                    <p className="mt-1 text-sm text-[var(--muted-text)]">County, sub-county, ward, and BMU details used for access scoping.</p>
-                  </div>
-                  <div className="flex flex-wrap gap-2">
-                    <CertificateBadge status={selectedBmu.certificate_status} />
-                    <span className="rounded-full border border-[var(--line)] bg-[var(--soft)] px-2.5 py-1 text-xs font-black text-[var(--muted-text)]">{selectedBmu.setup_status ?? "Pending"}</span>
-                  </div>
-                </div>
-                <div className="mt-5 grid gap-4 md:grid-cols-2">
-                  <Field label="BMU name"><input disabled={!canEdit} className={fieldClass()} value={bmuForm.name} onChange={(event) => updateBmuForm("name", event.target.value)} /></Field>
-                  <Field label="Registration code"><input disabled={!canEdit} className={fieldClass()} value={bmuForm.registration_code ?? ""} onChange={(event) => updateBmuForm("registration_code", event.target.value)} /></Field>
-                  <Field label="County"><select disabled={!canEdit} className={fieldClass()} value={bmuForm.county_id ?? ""} onChange={(event) => updateBmuForm("county_id", event.target.value)}><option value="">Select county</option>{context.locations.counties.map((county) => <option key={county.id} value={county.id}>{county.name}</option>)}</select></Field>
-                  <Field label="Sub-county"><select disabled={!canEdit || !bmuForm.county_id} className={fieldClass()} value={bmuForm.sub_county_id ?? ""} onChange={(event) => updateBmuForm("sub_county_id", event.target.value)}><option value="">Select sub-county</option>{subCounties.map((item) => <option key={item.id} value={item.id}>{item.name}</option>)}</select></Field>
-                  <Field label="Ward"><select disabled={!canEdit || !bmuForm.sub_county_id} className={fieldClass()} value={bmuForm.ward_id ?? ""} onChange={(event) => updateBmuForm("ward_id", event.target.value)}><option value="">Select ward</option>{wards.map((ward) => <option key={ward.id} value={ward.id}>{ward.name}</option>)}</select></Field>
-                  <Field label="Setup status"><select disabled={!canEdit} className={fieldClass()} value={bmuForm.setup_status ?? "In Progress"} onChange={(event) => updateBmuForm("setup_status", event.target.value)}><option>Pending</option><option>In Progress</option><option>Complete</option></select></Field>
-                </div>
-                {canEdit && (
-                  <button onClick={() => void saveBmuProfile()} disabled={busy === "bmu"} className="mt-5 inline-flex min-h-11 items-center justify-center gap-2 rounded-xl bg-cyan-300 px-4 text-sm font-black text-slate-950 disabled:opacity-50">
-                    <Save className="h-4 w-4" /> Save BMU profile
-                  </button>
-                )}
-              </div>
-
-              <div className="grid gap-5 lg:grid-cols-[1fr_1.2fr]">
-                <div className="ocean-panel rounded-3xl p-5">
-                  <h2 className="text-xl font-black text-[var(--text)]">Upload certificate</h2>
-                  <p className="mt-1 text-sm text-[var(--muted-text)]">Files are stored privately. Reviewers open time-limited signed links only.</p>
-                  {canEdit ? (
-                    <div className="mt-5 grid gap-4">
-                      <Field label="Certificate type"><input className={fieldClass()} value={certificateDraft.certificate_type} onChange={(event) => setCertificateDraft((current) => ({ ...current, certificate_type: event.target.value }))} /></Field>
-                      <Field label="Certificate number"><input className={fieldClass()} value={certificateDraft.certificate_number ?? ""} onChange={(event) => setCertificateDraft((current) => ({ ...current, certificate_number: event.target.value }))} /></Field>
-                      <Field label="Area"><input className={fieldClass()} value={certificateDraft.area ?? ""} onChange={(event) => setCertificateDraft((current) => ({ ...current, area: event.target.value }))} /></Field>
-                      <div className="grid gap-4 sm:grid-cols-2">
-                        <Field label="Issue date"><input type="date" className={fieldClass()} value={certificateDraft.issue_date ?? ""} onChange={(event) => setCertificateDraft((current) => ({ ...current, issue_date: event.target.value }))} /></Field>
-                        <Field label="Expiry date"><input type="date" className={fieldClass()} value={certificateDraft.expiry_date ?? ""} onChange={(event) => setCertificateDraft((current) => ({ ...current, expiry_date: event.target.value }))} /></Field>
-                      </div>
-                      <Field label="Certificate file"><input type="file" accept=".pdf,.png,.jpg,.jpeg,.webp" className={fieldClass()} onChange={(event) => setCertificateDraft((current) => ({ ...current, file: event.target.files?.[0] ?? null }))} /></Field>
-                      <button onClick={() => void submitCertificateUpload()} disabled={busy === "certificate-upload"} className="inline-flex min-h-11 items-center justify-center gap-2 rounded-xl bg-cyan-300 px-4 text-sm font-black text-slate-950 disabled:opacity-50">
-                        <FileUp className="h-4 w-4" /> Upload certificate
-                      </button>
-                    </div>
-                  ) : (
-                    <EmptyState title="View only" body="Your role can view BMU certificate status but cannot upload or edit certificate files." />
-                  )}
-                </div>
-
-                <div className="ocean-panel rounded-3xl p-5">
-                  <h2 className="text-xl font-black text-[var(--text)]">Certificate review</h2>
-                  <p className="mt-1 text-sm text-[var(--muted-text)]">BMU Manager can verify all certificates. County Officer review is scoped by county access.</p>
-                  <div className="mt-5 grid gap-3">
-                    {selectedCertificates.length ? selectedCertificates.map((certificate) => (
-                      <CertificateCard
-                        key={certificate.id}
-                        certificate={certificate}
-                        canEdit={canEdit}
-                        canReview={canReview}
-                        busy={busy}
-                        reviewNote={reviewNotesById[certificate.id] ?? ""}
-                        onReviewNoteChange={(value) => setReviewNotesById((current) => ({ ...current, [certificate.id]: value }))}
-                        onOpen={() => void openCertificate(certificate)}
-                        onSave={(nextCertificate) => void saveCertificateMetadata(nextCertificate)}
-                        onVerify={() => void reviewCertificate(certificate, "Verified")}
-                        onReject={() => void reviewCertificate(certificate, "Rejected")}
-                      />
-                    )) : <EmptyState title="No certificate uploaded" body="Upload a BMU certificate to start verification." />}
-                  </div>
-                </div>
-              </div>
-            </>
+            ))
           ) : (
-            <EmptyState title="Select a BMU" body="Choose an accessible BMU to view setup and certificate verification details." />
+            <div className="sm:col-span-2 lg:col-span-3">
+              <EmptyState title="No BMUs available" body="No BMU records are currently available under your access scope." />
+            </div>
           )}
         </div>
       </div>
+
+      {selectedBmu && bmuForm ? (
+        <>
+          {/* BMU Profile Details */}
+          <div className="ocean-panel rounded-2xl p-5 shadow-sm">
+            <div className="flex flex-col gap-3 border-b border-[var(--line)] pb-4 md:flex-row md:items-center md:justify-between">
+              <div>
+                <h2 className="text-lg font-bold text-[var(--text)]">{selectedBmu.name} Profile</h2>
+                <p className="mt-1 text-xs text-[var(--muted-text)]">County, sub-county, ward, and BMU details used for access scoping.</p>
+              </div>
+              <div className="flex flex-wrap items-center gap-2">
+                <CertificateBadge status={selectedBmu.certificate_status} />
+                <span className="rounded-full border border-[var(--line)] bg-[var(--soft)] px-2.5 py-1 text-xs font-bold text-[var(--muted-text)]">
+                  {selectedBmu.setup_status ?? "Pending"}
+                </span>
+              </div>
+            </div>
+            <div className="mt-5 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+              <Field label="BMU name">
+                <input
+                  disabled={!canEdit}
+                  className={fieldClass()}
+                  value={bmuForm.name}
+                  onChange={(event) => updateBmuForm("name", event.target.value)}
+                />
+              </Field>
+              <Field label="Registration code">
+                <input
+                  disabled={!canEdit}
+                  className={fieldClass()}
+                  value={bmuForm.registration_code ?? ""}
+                  onChange={(event) => updateBmuForm("registration_code", event.target.value)}
+                />
+              </Field>
+              <Field label="County">
+                <select
+                  disabled={!canEdit}
+                  className={fieldClass()}
+                  value={bmuForm.county_id ?? ""}
+                  onChange={(event) => updateBmuForm("county_id", event.target.value)}
+                >
+                  <option value="">Select county</option>
+                  {context.locations.counties.map((county) => (
+                    <option key={county.id} value={county.id}>
+                      {county.name}
+                    </option>
+                  ))}
+                </select>
+              </Field>
+              <Field label="Sub-county">
+                <select
+                  disabled={!canEdit || !bmuForm.county_id}
+                  className={fieldClass()}
+                  value={bmuForm.sub_county_id ?? ""}
+                  onChange={(event) => updateBmuForm("sub_county_id", event.target.value)}
+                >
+                  <option value="">Select sub-county</option>
+                  {subCounties.map((item) => (
+                    <option key={item.id} value={item.id}>
+                      {item.name}
+                    </option>
+                  ))}
+                </select>
+              </Field>
+              <Field label="Ward">
+                <select
+                  disabled={!canEdit || !bmuForm.sub_county_id}
+                  className={fieldClass()}
+                  value={bmuForm.ward_id ?? ""}
+                  onChange={(event) => updateBmuForm("ward_id", event.target.value)}
+                >
+                  <option value="">Select ward</option>
+                  {wards.map((ward) => (
+                    <option key={ward.id} value={ward.id}>
+                      {ward.name}
+                    </option>
+                  ))}
+                </select>
+              </Field>
+              <Field label="Setup status">
+                <select
+                  disabled={!canEdit}
+                  className={fieldClass()}
+                  value={bmuForm.setup_status ?? "In Progress"}
+                  onChange={(event) => updateBmuForm("setup_status", event.target.value)}
+                >
+                  <option>Pending</option>
+                  <option>In Progress</option>
+                  <option>Complete</option>
+                </select>
+              </Field>
+            </div>
+            {canEdit && (
+              <div className="mt-5">
+                <button
+                  type="button"
+                  onClick={() => void saveBmuProfile()}
+                  disabled={busy === "bmu"}
+                  className="ocean-action inline-flex min-h-11 items-center justify-center gap-2 rounded-xl px-5 py-2.5 text-sm font-bold text-slate-950 shadow-md transition active:scale-95 disabled:opacity-50"
+                >
+                  <Save className="h-4 w-4" /> Save BMU Profile
+                </button>
+              </div>
+            )}
+          </div>
+
+          {/* 2-Column Responsive Section: Upload Certificate & Certificate Review */}
+          <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
+            {/* Column 1: Upload Certificate */}
+            <div className="ocean-panel rounded-2xl p-5 shadow-sm">
+              <h2 className="text-lg font-bold text-[var(--text)]">Upload Certificate</h2>
+              <p className="mt-1 text-xs text-[var(--muted-text)]">
+                Files are stored securely. Reviewers open time-limited signed links only.
+              </p>
+              {canEdit ? (
+                <div className="mt-5 grid grid-cols-1 gap-4">
+                  <Field label="Certificate type">
+                    <input
+                      className={fieldClass()}
+                      value={certificateDraft.certificate_type}
+                      onChange={(event) =>
+                        setCertificateDraft((current) => ({ ...current, certificate_type: event.target.value }))
+                      }
+                    />
+                  </Field>
+                  <Field label="Certificate number">
+                    <input
+                      className={fieldClass()}
+                      value={certificateDraft.certificate_number ?? ""}
+                      placeholder="e.g. KE-BMU-CERT-2026-001"
+                      onChange={(event) =>
+                        setCertificateDraft((current) => ({ ...current, certificate_number: event.target.value }))
+                      }
+                    />
+                  </Field>
+                  <Field label="Area">
+                    <input
+                      className={fieldClass()}
+                      value={certificateDraft.area ?? ""}
+                      placeholder="e.g. Kilifi Creek & North Channel"
+                      onChange={(event) =>
+                        setCertificateDraft((current) => ({ ...current, area: event.target.value }))
+                      }
+                    />
+                  </Field>
+                  <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+                    <Field label="Issue date">
+                      <input
+                        type="date"
+                        className={fieldClass()}
+                        value={certificateDraft.issue_date ?? ""}
+                        onChange={(event) =>
+                          setCertificateDraft((current) => ({ ...current, issue_date: event.target.value }))
+                        }
+                      />
+                    </Field>
+                    <Field label="Expiry date">
+                      <input
+                        type="date"
+                        className={fieldClass()}
+                        value={certificateDraft.expiry_date ?? ""}
+                        onChange={(event) =>
+                          setCertificateDraft((current) => ({ ...current, expiry_date: event.target.value }))
+                        }
+                      />
+                    </Field>
+                  </div>
+                  <Field label="Certificate file">
+                    <input
+                      type="file"
+                      accept=".pdf,.png,.jpg,.jpeg,.webp"
+                      className={fieldClass()}
+                      onChange={(event) =>
+                        setCertificateDraft((current) => ({ ...current, file: event.target.files?.[0] ?? null }))
+                      }
+                    />
+                  </Field>
+                  <div>
+                    <button
+                      type="button"
+                      onClick={() => void submitCertificateUpload()}
+                      disabled={busy === "certificate-upload"}
+                      className="ocean-action inline-flex min-h-11 items-center justify-center gap-2 rounded-xl px-5 py-2.5 text-sm font-bold text-slate-950 shadow-md transition active:scale-95 disabled:opacity-50"
+                    >
+                      <FileUp className="h-4 w-4" /> Upload Certificate
+                    </button>
+                  </div>
+                </div>
+              ) : (
+                <EmptyState
+                  title="View only"
+                  body="Your role can view BMU certificate status but cannot upload or edit certificate files."
+                />
+              )}
+            </div>
+
+            {/* Column 2: Certificate Review */}
+            <div className="ocean-panel rounded-2xl p-5 shadow-sm">
+              <div className="flex items-center justify-between">
+                <div>
+                  <h2 className="text-lg font-bold text-[var(--text)]">Certificate Review</h2>
+                  <p className="mt-1 text-xs text-[var(--muted-text)]">
+                    BMU Manager can verify certificates. County Officer review is scoped by county.
+                  </p>
+                </div>
+                <span className="text-xs font-semibold text-cyan-400">
+                  {selectedCertificates.length} {selectedCertificates.length === 1 ? "record" : "records"}
+                </span>
+              </div>
+              <div className="mt-5 grid gap-4">
+                {selectedCertificates.length ? (
+                  selectedCertificates.map((certificate) => (
+                    <CertificateCard
+                      key={certificate.id}
+                      certificate={certificate}
+                      canEdit={canEdit}
+                      canReview={canReview}
+                      busy={busy}
+                      reviewNote={reviewNotesById[certificate.id] ?? ""}
+                      onReviewNoteChange={(value) =>
+                        setReviewNotesById((current) => ({ ...current, [certificate.id]: value }))
+                      }
+                      onOpen={() => void openCertificate(certificate)}
+                      onSave={(nextCertificate) => void saveCertificateMetadata(nextCertificate)}
+                      onVerify={() => void reviewCertificate(certificate, "Verified")}
+                      onReject={() => void reviewCertificate(certificate, "Rejected")}
+                    />
+                  ))
+                ) : (
+                  <EmptyState title="No certificate uploaded" body="Upload a BMU certificate to start verification." />
+                )}
+              </div>
+            </div>
+          </div>
+        </>
+      ) : (
+        <EmptyState title="Select a BMU" body="Choose an accessible BMU to view setup and certificate verification details." />
+      )}
     </section>
   );
 }
 
 function Field({ label, children }: { label: string; children: ReactNode }) {
-  return <label className="grid gap-2"><Label>{label}</Label>{children}</label>;
+  return (
+    <label className="flex flex-col gap-1.5 min-w-0 w-full">
+      <Label>{label}</Label>
+      {children}
+    </label>
+  );
 }
 
 function CertificateCard({
@@ -420,49 +618,121 @@ function CertificateCard({
   }, [certificate]);
 
   return (
-    <article className="rounded-2xl border border-[var(--line)] bg-[var(--soft)] p-4">
-      <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
-        <div>
+    <article className="rounded-xl border border-[var(--line)] bg-[var(--soft)] p-4 min-w-0 overflow-hidden">
+      <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between border-b border-[var(--line)] pb-3">
+        <div className="min-w-0">
           <div className="flex flex-wrap items-center gap-2">
-            <ShieldCheck className="h-4 w-4 text-cyan-500" />
-            <strong className="text-[var(--text)]">{certificate.file_name}</strong>
+            <ShieldCheck className="h-4 w-4 shrink-0 text-cyan-400" />
+            <strong className="text-sm font-bold text-[var(--text)] truncate">{certificate.file_name}</strong>
             <CertificateBadge status={certificate.status} />
           </div>
-          <p className="mt-2 text-xs text-[var(--muted-text)]">Uploaded {dateOrDash(certificate.created_at)} · Issue {dateOrDash(certificate.issue_date)} · Expiry {dateOrDash(certificate.expiry_date)}</p>
+          <p className="mt-1 text-xs text-[var(--muted-text)]">
+            Uploaded {dateOrDash(certificate.created_at)} · Issue {dateOrDash(certificate.issue_date)} · Expiry {dateOrDash(certificate.expiry_date)}
+          </p>
         </div>
-        <button onClick={onOpen} disabled={busy === `open-${certificate.id}`} className="inline-flex min-h-10 items-center justify-center gap-2 rounded-xl border border-[var(--line)] bg-[var(--input)] px-3 text-sm font-black text-[var(--text)] disabled:opacity-50">
-          <ExternalLink className="h-4 w-4" /> Open signed file
+        <button
+          type="button"
+          onClick={onOpen}
+          disabled={busy === `open-${certificate.id}`}
+          className="ocean-panel inline-flex shrink-0 items-center justify-center gap-1.5 rounded-lg px-3 py-1.5 text-xs font-bold text-[var(--text)] transition hover:border-cyan-400 disabled:opacity-50"
+        >
+          <ExternalLink className="h-3.5 w-3.5" /> Open signed file
         </button>
       </div>
 
-      <div className="mt-4 grid gap-3 md:grid-cols-2">
-        <Field label="Certificate type"><input disabled={!canEdit} className={fieldClass()} value={draft.certificate_type ?? ""} onChange={(event) => setDraft((current) => ({ ...current, certificate_type: event.target.value }))} /></Field>
-        <Field label="Certificate number"><input disabled={!canEdit} className={fieldClass()} value={draft.certificate_number ?? ""} onChange={(event) => setDraft((current) => ({ ...current, certificate_number: event.target.value }))} /></Field>
-        <Field label="Area"><input disabled={!canEdit} className={fieldClass()} value={draft.area ?? ""} onChange={(event) => setDraft((current) => ({ ...current, area: event.target.value }))} /></Field>
-        <div className="grid gap-3 sm:grid-cols-2">
-          <Field label="Issue"><input disabled={!canEdit} type="date" className={fieldClass()} value={draft.issue_date ?? ""} onChange={(event) => setDraft((current) => ({ ...current, issue_date: event.target.value }))} /></Field>
-          <Field label="Expiry"><input disabled={!canEdit} type="date" className={fieldClass()} value={draft.expiry_date ?? ""} onChange={(event) => setDraft((current) => ({ ...current, expiry_date: event.target.value }))} /></Field>
+      <div className="mt-4 grid grid-cols-1 gap-3 sm:grid-cols-2">
+        <div className="min-w-0 sm:col-span-2">
+          <Field label="Certificate type">
+            <input
+              disabled={!canEdit}
+              className={fieldClass()}
+              value={draft.certificate_type ?? ""}
+              onChange={(event) => setDraft((current) => ({ ...current, certificate_type: event.target.value }))}
+            />
+          </Field>
+        </div>
+        <div className="min-w-0">
+          <Field label="Certificate number">
+            <input
+              disabled={!canEdit}
+              className={fieldClass()}
+              value={draft.certificate_number ?? ""}
+              onChange={(event) => setDraft((current) => ({ ...current, certificate_number: event.target.value }))}
+            />
+          </Field>
+        </div>
+        <div className="min-w-0">
+          <Field label="Area">
+            <input
+              disabled={!canEdit}
+              className={fieldClass()}
+              value={draft.area ?? ""}
+              onChange={(event) => setDraft((current) => ({ ...current, area: event.target.value }))}
+            />
+          </Field>
+        </div>
+        <div className="min-w-0">
+          <Field label="Issue date">
+            <input
+              disabled={!canEdit}
+              type="date"
+              className={fieldClass()}
+              value={draft.issue_date ?? ""}
+              onChange={(event) => setDraft((current) => ({ ...current, issue_date: event.target.value }))}
+            />
+          </Field>
+        </div>
+        <div className="min-w-0">
+          <Field label="Expiry date">
+            <input
+              disabled={!canEdit}
+              type="date"
+              className={fieldClass()}
+              value={draft.expiry_date ?? ""}
+              onChange={(event) => setDraft((current) => ({ ...current, expiry_date: event.target.value }))}
+            />
+          </Field>
         </div>
       </div>
 
       <div className="mt-4 flex flex-wrap gap-2">
         {canEdit && (
-          <button onClick={() => onSave(draft)} disabled={busy === certificate.id} className="inline-flex min-h-10 items-center justify-center gap-2 rounded-xl border border-[var(--line)] bg-[var(--input)] px-3 text-sm font-black text-[var(--text)] disabled:opacity-50">
-            <Save className="h-4 w-4" /> Save metadata
+          <button
+            type="button"
+            onClick={() => onSave(draft)}
+            disabled={busy === certificate.id}
+            className="ocean-panel inline-flex items-center justify-center gap-1.5 rounded-lg px-3 py-1.5 text-xs font-bold text-[var(--text)] transition hover:border-cyan-400 disabled:opacity-50"
+          >
+            <Save className="h-3.5 w-3.5" /> Save metadata
           </button>
         )}
       </div>
 
       {canReview && (
-        <div className="mt-4 rounded-2xl border border-[var(--line)] bg-[var(--input)] p-3">
+        <div className="mt-4 rounded-xl border border-[var(--line)] bg-[var(--input)] p-3.5">
           <Label>Review notes</Label>
-          <textarea value={reviewNote} onChange={(event) => onReviewNoteChange(event.target.value)} className={`${fieldClass()} mt-2 min-h-20 w-full`} placeholder="Add verification or rejection notes" />
+          <textarea
+            value={reviewNote}
+            onChange={(event) => onReviewNoteChange(event.target.value)}
+            className={`${fieldClass()} mt-2 min-h-20 w-full`}
+            placeholder="Add verification or rejection notes..."
+          />
           <div className="mt-3 flex flex-wrap gap-2">
-            <button onClick={onVerify} disabled={busy === `Verified-${certificate.id}`} className="inline-flex min-h-10 items-center justify-center gap-2 rounded-xl bg-emerald-300 px-3 text-sm font-black text-slate-950 disabled:opacity-50">
-              <CheckCircle2 className="h-4 w-4" /> Verify
+            <button
+              type="button"
+              onClick={onVerify}
+              disabled={busy === `Verified-${certificate.id}`}
+              className="inline-flex items-center justify-center gap-1.5 rounded-lg bg-emerald-500/20 border border-emerald-500/40 px-3.5 py-1.5 text-xs font-bold text-emerald-400 transition hover:bg-emerald-500/30 active:scale-95 disabled:opacity-50"
+            >
+              <CheckCircle2 className="h-3.5 w-3.5" /> Verify
             </button>
-            <button onClick={onReject} disabled={busy === `Rejected-${certificate.id}`} className="inline-flex min-h-10 items-center justify-center gap-2 rounded-xl bg-rose-300 px-3 text-sm font-black text-slate-950 disabled:opacity-50">
-              <XCircle className="h-4 w-4" /> Reject
+            <button
+              type="button"
+              onClick={onReject}
+              disabled={busy === `Rejected-${certificate.id}`}
+              className="inline-flex items-center justify-center gap-1.5 rounded-lg bg-rose-500/20 border border-rose-500/40 px-3.5 py-1.5 text-xs font-bold text-rose-400 transition hover:bg-rose-500/30 active:scale-95 disabled:opacity-50"
+            >
+              <XCircle className="h-3.5 w-3.5" /> Reject
             </button>
           </div>
         </div>
