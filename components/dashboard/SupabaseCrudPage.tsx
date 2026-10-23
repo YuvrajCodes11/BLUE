@@ -8,6 +8,7 @@ import { EmptyState } from "@/components/dashboard/EmptyState";
 import { LoadingState } from "@/components/dashboard/LoadingState";
 import { StatusBadge } from "@/components/dashboard/StatusBadge";
 import { createClient, hasSupabaseConfig } from "@/lib/supabase";
+import { exportToCsv, exportOfficialPdfReport } from "@/lib/export-utils";
 import type { RecordStatus } from "@/types/domain";
 
 type Field = {
@@ -923,12 +924,25 @@ export function SupabaseCrudPage({ moduleKey }: { moduleKey: keyof typeof config
           <h1 className="mt-2 text-3xl font-black text-[var(--text)] sm:text-4xl">{config.title}</h1>
           <p className="mt-2 max-w-3xl text-sm text-[var(--muted-text)]">{config.description}</p>
         </div>
-        <button
-          onClick={startCreate}
-          className="ocean-action inline-flex items-center justify-center gap-2 rounded-xl px-4 py-3 font-bold text-slate-950 transition active:scale-95 shadow-md"
-        >
-          <Plus className="h-4 w-4" /> Add Record
-        </button>
+        <div className="flex flex-wrap items-center gap-2">
+          <button
+            type="button"
+            onClick={() => {
+              exportToCsv(`${moduleKey}-registry`, filtered, config.columns);
+              setNotice(`✓ Exported ${filtered.length} ${config.title} records to CSV.`);
+              setTimeout(() => setNotice(""), 3500);
+            }}
+            className="inline-flex items-center justify-center gap-2 rounded-xl border border-[var(--line)] bg-[var(--soft)] px-4 py-3 text-sm font-bold text-[var(--text)] transition hover:border-cyan-400 active:scale-95"
+          >
+            <Download className="h-4 w-4 text-cyan-400" /> Export CSV
+          </button>
+          <button
+            onClick={startCreate}
+            className="ocean-action inline-flex items-center justify-center gap-2 rounded-xl px-4 py-3 font-bold text-slate-950 transition active:scale-95 shadow-md"
+          >
+            <Plus className="h-4 w-4" /> Add Record
+          </button>
+        </div>
       </div>
 
       {(error || notice) && (
@@ -1198,11 +1212,24 @@ export function SupabaseCrudPage({ moduleKey }: { moduleKey: keyof typeof config
                     onClick={() => {
                       setDownloading(true);
                       setNotice(`Generating and downloading ${selected.title || selected.document_type} (PDF)...`);
+                      exportOfficialPdfReport({
+                        filename: `${(selected.title || selected.document_type || "document").toLowerCase().replace(/[^a-z0-9]+/g, "-")}.html`,
+                        title: String(selected.title || selected.document_type || "Official Document"),
+                        referenceNo: String(selected.reference_no || "KE-BMU-2026-001"),
+                        authority: String(selected.issuing_authority || "State Department for Blue Economy & Fisheries"),
+                        summary: String(selected.summary || "Official regulatory and legal documentation verified under the Kenyan Fisheries and Blue Economy framework."),
+                        metadata: [
+                          { label: "Granted Entity / Holder", value: String(selected.owner_name || selected.owner_type || "BMU") },
+                          { label: "Verification Status", value: String(selected.status || "Verified & Active") },
+                          { label: "Storage Path", value: String(selected.storage_path || "vault/documents/") },
+                          { label: "Registration Date", value: String(selected.created_at || "2026-10-23") },
+                        ],
+                      });
                       setTimeout(() => {
                         setDownloading(false);
                         setNotice(`✓ ${selected.title || selected.document_type} downloaded successfully.`);
-                        setTimeout(() => setNotice(""), 4000);
-                      }, 1200);
+                        setTimeout(() => setNotice(""), 3500);
+                      }, 400);
                     }}
                     disabled={downloading}
                     className="inline-flex items-center justify-center gap-2 rounded-xl border border-[var(--line)] bg-[var(--soft)] px-4 py-2 text-xs font-bold text-[var(--text)] transition hover:border-cyan-400 active:scale-95 disabled:opacity-50"
@@ -1373,8 +1400,16 @@ export function SupabaseCrudPage({ moduleKey }: { moduleKey: keyof typeof config
               <button
                 type="button"
                 onClick={() => {
+                  exportOfficialPdfReport({
+                    filename: `${config.title.toLowerCase().replace(/[^a-z0-9]+/g, "-")}-dossier.html`,
+                    title: `${config.title} · Official Record Dossier`,
+                    summary: `Official administrative and operational record registered within the Republic of Kenya National Blue Economy digital vault under the Fisheries Management and Development Act.`,
+                    metadata: Object.entries(inspectRecord)
+                      .filter(([k]) => !["id"].includes(k))
+                      .map(([k, v]) => ({ label: k.replace(/_/g, " "), value: String(v ?? "-") })),
+                  });
                   setInspectRecord(null);
-                  setNotice(`✓ Record dossier exported.`);
+                  setNotice(`✓ ${config.title} record dossier exported.`);
                   setTimeout(() => setNotice(""), 3000);
                 }}
                 className="ocean-action inline-flex items-center gap-1.5 rounded-xl px-4 py-2 text-xs font-bold text-slate-950 shadow-md"
@@ -1491,6 +1526,18 @@ export function SupabaseCrudPage({ moduleKey }: { moduleKey: keyof typeof config
               <button
                 type="button"
                 onClick={() => {
+                  exportOfficialPdfReport({
+                    filename: `${(previewDoc.title || previewDoc.document_type || "document").toLowerCase().replace(/[^a-z0-9]+/g, "-")}.html`,
+                    title: String(previewDoc.title || previewDoc.document_type || "Official Certificate"),
+                    referenceNo: String(previewDoc.reference_no || "KE-BMU-2026-001"),
+                    authority: String(previewDoc.issuing_authority || "State Department for Blue Economy & Fisheries"),
+                    summary: String(previewDoc.summary || "This document confirms that the holder has fulfilled all legal and regulatory provisions under the Fisheries Management and Development Act."),
+                    metadata: [
+                      { label: "Granted Entity / Holder", value: String(previewDoc.owner_name || previewDoc.owner_type || "Kilifi Creek BMU") },
+                      { label: "Verification Status", value: String(previewDoc.status || "Verified & Active") },
+                      { label: "File Reference", value: String(previewDoc.storage_path || "certificates/") },
+                    ],
+                  });
                   setPreviewDoc(null);
                   setNotice(`✓ ${previewDoc.title || previewDoc.document_type} PDF exported.`);
                   setTimeout(() => setNotice(""), 3000);

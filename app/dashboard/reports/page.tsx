@@ -39,15 +39,55 @@ const reportArchives = [
   },
 ];
 
+import { exportToCsv, exportOfficialPdfReport } from "@/lib/export-utils";
+
 export default function Page() {
   const [downloadNotice, setDownloadNotice] = useState("");
 
-  function triggerDownload(title: string, format: string) {
+  function triggerDownload(title: string, format: "CSV" | "PDF") {
     setDownloadNotice(`Generating and downloading ${title} (${format})...`);
+
+    if (format === "CSV") {
+      const sampleCatchData = [
+        { month: "May 2026", landing_site: "Kilifi Creek BMU", species: "Yellowfin Tuna", weight_kg: 42800, gross_kes: 4280000, active_vessels: 42 },
+        { month: "Jun 2026", landing_site: "Watamu Beach", species: "Kingfish / Nguru", weight_kg: 51200, gross_kes: 5632000, active_vessels: 48 },
+        { month: "Jul 2026", landing_site: "Diani Reef Jetty", species: "Snapper & Reef Species", weight_kg: 68400, gross_kes: 7182000, active_vessels: 54 },
+        { month: "Aug 2026", landing_site: "Shimoni Station", species: "Sailfish / Sansuli", weight_kg: 62100, gross_kes: 6831000, active_vessels: 50 },
+        { month: "Sep 2026", landing_site: "Ngomeni Inshore", species: "Prawns & Inshore Mix", weight_kg: 78500, gross_kes: 8635000, active_vessels: 60 },
+        { month: "Oct 2026", landing_site: "Kilifi Creek BMU", species: "Pelagic & Mixed Catch", weight_kg: 92300, gross_kes: 10153000, active_vessels: 65 },
+      ];
+      exportToCsv(`${title.toLowerCase().replace(/[^a-z0-9]+/g, "-")}`, sampleCatchData);
+    } else {
+      exportOfficialPdfReport({
+        filename: `${title.toLowerCase().replace(/[^a-z0-9]+/g, "-")}.html`,
+        title,
+        category: "Fisheries Governance & Blue Economy Analytics",
+        summary: `Official certified report published by the State Department for Blue Economy & Fisheries, summarizing landing activities, compliance observations, and community livelihood indicators across the Kenyan Coastline.`,
+        metadata: [
+          { label: "Reporting Period", value: "2026 Fiscal Year · Q1-Q3" },
+          { label: "Regulatory Framework", value: "Fisheries Management & Development Act" },
+          { label: "Lead Enforcement Body", value: "Kenya Fisheries Service (KeFS) MCS Unit" },
+          { label: "Data Verification Status", value: "Verified & Gazetted" },
+        ],
+        tables: [
+          {
+            title: "Summary Landings by BMU Cluster",
+            headers: ["Landing Site / BMU", "Key Species", "Volume (MT)", "Value (KES)"],
+            rows: [
+              ["Kilifi Creek BMU", "Yellowfin Tuna & Pelagic", "92.3 MT", "10,153,000"],
+              ["Watamu Reserve Area", "Reef Fish & Snapper", "51.2 MT", "5,632,000"],
+              ["Diani Reef Station", "Kingfish & Trevally", "68.4 MT", "7,182,000"],
+              ["Shimoni Wasini Channel", "Deep Sea Pelagics", "62.1 MT", "6,831,000"],
+            ],
+          },
+        ],
+      });
+    }
+
     setTimeout(() => {
       setDownloadNotice(`✓ ${title} (${format}) downloaded successfully.`);
       setTimeout(() => setDownloadNotice(""), 4000);
-    }, 1000);
+    }, 600);
   }
 
   return (

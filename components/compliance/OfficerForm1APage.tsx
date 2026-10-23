@@ -5,6 +5,7 @@ import { CheckCircle2, Download, Eye, FileText, Plus, QrCode, Save, Search, Shie
 import { EmptyState } from "@/components/dashboard/EmptyState";
 import { LoadingState } from "@/components/dashboard/LoadingState";
 import { createClient, hasSupabaseConfig } from "@/lib/supabase";
+import { exportOfficialPdfReport } from "@/lib/export-utils";
 import {
   createMcsOutcomeRecord,
   createOfficerPatrolReport,
@@ -743,6 +744,34 @@ export function OfficerForm1APage() {
               <button
                 type="button"
                 onClick={() => {
+                  exportOfficialPdfReport({
+                    filename: `officer-form-1a-${detail.report.patrol_reference_no || "report"}.html`,
+                    title: `Fisheries Officer FORM 1A Report · Ref: ${detail.report.patrol_reference_no}`,
+                    authority: "Kenya Fisheries Service (KeFS) · Monitoring, Control & Surveillance (MCS) Unit",
+                    summary: `Official coastal patrol inspection report filed under Fisheries Management and Development Act (Form 1A). Documents vessel verifications, gear compliance checks, and legal seizure notices.`,
+                    metadata: [
+                      { label: "Patrol Reference", value: detail.report.patrol_reference_no },
+                      { label: "Date of Inspection", value: detail.report.patrol_date },
+                      { label: "BMU Authority", value: detail.report.name_of_bmu || "Kilifi BMU" },
+                      { label: "Source Reference", value: detail.report.source_reference },
+                      { label: "Entries Logged", value: `${detail.entries.length} inspections` },
+                      { label: "MCS Enforcement Outcomes", value: `${detail.mcsOutcomes.length} recorded` },
+                      { label: "Seizure Notices", value: `${detail.seizureRecords.length} notice(s)` },
+                    ],
+                    tables: detail.entries.length
+                      ? [
+                          {
+                            title: "Structured Inspection Registry",
+                            headers: ["Fisher / Crew", "Location", "Encounter Findings"],
+                            rows: detail.entries.map((e) => [
+                              e.person_name || "Fisher Record",
+                              e.location || "Coast Grid",
+                              e.gear_craft_infringement || e.people_infringement || e.fish_infringement || "Compliant",
+                            ]),
+                          },
+                        ]
+                      : undefined,
+                  });
                   setShowModal(false);
                   setNotice("✓ FORM 1A report exported.");
                   setTimeout(() => setNotice(""), 3000);

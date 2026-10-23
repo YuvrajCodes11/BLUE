@@ -13,10 +13,10 @@ const monthlyData = [
 ];
 
 export function ChartCard({ title }: { title: string }) {
-  const [activeIdx, setActiveIdx] = useState<number | null>(null);
+  const [activeIdx, setActiveIdx] = useState<number>(monthlyData.length - 1);
   const maxTons = Math.max(...monthlyData.map((d) => d.tons));
 
-  const activeItem = activeIdx !== null ? monthlyData[activeIdx] : monthlyData[monthlyData.length - 1];
+  const activeItem = monthlyData[activeIdx] ?? monthlyData[monthlyData.length - 1];
 
   return (
     <div className="ocean-panel relative rounded-2xl p-5 shadow-sm">
@@ -59,38 +59,44 @@ export function ChartCard({ title }: { title: string }) {
         </div>
       </div>
 
-      {/* Modern CSS Bar Chart with SVG Trendline */}
-      <div className="relative mt-5 pt-2">
+      {/* Smooth, glitch-free Bar Chart */}
+      <div
+        className="relative mt-5 pt-3"
+        onMouseLeave={() => setActiveIdx(monthlyData.length - 1)}
+      >
         <div className="flex h-44 items-end justify-between gap-2 px-2 sm:gap-4">
           {monthlyData.map((item, index) => {
             const heightPercent = Math.round((item.tons / maxTons) * 100);
-            const isHovered = activeIdx === index || (activeIdx === null && index === monthlyData.length - 1);
+            const isHovered = activeIdx === index;
 
             return (
               <div
                 key={item.month}
                 onMouseEnter={() => setActiveIdx(index)}
-                onMouseLeave={() => setActiveIdx(null)}
-                className="group flex flex-1 cursor-pointer flex-col items-center"
+                className="group flex flex-1 cursor-pointer select-none flex-col items-center"
               >
                 <div className="relative flex h-36 w-full items-end justify-center">
                   <div
                     style={{ height: `${heightPercent}%` }}
-                    className={`w-full max-w-[42px] rounded-t-xl transition-all duration-300 ${
+                    className={`relative w-full max-w-[44px] rounded-t-xl transition-all duration-200 ${
                       isHovered
-                        ? "bg-gradient-to-t from-cyan-500 to-cyan-300 shadow-[0_0_18px_rgba(65,243,255,.4)]"
-                        : "bg-[var(--soft)]/80 hover:bg-cyan-500/50"
+                        ? "bg-gradient-to-t from-cyan-500 to-cyan-300 shadow-[0_0_20px_rgba(65,243,255,.55)]"
+                        : "bg-[var(--soft)]/90 hover:bg-cyan-500/40"
                     }`}
-                  />
-                  {isHovered && (
-                    <span className="absolute -top-7 rounded-md bg-slate-900 px-1.5 py-0.5 text-[10px] font-black text-cyan-300 shadow">
-                      {item.tons}t
-                    </span>
-                  )}
+                  >
+                    {isHovered && (
+                      <div className="pointer-events-none absolute -top-8 left-1/2 -translate-x-1/2 z-30 flex flex-col items-center animate-in fade-in zoom-in-90 duration-150">
+                        <span className="whitespace-nowrap rounded-md border border-cyan-400/60 bg-slate-950 px-2 py-0.5 text-[10px] font-black text-cyan-300 shadow-xl">
+                          {item.tons}t
+                        </span>
+                        <div className="h-1.5 w-1.5 -mt-0.5 rotate-45 border-b border-r border-cyan-400/60 bg-slate-950" />
+                      </div>
+                    )}
+                  </div>
                 </div>
                 <span
-                  className={`mt-2 text-xs font-bold transition ${
-                    isHovered ? "text-cyan-400" : "text-[var(--muted-text)]"
+                  className={`mt-2 text-xs font-bold transition-colors duration-150 ${
+                    isHovered ? "text-cyan-400 font-black" : "text-[var(--muted-text)]"
                   }`}
                 >
                   {item.month}

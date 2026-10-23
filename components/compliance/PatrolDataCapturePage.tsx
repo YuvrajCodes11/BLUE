@@ -6,6 +6,7 @@ import { CheckCircle2, ClipboardList, Download, Eye, FileText, Plus, QrCode, Sav
 import { EmptyState } from "@/components/dashboard/EmptyState";
 import { LoadingState } from "@/components/dashboard/LoadingState";
 import { createClient, hasSupabaseConfig } from "@/lib/supabase";
+import { exportOfficialPdfReport } from "@/lib/export-utils";
 import {
   createPatrolDataCaptureRecord,
   fetchBmusByWard,
@@ -600,6 +601,20 @@ export function PatrolDataCapturePage() {
               <button
                 type="button"
                 onClick={() => {
+                  exportOfficialPdfReport({
+                    filename: `patrol-capture-${detail.patrol_reference_no || "record"}.html`,
+                    title: `Patrol Data Capture Record · Ref: ${detail.patrol_reference_no || "MCS Log"}`,
+                    authority: "Inshore MCS Enforcement Division · State Department for Blue Economy",
+                    summary: `Official coastal patrol encounter log. Documents fisher identification, boat inspection findings, infringement observations, and confiscated gear register.`,
+                    metadata: [
+                      { label: "Patrol Reference", value: detail.patrol_reference_no || "-" },
+                      { label: "Date of Patrol", value: detail.patrol_date || "-" },
+                      { label: "Target Fisher", value: detail.fishers_name || "N/A" },
+                      { label: "Patrol Boat", value: detail.patrol_boat_name || "N/A" },
+                      { label: "Infringement Code", value: detail.infringement_code || "None" },
+                      { label: "Encounter Details", value: detail.item_confiscated_encountered_and_details || "Inspected Compliant" },
+                    ],
+                  });
                   setShowModal(false);
                   setNotice("✓ Patrol capture dossier exported.");
                   setTimeout(() => setNotice(""), 3000);

@@ -33,7 +33,12 @@ export function DashboardOverview({ role }: { role?: RoleSlug }) {
       const targetRole = role ?? "admin";
       setResolvedRole(targetRole);
 
-      if (!hasSupabaseConfig()) {
+      const isDemo =
+        typeof document !== "undefined" &&
+        (document.cookie.includes("blue_demo_session=true") ||
+          Boolean(localStorage.getItem("blue_demo_user")));
+
+      if (isDemo || !hasSupabaseConfig()) {
         setStats(dashboardStats[targetRole] ?? dashboardStats.admin);
         setLoading(false);
         return;

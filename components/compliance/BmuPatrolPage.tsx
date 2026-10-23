@@ -6,6 +6,7 @@ import { CheckCircle2, Download, Eye, FileText, Plus, QrCode, Save, Search, Shie
 import { EmptyState } from "@/components/dashboard/EmptyState";
 import { LoadingState } from "@/components/dashboard/LoadingState";
 import { createClient, hasSupabaseConfig } from "@/lib/supabase";
+import { exportOfficialPdfReport } from "@/lib/export-utils";
 import {
   createBmuPatrolOutcome,
   createBmuPatrolParticipant,
@@ -682,6 +683,33 @@ export function BmuPatrolPage() {
               <button
                 type="button"
                 onClick={() => {
+                  exportOfficialPdfReport({
+                    filename: `bmu-patrol-${detail.report.bmu_name_jina_la_patrol_bmu || "report"}.html`,
+                    title: `BMU Patrol Inspection Dossier · ${detail.report.bmu_name_jina_la_patrol_bmu || "Coastal Patrol"}`,
+                    authority: "Directorate of Fisheries Protection · State Department for Blue Economy",
+                    summary: `Official coastal surveillance inspection log submitted under the Community Inshore BMU Monitoring framework. Certified compliant by local scout detachment.`,
+                    metadata: [
+                      { label: "Patrol Leader", value: detail.report.patrol_leader_name },
+                      { label: "Date of Patrol", value: detail.report.date_of_patrol_tarehe_ya_patrol },
+                      { label: "Patrol Vessel", value: detail.report.patrol_vessel_name_jina_la_chombo || "Patrol Boat 01" },
+                      { label: "Area / Zone", value: detail.report.patrol_area_eneo_la_patrol_1 || "Inshore Coastal Waters" },
+                      { label: "Participants Deployed", value: `${detail.participants.length} team(s)` },
+                      { label: "Recorded Outcomes", value: `${detail.outcomes.length} action(s)` },
+                    ],
+                    tables: detail.outcomes.length
+                      ? [
+                          {
+                            title: "Logged Infringements & Enforcement Actions",
+                            headers: ["Infringement No", "Type of Infringement", "Action Taken / Matokeo"],
+                            rows: detail.outcomes.map((o) => [
+                              o.infringement_no || "-",
+                              o.infringement_type || "-",
+                              o.action_taken_hatua_iliyochukuliwa || "-",
+                            ]),
+                          },
+                        ]
+                      : undefined,
+                  });
                   setShowModal(false);
                   setNotice("✓ BMU Patrol dossier exported.");
                   setTimeout(() => setNotice(""), 3000);
